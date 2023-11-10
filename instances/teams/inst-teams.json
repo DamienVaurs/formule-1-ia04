@@ -1,0 +1,212 @@
+[
+    {
+        "Name": "Red Bull Racing",
+        "Country": "Austria",
+        "Level": 5,
+        "Drivers": [
+            {
+                "FirstName": "Max",
+                "LastName": "Verstappen",
+                "Country": "Netherlands",
+                "Level": 10,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Sergio",
+                "LastName": "Perez",
+                "Country": "Mexico",
+                "Level":7,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "Mercedes",
+        "Country": "UK",
+        "Level": 4,
+        "Drivers": [
+            {
+                "FirstName": "Lewis",
+                "LastName": "Hamilton",
+                "Country": "UK",
+                "Level": 8,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Russell",
+                "LastName": "George",
+                "Country": "UK",
+                "Level": 7,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "Ferrari",
+        "Country": "Italy",
+        "Level": 4,
+        "Drivers": [
+            {
+                "FirstName": "Charles",
+                "LastName": "Leclerc",
+                "Country": "Monaco",
+                "Level": 8,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Carlos",
+                "LastName": "Sainz",
+                "Country": "Spain",
+                "Level": 7,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "McLaren",
+        "Country": "UK",
+        "Level": 3,
+        "Drivers": [
+            {
+                "FirstName": "Lando",
+                "LastName": "Norris",
+                "Country": "UK",
+                "Level": 7,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Oscar",
+                "LastName": "Piastri",
+                "Country": "Australia",
+                "Level": 4,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "Alpine",
+        "Country": "France",
+        "Level": 3,
+        "Drivers": [
+            {
+                "FirstName": "Pierre",
+                "LastName": "Gasly",
+                "Country": "France",
+                "Level": 6,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Esteban",
+                "LastName": "Ocon",
+                "Country": "France",
+                "Level": 5,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "Alpha Tauri",
+        "Country": "Italy",
+        "Level": 2,
+        "Drivers": [
+            {
+                "FirstName": "Daniel",
+                "LastName": "Ricciardo",
+                "Country": "Australia",
+                "Level": 5,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Yuki",
+                "LastName": "Tsunoda",
+                "Country": "Japan",
+                "Level": 4,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "Aston Martin",
+        "Country": "UK",
+        "Level": 2,
+        "Drivers": [
+            {
+                "FirstName": "Fernando",
+                "LastName": "Alonso",
+                "Country": "Spain",
+                "Level": 7,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Lance",
+                "LastName": "Stroll",
+                "Country": "Canada",
+                "Level": 2,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "Alfa Romeo",
+        "Country": "Switzerland",
+        "Level": 1,
+        "Drivers": [
+            {
+                "FirstName": "Valtteri",
+                "LastName": "Bottas",
+                "Country": "Finland",
+                "Level": 6,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Guanyu",
+                "LastName": "Zhou",
+                "Country": "China",
+                "Level": 3,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "Haas",
+        "Country": "USA",
+        "Level": 1,
+        "Drivers": [
+            {
+                "FirstName": "Kevin",
+                "LastName": "Magnussen",
+                "Country": "Denmark",
+                "Level": 3,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Niko",
+                "LastName": "Hulkenberg",
+                "Country": "Germany",
+                "Level": 3,
+                "Personnality": []
+            }
+        ]
+    },
+    {
+        "Name": "Williams",
+        "Country": "UK",
+        "Level": 1,
+        "Drivers": [
+            {
+                "FirstName": "Alex",
+                "LastName": "Albon",
+                "Country": "Thailand",
+                "Level": 4,
+                "Personnality": []
+            },
+            {
+                "FirstName": "Logan",
+                "LastName": "Sargeant",
+                "Country": "USA",
+                "Level": 2,
+                "Personnality": []
+            }
+        ]
+    }
+]

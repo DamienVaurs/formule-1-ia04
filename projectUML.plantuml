@@ -115,6 +115,7 @@ Circuit "1..n" --o "*" Championship : intègre >
 Circuit "1" *-- "1..n" Portion : contient >
 Portion  <|--  Turn
 Portion  <|--  Straight
+Portion "1" --o "*" Driver : est sur <
 Championship "*" o-- "1..n" Team : prend par à <
 Team "1" o-- "2" Driver : appartient à <
 Personnality "1" --o "1" Driver : a <

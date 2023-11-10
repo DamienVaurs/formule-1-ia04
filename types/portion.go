@@ -13,9 +13,10 @@ type PortionInt interface {
 }
 
 type Portion struct {
-	Id                     string  // Portion ID
-	CrashProbability       int     // Crash probability in [1,10]
-	TryOvertakeProbability float64 //Probability of intenting an overtake in [0,1]
+	Id                     string    // Portion ID
+	CrashProbability       int       // Crash probability in [1,10]
+	TryOvertakeProbability float64   //Probability of intenting an overtake in [0,1]
+	DriversOn              []*Driver // Drivers on the portion
 }
 
 /****** TURN ******/
