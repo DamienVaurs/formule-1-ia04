@@ -4,6 +4,7 @@ type Team struct {
 	Id      string   // Team ID
 	Name    string   // Name
 	Drivers []Driver // Pilotes
+	Level   int      // Level of the team car, in [1, 10]
 
 }
 

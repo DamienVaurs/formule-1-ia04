@@ -8,18 +8,20 @@ class Driver {
   - id : string
   - firstName : string
   - lastName : string
+  - level: int
   - country : string
   - championshipPoints: int
 
-  + User(team : *Team, personnality: Personnality, firstName, lastName, country : string)
+  + Driver(team : *Team, personnality: Personnality, firstName, lastName, country : string, level: int)
   
   }
   
 class Team {
   - id: string
   - name: string
+  - level: int
 
-  + Team(name : string, drivers : []Driver)
+  + Team(name : string, drivers : []Driver, level: int)
 
 }
 
