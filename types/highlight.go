@@ -10,8 +10,9 @@ type Highlight struct {
 type HighlightType int
 
 const (
-	DRIVER_CRASH HighlightType = iota
-	DRIVER_OVERTAKE
+	CRASH HighlightType = iota
+	OVERTAKE
+	FINISH
 	//DRIVER_PITSTOP
 	//DRIVER_PENALTY
 	//DRIVER_FASTEST_LAP

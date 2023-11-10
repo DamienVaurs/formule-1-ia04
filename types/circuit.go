@@ -3,9 +3,9 @@ package types
 import "math/rand"
 
 type Circuit struct {
-	CircuitId         string    // Circuit ID
-	CircuitName       string    // Circuit name
-	CircuitCountry    string    // Circuit country
+	Id                string    // Circuit ID
+	Name              string    // Circuit name
+	Country           string    // Circuit country
 	Portions          []Portion // Portions
 	MeteoDistribution []int     // Distribution of meteo conditions
 }

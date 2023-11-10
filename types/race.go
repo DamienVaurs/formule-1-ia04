@@ -3,7 +3,7 @@ package types
 import "time"
 
 type Race struct {
-	CourseId       string      // Course ID
+	Id             string      // Race ID
 	Circuit        *Circuit    // Circuit
 	Date           time.Time   // Date
 	Drivers        []*Driver   // Drivers
