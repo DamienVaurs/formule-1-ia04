@@ -19,9 +19,29 @@ type Portion struct {
 	DriversOn              []*Driver // Drivers on the portion
 }
 
+func NewPortion(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver) *Portion {
+	return &Portion{
+		Id:                     id,
+		CrashProbability:       crashProbability,
+		TryOvertakeProbability: tryOvertakeProbability,
+		DriversOn:              driversOn,
+	}
+}
+
 /****** TURN ******/
 type Turn struct {
 	Portion
+}
+
+func NewTurn(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver) *Turn {
+	return &Turn{
+		Portion: Portion{
+			Id:                     id,
+			CrashProbability:       crashProbability,
+			TryOvertakeProbability: tryOvertakeProbability,
+			DriversOn:              driversOn,
+		},
+	}
 }
 
 func (t *Turn) GetType() PortionType {
@@ -32,6 +52,18 @@ func (t *Turn) GetType() PortionType {
 type Straight struct {
 	Portion
 	IsDRSZone bool // True if is a DRS Zone. -> increases chances of overtaking
+}
+
+func NewStraight(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver, isDRSZone bool) *Straight {
+	return &Straight{
+		Portion: Portion{
+			Id:                     id,
+			CrashProbability:       crashProbability,
+			TryOvertakeProbability: tryOvertakeProbability,
+			DriversOn:              driversOn,
+		},
+		IsDRSZone: isDRSZone,
+	}
 }
 
 func (s *Straight) GetType() PortionType {

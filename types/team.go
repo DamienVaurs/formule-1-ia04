@@ -8,6 +8,15 @@ type Team struct {
 
 }
 
+func NewTeam(id string, name string, drivers []Driver, level int) *Team {
+	return &Team{
+		Id:      id,
+		Name:    name,
+		Drivers: drivers,
+		Level:   level,
+	}
+}
+
 func (t *Team) CalcChampionshipPoints() int {
 	var res int
 	for _, driver := range t.Drivers {

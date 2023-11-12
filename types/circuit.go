@@ -10,6 +10,16 @@ type Circuit struct {
 	MeteoDistribution []int     // Distribution of meteo conditions
 }
 
+func NewCircuit(id string, name string, country string, portions []Portion, meteoDistribution []int) *Circuit {
+	return &Circuit{
+		Id:                id,
+		Name:              name,
+		Country:           country,
+		Portions:          portions,
+		MeteoDistribution: meteoDistribution,
+	}
+}
+
 /*MeteoDistribution est construit de la sorte : [40,70].
 * Ce cas signifie que 40% du temps, le temps sera RAINY, 30% DRY, 30% HEAT
  */

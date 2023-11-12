@@ -7,6 +7,15 @@ type Highlight struct {
 	Type        HighlightType // Type of highlight
 }
 
+func NewHighlight(id string, description string, drivers []*Driver, highlightType HighlightType) *Highlight {
+	return &Highlight{
+		Id:          id,
+		Description: description,
+		Drivers:     drivers,
+		Type:        highlightType,
+	}
+}
+
 type HighlightType int
 
 const (
