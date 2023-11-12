@@ -9,14 +9,14 @@
                 "LastName": "Verstappen",
                 "Country": "Netherlands",
                 "Level": 10,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Sergio",
                 "LastName": "Perez",
                 "Country": "Mexico",
                 "Level":7,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -30,14 +30,14 @@
                 "LastName": "Hamilton",
                 "Country": "UK",
                 "Level": 8,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Russell",
                 "LastName": "George",
                 "Country": "UK",
                 "Level": 7,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -51,14 +51,14 @@
                 "LastName": "Leclerc",
                 "Country": "Monaco",
                 "Level": 8,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Carlos",
                 "LastName": "Sainz",
                 "Country": "Spain",
                 "Level": 7,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -72,14 +72,14 @@
                 "LastName": "Norris",
                 "Country": "UK",
                 "Level": 7,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Oscar",
                 "LastName": "Piastri",
                 "Country": "Australia",
                 "Level": 4,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -93,14 +93,14 @@
                 "LastName": "Gasly",
                 "Country": "France",
                 "Level": 6,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Esteban",
                 "LastName": "Ocon",
                 "Country": "France",
                 "Level": 5,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -114,14 +114,14 @@
                 "LastName": "Ricciardo",
                 "Country": "Australia",
                 "Level": 5,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Yuki",
                 "LastName": "Tsunoda",
                 "Country": "Japan",
                 "Level": 4,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -135,14 +135,14 @@
                 "LastName": "Alonso",
                 "Country": "Spain",
                 "Level": 7,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Lance",
                 "LastName": "Stroll",
                 "Country": "Canada",
                 "Level": 2,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -156,14 +156,14 @@
                 "LastName": "Bottas",
                 "Country": "Finland",
                 "Level": 6,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Guanyu",
                 "LastName": "Zhou",
                 "Country": "China",
                 "Level": 3,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -177,14 +177,14 @@
                 "LastName": "Magnussen",
                 "Country": "Denmark",
                 "Level": 3,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Niko",
                 "LastName": "Hulkenberg",
                 "Country": "Germany",
                 "Level": 3,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     },
@@ -198,14 +198,14 @@
                 "LastName": "Albon",
                 "Country": "Thailand",
                 "Level": 4,
-                "Personnality": []
+                "Personnality": {}
             },
             {
                 "FirstName": "Logan",
                 "LastName": "Sargeant",
                 "Country": "USA",
                 "Level": 2,
-                "Personnality": []
+                "Personnality": {}
             }
         ]
     }
