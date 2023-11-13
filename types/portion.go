@@ -19,9 +19,37 @@ type Portion struct {
 	DriversOn              []*Driver // Drivers on the portion
 }
 
+func NewPortion(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver) *Portion {
+
+	d := make([]*Driver, len(driversOn))
+	copy(d, driversOn)
+
+	return &Portion{
+		Id:                     id,
+		CrashProbability:       crashProbability,
+		TryOvertakeProbability: tryOvertakeProbability,
+		DriversOn:              d,
+	}
+}
+
 /****** TURN ******/
 type Turn struct {
 	Portion
+}
+
+func NewTurn(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver) *Turn {
+
+	d := make([]*Driver, len(driversOn))
+	copy(d, driversOn)
+
+	return &Turn{
+		Portion: Portion{
+			Id:                     id,
+			CrashProbability:       crashProbability,
+			TryOvertakeProbability: tryOvertakeProbability,
+			DriversOn:              d,
+		},
+	}
 }
 
 func (t *Turn) GetType() PortionType {
@@ -32,6 +60,22 @@ func (t *Turn) GetType() PortionType {
 type Straight struct {
 	Portion
 	IsDRSZone bool // True if is a DRS Zone. -> increases chances of overtaking
+}
+
+func NewStraight(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver, isDRSZone bool) *Straight {
+
+	d := make([]*Driver, len(driversOn))
+	copy(d, driversOn)
+
+	return &Straight{
+		Portion: Portion{
+			Id:                     id,
+			CrashProbability:       crashProbability,
+			TryOvertakeProbability: tryOvertakeProbability,
+			DriversOn:              d,
+		},
+		IsDRSZone: isDRSZone,
+	}
 }
 
 func (s *Straight) GetType() PortionType {

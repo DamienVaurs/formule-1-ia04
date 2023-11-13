@@ -7,6 +7,19 @@ type Highlight struct {
 	Type        HighlightType // Type of highlight
 }
 
+func NewHighlight(id string, description string, drivers []*Driver, highlightType HighlightType) *Highlight {
+
+	d := make([]*Driver, len(drivers))
+	copy(d, drivers)
+
+	return &Highlight{
+		Id:          id,
+		Description: description,
+		Drivers:     d,
+		Type:        highlightType,
+	}
+}
+
 type HighlightType int
 
 const (
