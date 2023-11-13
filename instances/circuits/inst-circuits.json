@@ -4,6 +4,10 @@
         "Country": "France",
         "MeteoDistribution": [25,90],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -11,6 +15,10 @@
         "Country": "Italy",
         "MeteoDistribution": [15,70],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -18,6 +26,10 @@
         "Country": "UK",
         "MeteoDistribution": [45,95],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -25,6 +37,10 @@
         "Country": "Belgium",
         "MeteoDistribution": [30,90],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -32,6 +48,10 @@
         "Country": "Monaco",
         "MeteoDistribution": [15,80],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -39,6 +59,10 @@
         "Country": "Japan",
         "MeteoDistribution": [20,80],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -46,6 +70,10 @@
         "Country": "Brazil",
         "MeteoDistribution": [40,70],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -53,6 +81,10 @@
         "Country": "Australia",
         "MeteoDistribution": [10,75],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -60,6 +92,10 @@
         "Country": "Canada",
         "MeteoDistribution": [15,95],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -67,6 +103,10 @@
         "Country": "USA",
         "MeteoDistribution": [10,70],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -74,6 +114,10 @@
         "Country": "Azerbaijan",
         "MeteoDistribution": [10,65],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -81,6 +125,10 @@
         "Country": "China",
         "MeteoDistribution": [20,80],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     },
     {
@@ -88,6 +136,10 @@
         "Country": "Bahrain",
         "MeteoDistribution": [10,65],
         "Portions":[
+            {
+                "id": "",
+                "Difficulty": 1
+            }
         ]
     }
 ]
