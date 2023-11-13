@@ -11,11 +11,18 @@ type Championship struct {
 }
 
 func NewChampionship(id string, name string, circuits []*Circuit, teams []*Team) *Championship {
+
+	c := make([]*Circuit, len(circuits))
+	copy(c, circuits)
+
+	t := make([]*Team, len(teams))
+	copy(t, teams)
+
 	return &Championship{
 		Id:       id,
 		Name:     name,
-		Circuits: circuits,
-		Teams:    teams,
+		Circuits: c,
+		Teams:    t,
 	}
 }
 

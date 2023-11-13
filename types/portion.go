@@ -20,11 +20,15 @@ type Portion struct {
 }
 
 func NewPortion(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver) *Portion {
+
+	d := make([]*Driver, len(driversOn))
+	copy(d, driversOn)
+
 	return &Portion{
 		Id:                     id,
 		CrashProbability:       crashProbability,
 		TryOvertakeProbability: tryOvertakeProbability,
-		DriversOn:              driversOn,
+		DriversOn:              d,
 	}
 }
 
@@ -34,12 +38,16 @@ type Turn struct {
 }
 
 func NewTurn(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver) *Turn {
+
+	d := make([]*Driver, len(driversOn))
+	copy(d, driversOn)
+
 	return &Turn{
 		Portion: Portion{
 			Id:                     id,
 			CrashProbability:       crashProbability,
 			TryOvertakeProbability: tryOvertakeProbability,
-			DriversOn:              driversOn,
+			DriversOn:              d,
 		},
 	}
 }
@@ -55,12 +63,16 @@ type Straight struct {
 }
 
 func NewStraight(id string, crashProbability int, tryOvertakeProbability float64, driversOn []*Driver, isDRSZone bool) *Straight {
+
+	d := make([]*Driver, len(driversOn))
+	copy(d, driversOn)
+
 	return &Straight{
 		Portion: Portion{
 			Id:                     id,
 			CrashProbability:       crashProbability,
 			TryOvertakeProbability: tryOvertakeProbability,
-			DriversOn:              driversOn,
+			DriversOn:              d,
 		},
 		IsDRSZone: isDRSZone,
 	}

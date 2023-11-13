@@ -9,10 +9,14 @@ type Team struct {
 }
 
 func NewTeam(id string, name string, drivers []Driver, level int) *Team {
+
+	d := make([]Driver, len(drivers))
+	copy(d, drivers)
+
 	return &Team{
 		Id:      id,
 		Name:    name,
-		Drivers: drivers,
+		Drivers: d,
 		Level:   level,
 	}
 }

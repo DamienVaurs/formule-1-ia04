@@ -11,11 +11,15 @@ type Circuit struct {
 }
 
 func NewCircuit(id string, name string, country string, portions []Portion, meteoDistribution []int) *Circuit {
+
+	p := make([]Portion, len(portions))
+	copy(p, portions)
+
 	return &Circuit{
 		Id:                id,
 		Name:              name,
 		Country:           country,
-		Portions:          portions,
+		Portions:          p,
 		MeteoDistribution: meteoDistribution,
 	}
 }

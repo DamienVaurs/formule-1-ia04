@@ -13,13 +13,23 @@ type Race struct {
 }
 
 func NewRace(id string, circuit *Circuit, date time.Time, drivers []*Driver, meteo Meteo, finalResult []*Driver, highlights []Highlight) *Race {
+
+	d := make([]*Driver, len(drivers))
+	copy(d, drivers)
+
+	f := make([]*Driver, len(finalResult))
+	copy(f, finalResult)
+
+	h := make([]Highlight, len(highlights))
+	copy(h, highlights)
+
 	return &Race{
 		Id:             id,
 		Circuit:        circuit,
 		Date:           date,
-		Drivers:        drivers,
+		Drivers:        d,
 		MeteoCondition: meteo,
-		FinalResult:    finalResult,
-		HighLigths:     highlights,
+		FinalResult:    f,
+		HighLigths:     h,
 	}
 }
