@@ -1,5 +1,9 @@
 package types
 
-type Meteo struct {
-	RainProbabilities []float64 // Rain probabilities
-}
+type Meteo int
+
+const (
+	RAINY Meteo = iota
+	DRY
+	HEAT
+)

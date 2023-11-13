@@ -1,0 +1,125 @@
+@startuml IA04 - Modélisation Championnat de Formule 1
+
+
+title Projet IA04 - Modélisation Championnat de Formule 1
+
+
+class Driver {
+  - id : string
+  - firstName : string
+  - lastName : string
+  - level: int
+  - country : string
+  - championshipPoints: int
+
+  + Driver(team : *Team, personnality: Personnality, firstName, lastName, country : string, level: int)
+  
+  }
+  
+class Team {
+  - id: string
+  - name: string
+  - level: int
+
+  + Team(name : string, drivers : []Driver, level: int)
+
+}
+
+class Circuit {
+  - id: string
+  - name: string
+  - country: string
+  - MeteoDistribution : []int
+
+  + Circuit(name, country : string)
+  + GenerateMeteo(): Meteo
+}
+
+class Championship{
+  - id : string
+  - name : string
+
+  + Championship(name : string, circuits : []*Circuit, teams : []*Team)
+  + CalcTeamRank(): []*Team
+}
+
+class HighLight{
+  - id : string
+  - description : string
+  - drivers : []*Driver
+  - Type : HighLightType
+
+  + HighLight(description: string, drivers: []*Driver, Type: HighLightType)
+}
+
+enum HighLightType{
+  Crash
+  Overtake
+  PitStop
+  Finish
+}
+
+enum Meteo{
+  Rainy
+  Dry
+  Heat
+}
+
+class Personnality{
+  - TraitsValue : map[*Trait]int
+
+  + Personnality(traitsValue : map[*Trait]int)
+}
+
+class Trait{
+  - id : string
+  - name : string
+
+  + Trait(name : string)
+}
+
+abstract class Portion{
+  - id : string
+  - crashProbability : int
+  - tryOvertakeProbability: float64
+
+  + GetType(): PortionType
+}
+
+
+class Turn{
+
+  + Turn(id: string, crashProbability : int, tryOvertakeProbability: float64)
+}
+
+class Straight{
+  - isDRSZone: bool
+
+  + Straight(id: string, crashProbability : int, tryOvertakeProbability: float64, isDRSZone: bool)
+}
+
+class Race{
+  - id: string
+  - date: Date 
+  - finalResult: []*Driver
+
+  + Race(date: Date, circuit: *Circuit, meteo: Meteo, teams: []*Team)
+}
+
+HighLightType "1" --o "*" HighLight
+HighLight "*" --* "1" Race
+Race "*" o-- "20" Driver : participe à <
+Race "*" o-- "1" Circuit : engendre <
+Race "*" -- "1" Meteo : affecte <
+Circuit "1..n" --o "*" Championship : intègre >
+Circuit "1" *-- "1..n" Portion : contient >
+Portion  <|--  Turn
+Portion  <|--  Straight
+Portion "1" --o "*" Driver : est sur <
+Championship "*" o-- "1..n" Team : prend par à <
+Team "1" o-- "2" Driver : appartient à <
+Personnality "1" --o "1" Driver : a <
+Trait "1..*" --o "*" Personnality : forme >
+
+
+@enduml
