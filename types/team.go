@@ -8,6 +8,7 @@ type Team struct {
 
 }
 
+<<<<<<< HEAD
 func NewTeam(id string, name string, drivers []Driver, level int) *Team {
 
 	d := make([]Driver, len(drivers))
@@ -21,6 +22,8 @@ func NewTeam(id string, name string, drivers []Driver, level int) *Team {
 	}
 }
 
+=======
+>>>>>>> main
 func (t *Team) CalcChampionshipPoints() int {
 	var res int
 	for _, driver := range t.Drivers {
