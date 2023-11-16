@@ -10,6 +10,22 @@ type Championship struct {
 	Teams    []*Team    // Set of teams
 }
 
+func NewChampionship(id string, name string, circuits []*Circuit, teams []*Team) *Championship {
+
+	c := make([]*Circuit, len(circuits))
+	copy(c, circuits)
+
+	t := make([]*Team, len(teams))
+	copy(t, teams)
+
+	return &Championship{
+		Id:       id,
+		Name:     name,
+		Circuits: c,
+		Teams:    t,
+	}
+}
+
 //Remarque : on utilise des pointeurs quand l'objet ne gère pas le cycle de vie des instances
 
 func (c *Championship) CalcTeamRank() []*Team {

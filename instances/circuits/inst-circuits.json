@@ -4,7 +4,15 @@
         "Country": "France",
         "MeteoDistribution": [25,90],
         "Portions":[
-        ]
+            {
+                "Id": "turn_1",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_1",
+                "Difficulty": 2,
+                "IsDRSZone": true
+            }]
     },
     {
         "Name": "Monza",
@@ -35,17 +43,11 @@
         ]
     },
     {
-        "Name": "Suzuka",
-        "Country": "Japan",
-        "MeteoDistribution": [20,80],
-        "Portions":[
-        ]
-    },
-    {
         "Name": "Interlagos",
         "Country": "Brazil",
         "MeteoDistribution": [40,70],
         "Portions":[
+
         ]
     },
     {

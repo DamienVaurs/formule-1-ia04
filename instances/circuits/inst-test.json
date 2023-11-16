@@ -1,0 +1,27 @@
+[
+    {
+        "Name": "Place Délphino",
+        "Country": "Royaume Champignon",
+        "MeteoDistribution": [25,90],
+        "Portions":[
+            {
+                "Id": "straight_1",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 4
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_2",
+                "Difficulty": 4
+            }
+        ]
+    }
+]
