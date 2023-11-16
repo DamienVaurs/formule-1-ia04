@@ -43,7 +43,7 @@ func (d *Driver) Overtake(otherDriver *Driver, portion *Portion) (reussite bool,
 
 	// Pour le moment on prend en compte le niveau des pilotes et la "difficulté" de la portion
 	probaDoubler += bonus
-	probaDoubler -= portion.Diffculty / 5 * 7
+	probaDoubler -= portion.Difficulty / 5 * 7
 
 	var dice int = rand.Intn(99) + 1
 

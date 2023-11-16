@@ -15,6 +15,7 @@ func main() {
 	fmt.Println(c[0].Country)
 	fmt.Println(c[0].MeteoDistribution)
 	fmt.Println(c[0].GenerateMeteo())
+	fmt.Println(c[0].Portions)
 
 	t, err := utils.ReadTeams()
 	if err != nil {

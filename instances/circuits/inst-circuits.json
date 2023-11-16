@@ -10,7 +10,7 @@
             },
             {
                 "Id": "straight_1",
-                "Difficulty": 2,
+                "Difficulty": 0,
                 "IsDRSZone": true
             }]
     },
