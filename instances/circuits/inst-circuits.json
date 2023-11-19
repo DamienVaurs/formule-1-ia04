@@ -149,6 +149,87 @@
         "Country": "Canada",
         "MeteoDistribution": [15,95],
         "Portions":[
+            {
+                "Id": "straight_1",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_2",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_3",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_4",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_5",
+                "Difficulty": 1
+            },
+            {
+                "Id": "turn_6",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_7",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_3",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_8",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_9",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_4",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_10",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_11",
+                "Difficulty": 1
+            },
+            {
+                "Id": "turn_12",
+                "Difficulty": 1
+            },
+            {
+                "Id": "straight_5",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_13",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_14",
+                "Difficulty": 4
+            },
         ]
     },
     {
