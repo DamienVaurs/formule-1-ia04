@@ -3,43 +3,565 @@
         "Name": "Paul Ricard",
         "Country": "France",
         "MeteoDistribution": [25,90],
+        "NbLaps": 53,
         "Portions":[
-            {
-                "Id": "turn_1",
-                "Difficulty": 2
-            },
             {
                 "Id": "straight_1",
                 "Difficulty": 0,
                 "IsDRSZone": true
-            }]
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_2",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_3",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_4",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_5",
+                "Difficulty": 5
+            },
+            {
+                "Id": "turn_6",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_7",
+                "Difficulty": 1
+            },
+            {
+                "Id": "straight_3",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_8",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_9",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_4",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_10",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_5",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_11",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_12",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_13",
+                "Difficulty": 1
+            },
+            {
+                "Id": "turn_14",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_15",
+                "Difficulty": 4
+            }
+        ]
     },
     {
         "Name": "Monza",
         "Country": "Italy",
         "MeteoDistribution": [15,70],
+        "NbLaps": 51,
         "Portions":[
+            {
+                "Id": "straight_1",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_2",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_3",
+                "Difficulty": 1
+            },
+            {
+                "Id": "turn_4",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_5",
+                "Difficulty": 4
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_6",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_3",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_7",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_4",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_8",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_9",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_10",
+                "Difficulty": 4
+            },
+            {
+                "Id": "straight_5",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_11",
+                "Difficulty": 2
+            }
         ]
     },
     {
         "Name": "Silverstone",
         "Country": "UK",
         "MeteoDistribution": [45,95],
+        "NbLaps": 52,
         "Portions":[
+            {
+                "Id": "straight_1",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_2",
+                "Difficulty": 1
+            },
+            {
+                "Id":"turn_3",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_4",
+                "Difficulty": 5
+            },
+            {
+                "Id": "turn_5",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_6",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_7",
+                "Difficulty": 5
+            },
+            {
+                "Id": "turn_8",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_9",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_3",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_10",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_11",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_12",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_13",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_14",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_4",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_15",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_16",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_17",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_18",
+                "Difficulty": 3
+            }
         ]
     },
     {
         "Name": "Spa",
         "Country": "Belgium",
         "MeteoDistribution": [30,90],
+        "NbLaps": 44,
         "Portions":[
+            {
+                "Id": "straight_1",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_2",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_3",
+                "Difficulty": 1
+            },
+            {
+                "Id": "turn_4",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_5",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_6",
+                "Difficulty": 1
+            },
+            {
+                "Id": "straight_3",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_7",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_8",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_9",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_10",
+                "Difficulty": 5
+            },
+            {
+                "Id": "turn_11",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_12",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_13",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_14",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_15",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_4",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_17",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_18",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_19",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_20",
+                "Difficulty": 4
+            }
         ]
     },
     {
         "Name": "Monaco",
         "Country": "Monaco",
         "MeteoDistribution": [15,80],
+        "NbLaps": 78,
         "Portions":[
+            {
+                "Id": "straight_1",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_2",
+                "Difficulty": 1
+            },
+            {
+                "Id": "turn_3",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_4",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_5",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_6",
+                "Difficulty": 5
+            },
+            {
+                "Id": "turn_7",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_8",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_9",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_10",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_11",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_12",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_13",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_14",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_15",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_16",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_17",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_18",
+                "Difficulty": 2
+            }
+        ]
+    },
+    {
+        "Name": "Suzuka",
+        "Country": "Japan",
+        "MeteoDistribution": [20,80],
+        "NbLaps": 53,
+        "Portions":[
+            {
+                "Id": "straight_1",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_2",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_3",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_4",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_5",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_6",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_7",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_8",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_9",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_10",
+                "Difficulty": 1
+            },
+            {
+                "Id": "turn11",
+                "Difficulty": 4
+            },
+            {
+                "Id": "straight_3",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_12",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_4",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_13",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_5",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_14",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_15",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_16",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_17",
+                "Difficulty": 3
+            }
         ]
     },
     {
