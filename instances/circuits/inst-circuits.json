@@ -148,6 +148,7 @@
         "Name": "Montreal",
         "Country": "Canada",
         "MeteoDistribution": [15,95],
+        "NbLaps": 70,
         "Portions":[
             {
                 "Id": "straight_1",
@@ -236,6 +237,7 @@
         "Name": "Las Vegas",
         "Country": "USA",
         "MeteoDistribution": [10,70],
+        "NbLaps": 50,
         "Portions":[
             {
                 "Id": "turn_1",
@@ -334,6 +336,7 @@
         "Name": "Baku",
         "Country": "Azerbaijan",
         "MeteoDistribution": [10,65],
+        "NbLaps": 51,
         "Portions":[
             {
                 "Id": "straight_1",
@@ -460,7 +463,11 @@
         "Name": "Shanghai",
         "Country": "China",
         "MeteoDistribution": [20,80],
+        "NbLaps": 56,
         "Portions":[
+            {
+
+            }
         ]
     },
     {
