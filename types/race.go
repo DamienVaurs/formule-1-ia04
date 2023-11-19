@@ -32,6 +32,7 @@ func NewRace(id string, circuit *Circuit, date time.Time, teams []*Team, meteo M
 	}
 }
 
+/*
 func (r *Race) SimulateRace() {
 	//On lance les agents pilotes
 	for _, team := range r.Team {
@@ -45,3 +46,4 @@ func (r *Race) SimulateRace() {
 
 	}
 }
+*/

@@ -507,7 +507,7 @@
             {
                 "Id": "straight_4",
                 "Difficulty": 0,
-                "IsDRSZone": 0
+                "IsDRSZone": false
             },
             {
                 "Id": "turn_7",
