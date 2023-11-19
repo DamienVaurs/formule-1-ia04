@@ -54,7 +54,94 @@
         "Name": "Melbourne",
         "Country": "Australia",
         "MeteoDistribution": [10,75],
+        "NbLaps": 58,
         "Portions":[
+            {
+                "Id": "straight_1",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_1",
+                "Difficulty": 3
+            }, 
+            {
+                "Id": "turn_2",
+                "Difficulty": 2
+            },
+            {
+                "Id": "straight_2",
+                "Difficulty":0,
+                "IsDRSZone": true
+            },
+            {
+                "Id" : "turn_3",
+                "Difficulty": 3
+            },
+            {
+                "Id": "turn_4",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_5",
+                "Difficulty": 1
+            },
+            {
+                "Id": "straight_3",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_6",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_7",
+                "Difficulty": 1
+            },
+            {
+                "Id": "turn_8",
+                "Difficulty": 1
+            },
+            {
+                "Id": "straight_4",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_9",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_10",
+                "Difficulty": 3
+            },
+            {
+                "Id":"straight_5",
+                "Difficulty": 0,
+                "IsDRSZone": true
+            },
+            {
+                "Id": "turn_11",
+                "Difficulty": 3
+            },
+            {
+                "Id": "straight_6",
+                "Difficulty": 0,
+                "IsDRSZone": false
+            },
+            {
+                "Id": "turn_12",
+                "Difficulty": 2
+            },
+            {
+                "Id": "turn_13",
+                "Difficulty": 4
+            },
+            {
+                "Id": "turn_14",
+                "Difficulty": 3
+            }
         ]
     },
     {

@@ -30,6 +30,7 @@ class Circuit {
   - name: string
   - country: string
   - MeteoDistribution : []int
+  - NbLaps: int
 
   + Circuit(name, country : string)
   + GenerateMeteo(): Meteo

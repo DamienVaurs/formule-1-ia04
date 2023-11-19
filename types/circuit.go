@@ -8,6 +8,7 @@ type Circuit struct {
 	Country           string    // Circuit country
 	Portions          []Portion // Portions
 	MeteoDistribution []int     // Distribution of meteo conditions
+	NbLaps            int       //Number of Laps
 }
 
 func NewCircuit(id string, name string, country string, portions []Portion, meteoDistribution []int) *Circuit {
