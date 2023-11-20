@@ -33,6 +33,18 @@ func ReadCircuit() ([]types.Circuit, error) {
 		return nil, err
 	}
 
+	// On spécifie le type de chaque portion
+	for i := 0; i < len(circuits); i++ {
+		for j := 0; j < len(circuits[i].Portions); j++ {
+			if len(circuits[i].Portions[j].Id) < len("turn") {
+			} else if circuits[i].Portions[j].Id[:len("turn")] == "turn" {
+				circuits[i].Portions[j].Type = types.TURN
+			} else {
+				circuits[i].Portions[j].Type = types.STRAIGHT
+			}
+		}
+	}
+
 	return circuits, nil
 }
 
@@ -45,7 +57,7 @@ func ReadTeams() ([]types.Team, error) {
 	}
 	defer file.Close()
 
-	var teams []types.Team
+	teams := make([]types.Team, 0)
 
 	// Décoder le fichier JSON dans la structure de données
 	decoder := json.NewDecoder(file)

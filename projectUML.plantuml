@@ -30,6 +30,7 @@ class Circuit {
   - name: string
   - country: string
   - MeteoDistribution : []int
+  - NbLaps: int
 
   + Circuit(name, country : string)
   + GenerateMeteo(): Meteo
@@ -110,6 +111,7 @@ HighLightType "1" --o "*" HighLight
 HighLight "*" --* "1" Race
 Race "*" o-- "20" Driver : participe à <
 Race "*" o-- "1" Circuit : engendre <
+Race "*" --* "1" Championship : consitute >
 Race "*" -- "1" Meteo : affecte <
 Circuit "1..n" --o "*" Championship : intègre >
 Circuit "1" *-- "1..n" Portion : contient >
