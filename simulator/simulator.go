@@ -10,7 +10,7 @@ type Simulator struct {
 	Championships []types.Championship
 }
 
-func (s Simulator) NewSimulator(championships []types.Championship) *Simulator {
+func NewSimulator(championships []types.Championship) *Simulator {
 	c := make([]types.Championship, len(championships))
 	copy(c, championships)
 
@@ -35,6 +35,7 @@ func (s *Simulator) LaunchSimulation() {
 			new_Race := types.NewRace(id, circuit, date, championship.Teams, meteo)
 
 			//Etape 2 (la principale) : on joue la course
+			new_Race.SimulateRace()
 
 			//Etape 3 : on ajoute la course au championnat
 			championship.Races[i] = new_Race

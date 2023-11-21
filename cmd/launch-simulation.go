@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"gitlab.utc.fr/vaursdam/formule-1-ia04/simulator"
+	"gitlab.utc.fr/vaursdam/formule-1-ia04/types"
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/utils"
 )
 
@@ -35,4 +37,16 @@ func main() {
 	fmt.Println(t[0].Drivers[0].Personnality)
 	*/
 
+	//Lancement simulation
+	pointTabCircuit := make([]*types.Circuit, len(c))
+	for i, circuit := range c {
+		pointTabCircuit[i] = &circuit
+	}
+	pointTabTeam := make([]*types.Team, len(t))
+	for i, team := range t {
+		pointTabTeam[i] = &team
+	}
+	championship := types.NewChampionship("2023", "Championship 1", pointTabCircuit, pointTabTeam)
+	s := simulator.NewSimulator([]types.Championship{*championship})
+	s.LaunchSimulation()
 }
