@@ -18,10 +18,10 @@ type Driver struct {
 }
 
 type DriverInRace struct {
-	Driver   *Driver  //Pilote lui même
-	Position *Portion //Position du pilote
-	NbLaps   int      //Nombre de tours effectués
-
+	Driver   *Driver      //Pilote lui même
+	Position *Portion     //Position du pilote
+	NbLaps   int          //Nombre de tours effectués
+	Status   DriverStatus //Status du pilote
 	//Pour l'implémentation:
 	// - On a un channel pour recevoir et envoyer les actions & l'environnement
 	ChanEnv chan Action
@@ -34,6 +34,15 @@ type Action int
 const (
 	TRY_OVERTAKE Action = iota
 	NOOP
+)
+
+type DriverStatus int
+
+const (
+	RACING DriverStatus = iota
+	CRASHED
+	ARRIVED
+	PITSTOP
 )
 
 func NewDriver(id string, firstname string, lastname string, level int, country string, team *Team, personnality Personnality) *Driver {
@@ -57,6 +66,7 @@ func NewDriverInRace(driver *Driver, position *Portion) *DriverInRace {
 		Position: position,
 		NbLaps:   0,
 		ChanEnv:  c,
+		Status:   RACING,
 	}
 }
 
@@ -147,7 +157,7 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 }
 
 func (d *DriverInRace) Start(raceChan chan Action, position *Portion, nbLaps int) {
-
+	log.Printf("Lancement du pilote driver %s %s\n", d.Driver.Firstname, d.Driver.Lastname)
 	//On stocke le chanel
 	d.ChanEnv = raceChan
 

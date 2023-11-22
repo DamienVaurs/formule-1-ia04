@@ -48,18 +48,21 @@ func NewRace(id string, circuit *Circuit, date time.Time, teams []*Team, meteo M
 }
 
 func (r *Race) SimulateRace() {
+	log.Printf("	Lancement d'une nouvelle course : %s...\n", r.Id)
 	//On crée les instances des pilotes en course
 
 	var drivers = SliceOfDriversInRace(r.Teams, &(r.Circuit.Portions[0]))
+
 	//On lance les agents pilotes
 	for _, driver := range drivers {
 		c, ok := r.MapChan.Load(driver.Driver.Id)
-		if ok != true {
+		if !ok {
 			log.Printf("Error while loading channel for driver %s\n", driver.Driver.Id)
 		}
-		go driver.Start(c.(chan Action), driver.Position, driver.NbLaps)
+		go func(driver *DriverInRace) {
+			driver.Start(c.(chan Action), driver.Position, driver.NbLaps)
+		}(driver)
 	}
-
 	var nbFinish = 0
 	var nbDrivers = len(r.Teams) * 2
 	decisionMap := make(map[*DriverInRace]Action, nbDrivers)
@@ -92,19 +95,48 @@ func (r *Race) SimulateRace() {
 					if crashedDrivers != nil {
 						//On supprime les pilotes crashés
 						for _, crashedDriver := range crashedDrivers {
+							crashedDriver.Status = CRASHED
 							driver.Position.RemoveDriverOn(crashedDriver)
 							nbFinish++
 						}
 
 						if success {
 							//On met à jour les positions
-							driver.Position.RemoveDriverOn(driver)
-							driverToOvertake.Position.AddDriverOn(driver)
+							driver.Position.SwapDrivers(driver, driverToOvertake)
 						}
 					}
+				}
+			case NOOP:
+				//On ne fait rien
 
+			}
+		}
+
+		//On fait avancer tout les pilotes n'ayant pas fini la course et n'étant pas crashés
+		newDriversOnPortion := make([][]*DriverInRace, len(r.Circuit.Portions)) //stocke les nouvelles positions des pilotes
+		for i, portion := range r.Circuit.Portions {
+			for _, driver := range portion.DriversOn {
+				if driver.Status != CRASHED && driver.Status != ARRIVED {
+					driver.Position = &(r.Circuit.Portions[(i+1)%len(r.Circuit.Portions)]) //Usage du modulo pour gérer le cas où on est sur la dernière portion
+					if i == len(r.Circuit.Portions)-1 {
+						//Si on a fait un tour
+						driver.NbLaps++
+						if driver.NbLaps == r.Circuit.NbLaps {
+							//Si on a fini la course, on enlève le pilote du circuit et on le met dans le classement
+							driver.Status = ARRIVED
+							nbFinish++
+							r.FinalResult = append(r.FinalResult, driver.Driver)
+						}
+					}
+				}
+				if driver.Status != CRASHED && driver.Status != ARRIVED {
+					newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
 				}
 			}
+		}
+		//On met à jour les positions des pilotes
+		for i, portion := range r.Circuit.Portions {
+			portion.DriversOn = newDriversOnPortion[i]
 		}
 	}
 }
