@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -47,21 +48,18 @@ func NewRace(id string, circuit *Circuit, date time.Time, teams []*Team, meteo M
 	}
 }
 
-func (r *Race) SimulateRace() {
+func (r *Race) SimulateRace() error {
 	log.Printf("	Lancement d'une nouvelle course : %s...\n", r.Id)
 	//On crée les instances des pilotes en course
 
-	var drivers = SliceOfDriversInRace(r.Teams, &(r.Circuit.Portions[0]))
+	drivers, err := MakeSliceOfDriversInRace(r.Teams, &(r.Circuit.Portions[0]), r.MapChan)
+	if err != nil {
+		return err
+	}
 
 	//On lance les agents pilotes
 	for _, driver := range drivers {
-		c, ok := r.MapChan.Load(driver.Driver.Id)
-		if !ok {
-			log.Printf("Error while loading channel for driver %s\n", driver.Driver.Id)
-		}
-		go func(driver *DriverInRace) {
-			driver.Start(c.(chan Action), driver.Position, driver.NbLaps)
-		}(driver)
+		go driver.Start(driver.Position, driver.NbLaps)
 	}
 	var nbFinish = 0
 	var nbDrivers = len(r.Teams) * 2
@@ -71,10 +69,14 @@ func (r *Race) SimulateRace() {
 	for nbFinish < nbDrivers {
 		//Chaque pilote, dans un ordre aléatoire, réalise les tests sur la proba de dépasser etc...
 		drivers = ShuffleDrivers(drivers)
+		fmt.Println("Débloquage des go routines...")
+
 		for _, driver := range drivers {
-			//On débloque le pilote qu'il décide de dépasser ou non
+			//On débloque le pilote pour qu'il prenne une décision
+			fmt.Println("Envoie de déblocage à : " + driver.Driver.Lastname)
 			driver.ChanEnv <- 1
 		}
+		fmt.Println("Les go routines sont débloquées")
 		// On récupère les décisions des pilotes
 		for _, driver := range drivers {
 			decisionMap[driver] = <-driver.ChanEnv
@@ -139,4 +141,5 @@ func (r *Race) SimulateRace() {
 			portion.DriversOn = newDriversOnPortion[i]
 		}
 	}
+	return nil
 }

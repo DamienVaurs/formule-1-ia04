@@ -1,8 +1,10 @@
 package types
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
+	"sync"
 )
 
 type Driver struct {
@@ -59,26 +61,30 @@ func NewDriver(id string, firstname string, lastname string, level int, country 
 	}
 }
 
-func NewDriverInRace(driver *Driver, position *Portion) *DriverInRace {
-	c := make(chan Action)
+func NewDriverInRace(driver *Driver, position *Portion, channel chan Action) *DriverInRace {
 	return &DriverInRace{
 		Driver:   driver,
 		Position: position,
 		NbLaps:   0,
-		ChanEnv:  c,
+		ChanEnv:  channel,
 		Status:   RACING,
 	}
 }
 
-func SliceOfDriversInRace(teams []*Team, portionDepart *Portion) []*DriverInRace {
+func MakeSliceOfDriversInRace(teams []*Team, portionDepart *Portion, mapChan sync.Map) ([]*DriverInRace, error) {
 	res := make([]*DriverInRace, 0)
 	for _, team := range teams {
 		for _, driver := range team.Drivers {
-			d := NewDriverInRace(&driver, portionDepart)
+			dtamp := driver //nécessaire, sinon n'utilise l'adresse que d'un membre de l'équipe
+			c, ok := mapChan.Load(dtamp.Id)
+			if !ok {
+				return nil, fmt.Errorf("error while creating driverinrace : %s", driver.Id)
+			}
+			d := NewDriverInRace(&dtamp, portionDepart, c.(chan Action))
 			res = append(res, d)
 		}
 	}
-	return res
+	return res, nil
 }
 
 func ShuffleDrivers(drivers []*DriverInRace) []*DriverInRace {
@@ -156,14 +162,14 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	return false, nil
 }
 
-func (d *DriverInRace) Start(raceChan chan Action, position *Portion, nbLaps int) {
-	log.Printf("Lancement du pilote driver %s %s\n", d.Driver.Firstname, d.Driver.Lastname)
-	//On stocke le chanel
-	d.ChanEnv = raceChan
+func (d *DriverInRace) Start(position *Portion, nbLaps int) {
+	log.Printf("		Lancement du pilote driver %s %s\n", d.Driver.Firstname, d.Driver.Lastname)
 
 	for {
 		//On attend que l'environnement nous dise qu'on peut prendre une décision
+		fmt.Println("Attente de l'env : " + d.Driver.Lastname)
 		<-d.ChanEnv
+		fmt.Println("Réception de l'env : " + d.Driver.Lastname)
 
 		//On décide
 		//On regarde si on peut doubler
