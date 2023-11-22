@@ -10,11 +10,12 @@ const (
 )
 
 type Portion struct {
-	Id         string          // Portion ID
-	Difficulty int             // Difficulty of the portion in [0,5]
-	DriversOn  []*DriverInRace // Drivers on the portion
-	Type       PortionType     // Type of the portion
-	IsDRSZone  bool            // True if is a DRS Zone. -> increases chances of overtaking
+	Id          string          // Portion ID
+	Difficulty  int             // Difficulty of the portion in [0,5]
+	DriversOn   []*DriverInRace // Drivers on the portion
+	Type        PortionType     // Type of the portion
+	IsDRSZone   bool            // True if is a DRS Zone. -> increases chances of overtaking
+	NextPortion *Portion        // Next Portion in the circuit
 }
 
 func NewPortion(id string, difficulty int, driversOn []*DriverInRace, isDRSZone bool) *Portion {
@@ -42,7 +43,7 @@ func (p *Portion) AddDriverOn(driver *DriverInRace) {
 	p.DriversOn = append(p.DriversOn, driver)
 }
 
-// TODO A tester
+// semble fonctionner
 func (p *Portion) RemoveDriverOn(driver *DriverInRace) {
 	for i, d := range p.DriversOn {
 		if d == driver {
@@ -81,4 +82,12 @@ func (p *Portion) SwapDrivers(driver1 *DriverInRace, driver2 *DriverInRace) erro
 		return nil
 	}
 	return fmt.Errorf("Driver %s or %s not found on portion %s", driver1.Driver.Id, driver2.Driver.Id, p.Id)
+}
+
+func (p *Portion) DisplayDriversOn() {
+	fmt.Println("Drivers on portion", p.Id)
+	for i, driver := range p.DriversOn {
+		fmt.Printf("%d : %s\n", len(p.DriversOn)-i, driver.Driver.Lastname)
+	}
+	fmt.Println()
 }

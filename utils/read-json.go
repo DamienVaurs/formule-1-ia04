@@ -33,17 +33,26 @@ func ReadCircuit() ([]types.Circuit, error) {
 		return nil, err
 	}
 
-	// On spécifie le type de chaque portion
 	for i := 0; i < len(circuits); i++ {
+		//On donne un Id à la portion
 		circuits[i].Id = fmt.Sprintf("circuit-%d", i)
 		for j := 0; j < len(circuits[i].Portions); j++ {
+			// On spécifie le type de chaque portion
 			if len(circuits[i].Portions[j].Id) < len("turn") {
 			} else if circuits[i].Portions[j].Id[:len("turn")] == "turn" {
 				circuits[i].Portions[j].Type = types.TURN
 			} else {
 				circuits[i].Portions[j].Type = types.STRAIGHT
 			}
+
+			//On spécifie de quelle portion celle-ci est la suivante
+			if j == 0 {
+				circuits[i].Portions[len(circuits[i].Portions)-1].NextPortion = &(circuits[i].Portions[j])
+			} else {
+				circuits[i].Portions[j-1].NextPortion = &(circuits[i].Portions[j])
+			}
 		}
+
 	}
 
 	return circuits, nil

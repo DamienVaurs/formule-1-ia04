@@ -167,9 +167,9 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 
 	for {
 		//On attend que l'environnement nous dise qu'on peut prendre une décision
-		fmt.Println("Attente de l'env : " + d.Driver.Lastname)
+		//fmt.Println("Attente de l'env : " + d.Driver.Lastname)
 		<-d.ChanEnv
-		fmt.Println("Réception de l'env : " + d.Driver.Lastname)
+		//fmt.Println("Réception de l'env : " + d.Driver.Lastname)
 
 		//On décide
 		//On regarde si on peut doubler
@@ -179,24 +179,24 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		}
 		if toOvertake != nil {
 			//On décide si on veut doubler
-			fmt.Printf("%s peut essayer de dépasser %s sur %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname, position.Id)
+			//fmt.Printf("%s peut essayer de dépasser %s sur %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname, position.Id)
 
 			decision, err := d.OvertakeDecision(toOvertake)
 			if err != nil {
 				log.Printf("Error while getting the decision to overtake : %s\n", err)
 			}
 			if decision {
-				fmt.Printf("%s décide de dépasser %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname)
+				//fmt.Printf("%s décide de dépasser %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname)
 				//On envoie la décision à l'environnement
 				d.ChanEnv <- TRY_OVERTAKE
 			} else {
-				fmt.Printf("%s décide de NE PAS dépasser %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname)
+				//fmt.Printf("%s décide de NE PAS dépasser %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname)
 				d.ChanEnv <- NOOP
 			}
 
 		} else {
 			//Si pas de possibilité de doubler, on ne fait rien
-			fmt.Printf("%s ne peut dépasser personne sur %s\n", d.Driver.Lastname, position.Id)
+			//fmt.Printf("%s ne peut dépasser personne sur %s\n", d.Driver.Lastname, position.Id)
 
 			d.ChanEnv <- NOOP
 		}
@@ -204,7 +204,7 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		if d.NbLaps == nbLaps {
 			return
 		}
-		fmt.Printf("Fin de décision pour %s\n", d.Driver.Lastname)
+		//fmt.Printf("Fin de décision pour %s\n", d.Driver.Lastname)
 
 	}
 }
