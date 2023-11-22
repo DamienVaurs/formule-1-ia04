@@ -35,6 +35,7 @@ func ReadCircuit() ([]types.Circuit, error) {
 
 	// On spécifie le type de chaque portion
 	for i := 0; i < len(circuits); i++ {
+		circuits[i].Id = fmt.Sprintf("circuit-%d", i)
 		for j := 0; j < len(circuits[i].Portions); j++ {
 			if len(circuits[i].Portions[j].Id) < len("turn") {
 			} else if circuits[i].Portions[j].Id[:len("turn")] == "turn" {
@@ -64,6 +65,13 @@ func ReadTeams() ([]types.Team, error) {
 	if err := decoder.Decode(&teams); err != nil {
 		fmt.Println("Erreur lors de la lecture du fichier JSON :", err)
 		return nil, err
+	}
+	//Ajout d'Id aux pilotes et aux team
+	for i, team := range teams {
+		teams[i].Id = fmt.Sprintf("team-%d", i)
+		for j := range team.Drivers {
+			teams[i].Drivers[j].Id = fmt.Sprintf("driver-%d-%d", i, j)
+		}
 	}
 
 	return teams, nil

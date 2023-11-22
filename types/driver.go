@@ -78,7 +78,7 @@ func MakeSliceOfDriversInRace(teams []*Team, portionDepart *Portion, mapChan syn
 			dtamp := driver //nécessaire, sinon n'utilise l'adresse que d'un membre de l'équipe
 			c, ok := mapChan.Load(dtamp.Id)
 			if !ok {
-				return nil, fmt.Errorf("error while creating driverinrace : %s", driver.Id)
+				return nil, fmt.Errorf("error while creating driver in race : %s", driver.Id)
 			}
 			d := NewDriverInRace(&dtamp, portionDepart, c.(chan Action))
 			res = append(res, d)
@@ -163,7 +163,7 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 }
 
 func (d *DriverInRace) Start(position *Portion, nbLaps int) {
-	log.Printf("		Lancement du pilote driver %s %s\n", d.Driver.Firstname, d.Driver.Lastname)
+	log.Printf("		Lancement du pilote %s %s\n", d.Driver.Firstname, d.Driver.Lastname)
 
 	for {
 		//On attend que l'environnement nous dise qu'on peut prendre une décision
@@ -179,23 +179,32 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		}
 		if toOvertake != nil {
 			//On décide si on veut doubler
+			fmt.Printf("%s peut essayer de dépasser %s sur %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname, position.Id)
+
 			decision, err := d.OvertakeDecision(toOvertake)
 			if err != nil {
 				log.Printf("Error while getting the decision to overtake : %s\n", err)
 			}
 			if decision {
+				fmt.Printf("%s décide de dépasser %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname)
 				//On envoie la décision à l'environnement
 				d.ChanEnv <- TRY_OVERTAKE
 			} else {
+				fmt.Printf("%s décide de NE PAS dépasser %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname)
 				d.ChanEnv <- NOOP
 			}
 
-			//On vérifie si on a fini la course
-			if d.NbLaps == nbLaps {
-				return
-			}
+		} else {
+			//Si pas de possibilité de doubler, on ne fait rien
+			fmt.Printf("%s ne peut dépasser personne sur %s\n", d.Driver.Lastname, position.Id)
 
+			d.ChanEnv <- NOOP
 		}
+		//On vérifie si on a fini la course
+		if d.NbLaps == nbLaps {
+			return
+		}
+		fmt.Printf("Fin de décision pour %s\n", d.Driver.Lastname)
 
 	}
 }

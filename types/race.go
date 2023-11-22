@@ -57,9 +57,15 @@ func (r *Race) SimulateRace() error {
 		return err
 	}
 
-	//On lance les agents pilotes
+	//On met tous les agents sur la ligne de départ :
 	for _, driver := range drivers {
-		go driver.Start(driver.Position, driver.NbLaps)
+		driver.Position.AddDriverOn(driver)
+	}
+	fmt.Println("Les pilotes sont sur la ligne de départ")
+	//On lance les agents pilotes
+	fmt.Println("Début de la course...")
+	for _, driver := range drivers {
+		go driver.Start(driver.Position, 1) //todo : mettre le bon paramètre r.Circuit.NbLaps à la place de 1
 	}
 	var nbFinish = 0
 	var nbDrivers = len(r.Teams) * 2
@@ -73,14 +79,21 @@ func (r *Race) SimulateRace() error {
 
 		for _, driver := range drivers {
 			//On débloque le pilote pour qu'il prenne une décision
+			if driver.Status == CRASHED || driver.Status == ARRIVED {
+				continue
+			}
 			fmt.Println("Envoie de déblocage à : " + driver.Driver.Lastname)
 			driver.ChanEnv <- 1
 		}
 		fmt.Println("Les go routines sont débloquées")
 		// On récupère les décisions des pilotes
 		for _, driver := range drivers {
+			if driver.Status == CRASHED || driver.Status == ARRIVED {
+				continue
+			}
 			decisionMap[driver] = <-driver.ChanEnv
 		}
+		fmt.Println("On a toutes les décisions")
 
 		//On traite les décisions et on met à jour les positions des pilotes
 		for driver, decision := range decisionMap {

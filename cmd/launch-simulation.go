@@ -41,7 +41,7 @@ func main() {
 	fmt.Println(t[0].Drivers[0].Personnality)
 	*/
 
-	//Lancement simulation
+	//On crée des pointeurs vers les équipes et les circuits
 	pointTabCircuit := make([]*types.Circuit, len(c))
 	for i, circuit := range c {
 		tempCircuit := circuit //sans tampon, tous les éléments du tableau contiendront la même adresse

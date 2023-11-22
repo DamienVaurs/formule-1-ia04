@@ -62,7 +62,7 @@ func (p *Portion) DriverToOvertake(driver *DriverInRace) (*DriverInRace, error) 
 			}
 		}
 	}
-	return nil, fmt.Errorf("Driver %s not found on portion %s", driver.Driver.Id, p.Id)
+	return nil, fmt.Errorf("Driver %s (%s) not found on portion %s", driver.Driver.Id, driver.Driver.Lastname, p.Id)
 }
 
 func (p *Portion) SwapDrivers(driver1 *DriverInRace, driver2 *DriverInRace) error {
