@@ -54,8 +54,9 @@ func (p *Portion) RemoveDriverOn(driver *DriverInRace) {
 }
 
 func (p *Portion) DriverToOvertake(driver *DriverInRace) (*DriverInRace, error) {
-	for i, d := range p.DriversOn {
-		if d == driver {
+	fmt.Println("GAGA", p.Id)
+	for i := range p.DriversOn {
+		if p.DriversOn[i] == driver {
 			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil {
 				return p.DriversOn[i+1], nil
 			} else {
@@ -63,6 +64,7 @@ func (p *Portion) DriverToOvertake(driver *DriverInRace) (*DriverInRace, error) 
 			}
 		}
 	}
+	// TODO : vérifier
 	return nil, fmt.Errorf("Driver %s (%s) not found on portion %s", driver.Driver.Id, driver.Driver.Lastname, p.Id)
 }
 
