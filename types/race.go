@@ -74,7 +74,7 @@ func (r *Race) SimulateRace() error {
 	//On simule tant que tous les pilotes n'ont pas fini la course
 	for nbFinish < nbDrivers {
 		fmt.Println("============ NOUVELLE BOUCLE=================")
-		time.Sleep(5 * time.Second)
+		time.Sleep(1 * time.Second)
 		//Chaque pilote, dans un ordre aléatoire, réalise les tests sur la proba de dépasser etc...
 		drivers = ShuffleDrivers(drivers)
 		//fmt.Println("LLLA")
@@ -106,8 +106,9 @@ func (r *Race) SimulateRace() error {
 			switch decision {
 			case TRY_OVERTAKE:
 				//On vérifie si le pilote peut bien dépasser
-				fmt.Println("Portion pilote ", drivers[i].Position.Id)                    //TODO : n'est pas ok, fixé à straight_1
-				driverToOvertake, err := drivers[i].Position.DriverToOvertake(drivers[i]) //TODO: pb ici, cherche toujours sur straight_1
+				driverPortion := drivers[i].Position
+				fmt.Println("Portion pilote ", driverPortion.Id)       //TODO : n'est pas ok, fixé à straight_1
+				driverToOvertake, err := drivers[i].DriverToOvertake() //TODO: pb ici, cherche toujours sur straight_1
 				if err != nil {
 					log.Printf("Error while getting driver to overtake: %s\n", err)
 				}
@@ -162,7 +163,10 @@ func (r *Race) SimulateRace() error {
 				}
 			}
 		}
-		fmt.Println("Portion du pilote après maj : ", drivers[0].Position.Id) //est ok
+		fmt.Println("Portion des pilote après maj : ") //est ok
+		for i := range drivers {
+			fmt.Println(drivers[i].Position.Id, drivers[i].Position.DriversOn)
+		}
 
 		//On met à jour les positions des pilotes
 		for i := range r.Circuit.Portions {
@@ -172,7 +176,10 @@ func (r *Race) SimulateRace() error {
 			//fmt.Printf("%s après update : %s \n", portion.Id, portion.DriversOn) semble ok
 			fmt.Println("UUUUU", r.Circuit.Portions[i].Id, r.Circuit.Portions[i].DriversOn)
 		}
-		//fmt.Println("OOOOO ", r.Circuit.Portions)
+		fmt.Println("Portion des pilote après maj de ler position + maj des portions : ") //est ok
+		for i := range drivers {
+			fmt.Println(drivers[i].Position.Id, drivers[i].Position.DriversOn)
+		}
 
 	}
 	//On affiche le classement

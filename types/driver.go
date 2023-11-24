@@ -142,10 +142,26 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 }
 
+func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
+	p := d.Position
+	fmt.Println("GAGA", p.Id)
+	for i := range p.DriversOn {
+		if p.DriversOn[i] == d {
+			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil {
+				return p.DriversOn[i+1], nil
+			} else {
+				return nil, nil
+			}
+		}
+	}
+	// TODO : vérifier
+	return nil, fmt.Errorf("Driver %s (%s) not found on portion %s", d.Driver.Id, d.Driver.Lastname, p.Id)
+}
+
 // Fonction pourdécider si on veut ESSAYER de doubler ou non
 func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, error) {
 
-	toOvertake, err := d.Position.DriverToOvertake(d)
+	toOvertake, err := d.DriverToOvertake()
 	if err != nil {
 		return false, err
 	}
@@ -173,7 +189,7 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 
 		//On décide
 		//On regarde si on peut doubler
-		toOvertake, err := position.DriverToOvertake(d)
+		toOvertake, err := d.DriverToOvertake()
 		if err != nil {
 			log.Printf("Error while getting the driver to overtake : %s\n", err)
 		}
