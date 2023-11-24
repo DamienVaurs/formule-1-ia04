@@ -144,7 +144,7 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 	p := d.Position
-	fmt.Println("GAGA", p.Id)
+	//fmt.Println("GAGA", p.Id)
 	for i := range p.DriversOn {
 		if p.DriversOn[i] == d {
 			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil {
@@ -182,6 +182,10 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 	log.Printf("		Lancement du pilote %s %s\n", d.Driver.Firstname, d.Driver.Lastname)
 
 	for {
+		if d.Status == ARRIVED || d.Status == CRASHED {
+			return
+		}
+		fmt.Printf("Nb tours fait pour %s : %d\n", d.Driver.Lastname, d.NbLaps)
 		//On attend que l'environnement nous dise qu'on peut prendre une décision
 		//fmt.Println("Attente de l'env : " + d.Driver.Lastname)
 		<-d.ChanEnv

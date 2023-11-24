@@ -1,6 +1,7 @@
 package simulator
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -38,10 +39,15 @@ func (s *Simulator) LaunchSimulation() {
 			new_Race := types.NewRace(id, circuit, date, championship.Teams, meteo)
 
 			//Etape 2 (la principale) : on joue la course
-			new_Race.SimulateRace()
+			err := new_Race.SimulateRace()
+			if err != nil {
+				fmt.Printf("Erreur simulation cours %s : %s\n", new_Race.Id, err.Error())
+			}
 
 			//Etape 3 : on ajoute la course au championnat
-			championship.Races[i] = new_Race
+			fmt.Println("Ajout de la course au championnat...")
+			championship.Races[i] = *new_Race
+			fmt.Println("Ajout réussi!")
 		}
 	}
 }

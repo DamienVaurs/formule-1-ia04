@@ -3,6 +3,7 @@
         "Name": "Place Délphino",
         "Country": "Royaume Champignon",
         "MeteoDistribution": [25,90],
+        "NbLaps": 1,
         "Portions":[
             {
                 "Id": "straight_1",
