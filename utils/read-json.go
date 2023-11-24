@@ -11,13 +11,14 @@ import (
 const (
 	// Path to the JSON file containing the circuits
 	CIRCUITS_PATH = "instances/circuits/inst-circuits.json"
+	TEST_PATH     = "instances/circuits/inst-test.json"
 	// Path to the JSON file containing the teams
 	TEAMS_PATH = "instances/teams/inst-teams.json"
 )
 
 func ReadCircuit() ([]types.Circuit, error) {
 	// Ouvrir et lire le fichier JSON
-	file, err := os.Open(CIRCUITS_PATH)
+	file, err := os.Open(TEST_PATH)
 	if err != nil {
 		fmt.Println("Erreur lors de l'ouverture du fichier :", err)
 		return nil, err

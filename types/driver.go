@@ -185,7 +185,7 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		if d.Status == ARRIVED || d.Status == CRASHED {
 			return
 		}
-		fmt.Printf("Nb tours fait pour %s : %d\n", d.Driver.Lastname, d.NbLaps)
+		//fmt.Printf("Nb tours fait pour %s : %d\n", d.Driver.Lastname, d.NbLaps) //semble ok
 		//On attend que l'environnement nous dise qu'on peut prendre une décision
 		//fmt.Println("Attente de l'env : " + d.Driver.Lastname)
 		<-d.ChanEnv

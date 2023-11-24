@@ -63,7 +63,7 @@ func (r *Race) SimulateRace() error {
 	//On lance les agents pilotes
 	fmt.Println("Début de la course...")
 	for _, driver := range drivers {
-		go driver.Start(driver.Position, 1) //todo : mettre le bon paramètre r.Circuit.NbLaps à la place de 1
+		go driver.Start(driver.Position, r.Circuit.NbLaps)
 	}
 	var nbFinish = 0
 	var nbDrivers = len(r.Teams) * 2
@@ -180,7 +180,7 @@ func (r *Race) SimulateRace() error {
 		for i := range drivers {
 			fmt.Println(drivers[i].Position.Id, drivers[i].Position.DriversOn)
 		}
-		fmt.Println("Classement intermédiraire : ", r.FinalResult)
+		fmt.Println("Classement intermédiaire : ", r.FinalResult)
 
 	}
 	//On affiche le classement
