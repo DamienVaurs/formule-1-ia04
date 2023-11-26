@@ -38,7 +38,7 @@ func (d *Driver) PortionSuccess(portion *Portion) bool {
 
 	var dice int = rand.Intn(99) + 1
 
-	return dice < probaReussite
+	return dice <= probaReussite
 }
 
 func (d *Driver) Overtake(otherDriver *Driver, portion *Portion) (reussite bool, crashedDrivers []*Driver) {
