@@ -37,7 +37,7 @@ func NewRace(id string, circuit *Circuit, date time.Time, teams []*Team, meteo M
 	}
 }
 
-func (r *Race) SimulateRace() error {
+func (r *Race) SimulateRace() (map[string]int, error) {
 	log.Printf("	Lancement d'une nouvelle course : %s...\n", r.Id)
 
 	//Création du map partagé
@@ -51,7 +51,11 @@ func (r *Race) SimulateRace() error {
 
 	drivers, err := MakeSliceOfDriversInRace(r.Teams, &(r.Circuit.Portions[0]), mapChan)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	log.Println("\n\nLigne de départ:")
+	for i := range drivers {
+		log.Printf("%d : %s %s\n", len(drivers)-i, drivers[i].Driver.Firstname, drivers[i].Driver.Lastname)
 	}
 
 	//On met tous les agents sur la ligne de départ :
@@ -165,7 +169,6 @@ func (r *Race) SimulateRace() error {
 			r.Circuit.Portions[i].DriversOn = make([]*DriverInRace, len(newDriversOnPortion[i])) //on écrase l'ancien slice
 			copy(r.Circuit.Portions[i].DriversOn, newDriversOnPortion[i])                        //on remplace par le nouveau
 		}
-
 	}
 	//On affiche le classement
 	log.Println("\n\nClassement final :")
@@ -173,5 +176,37 @@ func (r *Race) SimulateRace() error {
 		log.Printf("%d : %s %s\n", len(r.FinalResult)-i, r.FinalResult[i].Firstname, r.FinalResult[i].Lastname)
 	}
 	//time.Sleep(1 * time.Second)
-	return nil
+	//On retourne le classement et les points attribués
+	res := r.CalcDiversPoints()
+	return res, nil
+}
+
+func (r *Race) CalcDiversPoints() map[string]int {
+	//TODO : ajouter meilleur temps?
+	var n int = len(r.FinalResult)
+	res := make(map[string]int, n)
+	for i := 0; i < len(r.FinalResult); i++ {
+		res[r.FinalResult[i].Id] = 0
+	}
+	//Le premier obtient 25 points
+	res[r.FinalResult[n-1].Id] = 25
+
+	//Le deuxième obtient 18 points
+	res[r.FinalResult[n-2].Id] = 18
+
+	//Le troisième obtient 15 points
+	res[r.FinalResult[n-3].Id] = 15
+
+	//Le quatrième obtient 12 points
+	res[r.FinalResult[n-4].Id] = 12
+
+	// Le cinquième obtient 10 points, et on décremente de 2 jusqu'au neuvième
+	for i := 1; i <= 5; i++ {
+		res[r.FinalResult[n-4-i].Id] = 12 - 2*i
+	}
+
+	//Le dixième obtient 1 point
+	res[r.FinalResult[n-10].Id] = 1
+
+	return res
 }

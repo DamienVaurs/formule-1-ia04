@@ -13,7 +13,6 @@ type Driver struct {
 	Lastname           string       // Lastname
 	Level              int          // Level of the driver, in [1, 10]
 	Country            string       // Country
-	Team               *Team        // Team
 	Personnality       Personnality // Personnality
 	ChampionshipPoints int          // Points in the current champonship
 	IsPitStop          bool         // PitStop --> true if the driver is in pitstop
@@ -56,7 +55,6 @@ func NewDriver(id string, firstname string, lastname string, level int, country 
 		Lastname:           lastname,
 		Level:              level,
 		Country:            country,
-		Team:               team,
 		Personnality:       personnality,
 		ChampionshipPoints: 0,
 	}
