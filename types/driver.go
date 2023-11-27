@@ -76,11 +76,11 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action) *Dr
 
 // Fonction pour tester si un pilote réussit une portion sans se crasher
 func (d *DriverInRace) PortionSuccess(portion *Portion) bool {
-	// Pour le moment on prend en compte le niveau du pilote et la "difficulté" de la portion
+	// Pour le moment on prend en compte le niveau du pilote, la difficulté de la portion et l'usure des pneus
 	probaReussite := 80
 	probaReussite += d.Driver.Level * 2
 	probaReussite -= portion.Difficulty * 2
-	probaReussite -= d.TimeWoPitStop / 2
+	probaReussite -= d.TimeWoPitStop
 
 	var dice int = rand.Intn(99) + 1
 
@@ -121,20 +121,17 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 	probaDoubler := 75
 
-	bonus := 0
-
 	if d.Driver.Level > otherDriver.Driver.Level {
-		bonus = 10
+		probaDoubler = 10
 	} else if d.Driver.Level < otherDriver.Driver.Level {
-		bonus = -10
+		probaDoubler = -10
 	} else {
-		bonus = 0
+		probaDoubler = 0
 	}
 
 	portion := d.Position
 
 	// Pour le moment on prend en compte le niveau des pilotes et la "difficulté" de la portion
-	probaDoubler += bonus
 	probaDoubler -= portion.Difficulty * 7
 
 	var dice int = rand.Intn(99) + 1
