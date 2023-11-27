@@ -175,7 +175,7 @@ func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 		}
 	}
 	// TODO : vérifier
-	return nil, fmt.Errorf("Driver %s (%s) not found on portion %s", d.Driver.Id, d.Driver.Lastname, p.Id)
+	return nil, fmt.Errorf("Driver %s (%s, crashé si =1 : %d) who want to overtake is not found on portion %s", d.Driver.Id, d.Driver.Lastname, d.Status, p.Id)
 }
 
 // Fonction pourdécider si on veut ESSAYER de doubler ou non
@@ -210,7 +210,9 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		//fmt.Println("Attente de l'env : " + d.Driver.Lastname)
 		<-d.ChanEnv
 		//fmt.Println("Réception de l'env : " + d.Driver.Lastname)
-
+		if d.Status == ARRIVED || d.Status == CRASHED {
+			return
+		}
 		//On décide
 		//On regarde si on peut doubler
 		toOvertake, err := d.DriverToOvertake()

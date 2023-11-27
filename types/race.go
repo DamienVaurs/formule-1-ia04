@@ -1,7 +1,6 @@
 package types
 
 import (
-	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -59,9 +58,9 @@ func (r *Race) SimulateRace() error {
 	for _, driver := range drivers {
 		driver.Position.AddDriverOn(driver)
 	}
-	fmt.Println("Les pilotes sont sur la ligne de départ")
+	log.Println("Les pilotes sont sur la ligne de départ")
 	//On lance les agents pilotes
-	fmt.Println("Début de la course...")
+	log.Println("Début de la course...")
 	for _, driver := range drivers {
 		go driver.Start(driver.Position, r.Circuit.NbLaps)
 	}
@@ -71,63 +70,59 @@ func (r *Race) SimulateRace() error {
 
 	//On simule tant que tous les pilotes n'ont pas fini la course
 	for nbFinish < nbDrivers {
-		fmt.Printf("============ NOUVELLE BOUCLE %s : %d ont fini =================\n\n", r.Circuit.Name, nbFinish)
-		//time.Sleep(1 * time.Second)
+		log.Printf("============ NOUVELLE BOUCLE %s : %d ont fini =================\n\n", r.Circuit.Name, nbFinish)
+		//time.Sleep(5 * time.Second)
 		//Chaque pilote, dans un ordre aléatoire, réalise les tests sur la proba de dépasser etc...
 		drivers = ShuffleDrivers(drivers)
-		//fmt.Println("LLLA")
-		//fmt.Println(drivers[0].Position.Id)
-
-		//fmt.Println("Débloquage des go routines...")
 
 		for i := range drivers {
 			//On débloque les pilotes en course pour qu'ils prennent une décision
 			if drivers[i].Status == CRASHED || drivers[i].Status == ARRIVED {
-				continue
+				continue //Obligatoire car il ne faut attendre que les pilotes qui courent encore
 			}
-			//fmt.Println("Envoie de déblocage à : " + driver.Driver.Lastname) : IDEE : envoyer le statut du coureur
 			drivers[i].ChanEnv <- 1
 		}
-		//fmt.Println("Les go routines sont débloquées")
 		// On récupère les décisions des pilotes
+		for i := range drivers {
+			if drivers[i].Status == CRASHED || drivers[i].Status == ARRIVED {
+				continue //Obligatoire car il ne faut attendre que les pilotes qui courent encore
+			}
+			decisionMap[drivers[i].Driver.Id] = <-drivers[i].ChanEnv
+		}
+
+		//On traite les décisions et on met à jour les positions des pilotes
 		for i := range drivers {
 			if drivers[i].Status == CRASHED || drivers[i].Status == ARRIVED {
 				continue
 			}
-			decisionMap[drivers[i].Driver.Id] = <-drivers[i].ChanEnv
-		}
-		//fmt.Println("On a toutes les décisions")
-
-		//On traite les décisions et on met à jour les positions des pilotes
-		for i := range drivers {
 			decision := decisionMap[drivers[i].Driver.Id]
 			switch decision {
 			case TRY_OVERTAKE:
 				//On vérifie si le pilote peut bien dépasser
-				//driverPortion := drivers[i].Position
-				//fmt.Printf("Portion pilote %s : %s\n", drivers[i].Driver.Lastname, driverPortion.Id) //TODO : n'est pas ok, fixé à straight_1
-				driverToOvertake, err := drivers[i].DriverToOvertake() //TODO: pb ici, cherche toujours sur straight_1
+				driverToOvertake, err := drivers[i].DriverToOvertake()
 				if err != nil {
 					log.Printf("Error while getting driver to overtake: %s\n", err)
 				}
 				if driverToOvertake != nil {
 					//On vérifie si le pilote a réussi son dépassement
 					success, crashedDrivers := drivers[i].Overtake(driverToOvertake)
-					if crashedDrivers != nil {
+					if len(crashedDrivers) > 0 {
 						//On supprime les pilotes crashés
-						for _, crashedDriver := range crashedDrivers {
-							crashedDriver.Status = CRASHED
-							fmt.Println("CRASH : Le pilote " + crashedDriver.Driver.Lastname + " a crashé")
-							r.FinalResult = append(r.FinalResult, crashedDriver.Driver) //on l'ajoute au tableau
-							drivers[i].Position.RemoveDriverOn(crashedDriver)
-							/*fmt.Print("Après remove : ")
-							driver.Position.DisplayDriversOn()*/
+						if len(crashedDrivers) > 1 {
+							log.Println("CRASH : Plusieurs pilotes sont rentrés en accident : ", crashedDrivers[0].Driver.Lastname, " et ", crashedDrivers[1].Driver.Lastname)
+						} else {
+							log.Println("CRASH : Le pilote " + crashedDrivers[0].Driver.Lastname + " a crashé")
+						}
+						for ind := range crashedDrivers {
+							crashedDrivers[ind].Status = CRASHED
+							r.FinalResult = append(r.FinalResult, crashedDrivers[ind].Driver) //on l'ajoute au tableau
+							drivers[i].Position.RemoveDriverOn(crashedDrivers[ind])
 							nbFinish++
 						}
 
 						if success {
 							//On met à jour les positions
-							fmt.Println("OVERTAKE : Le pilote " + drivers[i].Driver.Lastname + " a réussi son dépassement")
+							log.Println("OVERTAKE : Le pilote " + drivers[i].Driver.Lastname + " a réussi son dépassement sur " + driverToOvertake.Driver.Lastname)
 							drivers[i].Position.SwapDrivers(drivers[i], driverToOvertake)
 						}
 					}
@@ -151,7 +146,7 @@ func (r *Race) SimulateRace() error {
 						driver.NbLaps += 1
 						if driver.NbLaps == r.Circuit.NbLaps {
 							//Si on a fini la course, on enlève le pilote du circuit et on le met dans le classement
-							//fmt.Printf("\nPilote %s a fini !!! \n", driver.Driver.Lastname)
+							log.Printf("ARRIVEE : Pilote %s est arrivé!\n", driver.Driver.Lastname)
 							driver.Status = ARRIVED
 							nbFinish++
 							r.FinalResult = append(r.FinalResult, driver.Driver)
@@ -163,31 +158,18 @@ func (r *Race) SimulateRace() error {
 				}
 			}
 		}
-		/*
-			fmt.Println("Portion des pilote après maj : ") //est ok
-			for i := range drivers {
-				fmt.Println(drivers[i].Position.Id, drivers[i].Position.DriversOn)
-			}*/
 
 		//On met à jour les positions des pilotes
 		for i := range r.Circuit.Portions {
-			//fmt.Printf("On remplace %s par %s\n", portion.DriversOn, newDriversOnPortion[i]) semble bon
 			r.Circuit.Portions[i].DriversOn = make([]*DriverInRace, len(newDriversOnPortion[i])) //on écrase l'ancien slice
 			copy(r.Circuit.Portions[i].DriversOn, newDriversOnPortion[i])                        //on remplace par le nouveau
-			//fmt.Printf("%s après update : %s \n", portion.Id, portion.DriversOn) semble ok
-			//fmt.Println("UUUUU", r.Circuit.Portions[i].Id, r.Circuit.Portions[i].DriversOn)
 		}
-		fmt.Println("Portion des pilote après maj de ler position + maj des portions : ") //est ok
-		for i := range drivers {
-			fmt.Println("	", drivers[i].Position.Id, drivers[i].Position.DriversOn)
-		}
-		//fmt.Println("Classement intermédiaire : ", r.FinalResult)
 
 	}
 	//On affiche le classement
-	fmt.Println("Classement final :")
+	log.Println("Classement final :")
 	for i := range r.FinalResult {
-		fmt.Printf("%d : %s %s\n", len(r.FinalResult)-i, r.FinalResult[i].Firstname, r.FinalResult[i].Lastname)
+		log.Printf("%d : %s %s\n", len(r.FinalResult)-i, r.FinalResult[i].Firstname, r.FinalResult[i].Lastname)
 	}
 	//time.Sleep(1 * time.Second)
 	return nil

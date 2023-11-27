@@ -87,9 +87,9 @@ func (p *Portion) SwapDrivers(driver1 *DriverInRace, driver2 *DriverInRace) erro
 }
 
 func (p *Portion) DisplayDriversOn() {
-	fmt.Println("Drivers on portion", p.Id)
+	fmt.Print("Drivers on portion", p.Id, " [ ")
 	for i, driver := range p.DriversOn {
-		fmt.Printf("%d : %s\n", len(p.DriversOn)-i, driver.Driver.Lastname)
+		fmt.Printf("%d : %s, ", len(p.DriversOn)-i, driver.Driver.Lastname)
 	}
-	fmt.Println()
+	fmt.Println("]")
 }

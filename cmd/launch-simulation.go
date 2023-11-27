@@ -69,6 +69,7 @@ func main() {
 			fmt.Println(portion.Id, portion.NextPortion)
 		}
 	*/
+
 	//On a les équipes et les circuits, on lance la simulation
 	championship := types.NewChampionship("2023", "Championship 1", pointTabCircuit, pointTabTeam)
 	s := simulator.NewSimulator([]types.Championship{*championship})
