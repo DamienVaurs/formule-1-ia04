@@ -6,7 +6,7 @@ type Championship struct {
 	Id       string     // Championship ID
 	Name     string     // Name
 	Circuits []*Circuit // Set of circuits that compose the championship. Defined at the creation of the championship
-	Races    []*Race    // Array of Races, filled during the championship
+	Races    []Race     // Array of Races, filled during the championship
 	Teams    []*Team    // Set of teams
 }
 
@@ -18,10 +18,13 @@ func NewChampionship(id string, name string, circuits []*Circuit, teams []*Team)
 	t := make([]*Team, len(teams))
 	copy(t, teams)
 
+	r := make([]Race, len(circuits))
+
 	return &Championship{
 		Id:       id,
 		Name:     name,
 		Circuits: c,
+		Races:    r,
 		Teams:    t,
 	}
 }
