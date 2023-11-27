@@ -17,7 +17,6 @@ type Driver struct {
 	ChampionshipPoints int          // Points in the current champonship
 	IsPitStop          bool         // PitStop --> true if the driver is in pitstop
 	TimeWoPitStop      int          // Time without pitstop --> increments at each step
-
 }
 
 type DriverInRace struct {
