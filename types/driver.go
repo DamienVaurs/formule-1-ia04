@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"sync"
 )
 
 type Driver struct {
@@ -61,6 +62,16 @@ func NewDriver(id string, firstname string, lastname string, level int, country 
 	}
 }
 
+func NewDriverInRace(driver *Driver, position *Portion, channel chan Action) *DriverInRace {
+	return &DriverInRace{
+		Driver:   driver,
+		Position: position,
+		NbLaps:   0,
+		ChanEnv:  channel,
+		Status:   RACING,
+	}
+}
+
 // Fonction pour tester si un pilote réussit une portion sans se crasher
 func (d *Driver) PortionSuccess(portion *Portion) bool {
 	// Pour le moment on prend en compte le niveau du pilote et la "difficulté" de la portion
@@ -71,6 +82,28 @@ func (d *Driver) PortionSuccess(portion *Portion) bool {
 	var dice int = rand.Intn(99) + 1
 
 	return dice <= probaReussite
+}
+func MakeSliceOfDriversInRace(teams []*Team, portionDepart *Portion, mapChan sync.Map) ([]*DriverInRace, error) {
+	res := make([]*DriverInRace, 0)
+	for _, team := range teams {
+		for _, driver := range team.Drivers {
+			dtamp := driver //nécessaire, sinon n'utilise l'adresse que d'un membre de l'équipe
+			c, ok := mapChan.Load(dtamp.Id)
+			if !ok {
+				return nil, fmt.Errorf("error while creating driver in race : %s", driver.Id)
+			}
+			d := NewDriverInRace(&dtamp, portionDepart, c.(chan Action))
+			res = append(res, d)
+		}
+	}
+	return res, nil
+}
+
+func ShuffleDrivers(drivers []*DriverInRace) []*DriverInRace {
+	rand.Shuffle(len(drivers), func(i, j int) {
+		drivers[i], drivers[j] = drivers[j], drivers[i]
+	})
+	return drivers
 }
 
 func (d *Driver) PitStop() {
