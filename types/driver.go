@@ -164,7 +164,6 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 	p := d.Position
-	//fmt.Println("GAGA", p.Id)
 	for i := range p.DriversOn {
 		if p.DriversOn[i] == d {
 			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil {
@@ -174,7 +173,6 @@ func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 			}
 		}
 	}
-	// TODO : vérifier
 	return nil, fmt.Errorf("Driver %s (%s, crashé si =1 : %d) who want to overtake is not found on portion %s", d.Driver.Id, d.Driver.Lastname, d.Status, p.Id)
 }
 
@@ -205,11 +203,8 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		if d.Status == ARRIVED || d.Status == CRASHED {
 			return
 		}
-		//fmt.Printf("Nb tours fait pour %s : %d\n", d.Driver.Lastname, d.NbLaps) //semble ok
 		//On attend que l'environnement nous dise qu'on peut prendre une décision
-		//fmt.Println("Attente de l'env : " + d.Driver.Lastname)
 		<-d.ChanEnv
-		//fmt.Println("Réception de l'env : " + d.Driver.Lastname)
 		if d.Status == ARRIVED || d.Status == CRASHED {
 			return
 		}
@@ -221,32 +216,25 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		}
 		if toOvertake != nil {
 			//On décide si on veut doubler
-			//fmt.Printf("%s peut essayer de dépasser %s sur %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname, position.Id)
 
 			decision, err := d.OvertakeDecision(toOvertake)
 			if err != nil {
 				log.Printf("Error while getting the decision to overtake : %s\n", err)
 			}
 			if decision {
-				//fmt.Printf("%s décide de dépasser %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname)
 				//On envoie la décision à l'environnement
 				d.ChanEnv <- TRY_OVERTAKE
 			} else {
-				//fmt.Printf("%s décide de NE PAS dépasser %s\n", d.Driver.Lastname, toOvertake.Driver.Lastname)
 				d.ChanEnv <- NOOP
 			}
 
 		} else {
 			//Si pas de possibilité de doubler, on ne fait rien
-			//fmt.Printf("%s ne peut dépasser personne sur %s\n", d.Driver.Lastname, position.Id)
-
 			d.ChanEnv <- NOOP
 		}
 		//On vérifie si on a fini la course
 		if d.NbLaps == nbLaps {
 			return
 		}
-		//fmt.Printf("Fin de décision pour %s\n", d.Driver.Lastname)
-
 	}
 }

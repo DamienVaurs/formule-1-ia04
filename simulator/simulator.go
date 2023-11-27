@@ -41,13 +41,12 @@ func (s *Simulator) LaunchSimulation() {
 			//Etape 2 (la principale) : on joue la course
 			err := new_Race.SimulateRace()
 			if err != nil {
-				fmt.Printf("Erreur simulation cours %s : %s\n", new_Race.Id, err.Error())
+				log.Printf("Erreur simulation cours %s : %s\n", new_Race.Id, err.Error())
 			}
 
 			//Etape 3 : on ajoute la course au championnat
 			fmt.Println("Ajout de la course au championnat...")
 			championship.Races[i] = *new_Race
-			fmt.Println("Ajout réussi!")
 		}
 	}
 }

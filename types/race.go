@@ -70,7 +70,7 @@ func (r *Race) SimulateRace() error {
 
 	//On simule tant que tous les pilotes n'ont pas fini la course
 	for nbFinish < nbDrivers {
-		log.Printf("============ NOUVELLE BOUCLE %s : %d ont fini =================\n\n", r.Circuit.Name, nbFinish)
+		log.Printf("\n\n============ NOUVELLE BOUCLE %s : %d ont fini =================\n\n", r.Circuit.Name, nbFinish)
 		//time.Sleep(5 * time.Second)
 		//Chaque pilote, dans un ordre aléatoire, réalise les tests sur la proba de dépasser etc...
 		drivers = ShuffleDrivers(drivers)
@@ -122,6 +122,7 @@ func (r *Race) SimulateRace() error {
 
 						if success {
 							//On met à jour les positions
+							log.Println("Overtake")
 							log.Println("OVERTAKE : Le pilote " + drivers[i].Driver.Lastname + " a réussi son dépassement sur " + driverToOvertake.Driver.Lastname)
 							drivers[i].Position.SwapDrivers(drivers[i], driverToOvertake)
 						}
@@ -167,7 +168,7 @@ func (r *Race) SimulateRace() error {
 
 	}
 	//On affiche le classement
-	log.Println("Classement final :")
+	log.Println("\n\nClassement final :")
 	for i := range r.FinalResult {
 		log.Printf("%d : %s %s\n", len(r.FinalResult)-i, r.FinalResult[i].Firstname, r.FinalResult[i].Lastname)
 	}
