@@ -71,8 +71,8 @@ func (r *Race) SimulateRace() error {
 
 	//On simule tant que tous les pilotes n'ont pas fini la course
 	for nbFinish < nbDrivers {
-		fmt.Printf("============ NOUVELLE BOUCLE : %d ont fini =================\n\n", nbFinish)
-		time.Sleep(1 * time.Second)
+		fmt.Printf("============ NOUVELLE BOUCLE %s : %d ont fini =================\n\n", r.Circuit.Name, nbFinish)
+		//time.Sleep(1 * time.Second)
 		//Chaque pilote, dans un ordre aléatoire, réalise les tests sur la proba de dépasser etc...
 		drivers = ShuffleDrivers(drivers)
 		//fmt.Println("LLLA")
@@ -85,7 +85,7 @@ func (r *Race) SimulateRace() error {
 			if drivers[i].Status == CRASHED || drivers[i].Status == ARRIVED {
 				continue
 			}
-			//fmt.Println("Envoie de déblocage à : " + driver.Driver.Lastname)
+			//fmt.Println("Envoie de déblocage à : " + driver.Driver.Lastname) : IDEE : envoyer le statut du coureur
 			drivers[i].ChanEnv <- 1
 		}
 		//fmt.Println("Les go routines sont débloquées")
@@ -104,9 +104,9 @@ func (r *Race) SimulateRace() error {
 			switch decision {
 			case TRY_OVERTAKE:
 				//On vérifie si le pilote peut bien dépasser
-				driverPortion := drivers[i].Position
-				fmt.Printf("Portion pilote %s : %s\n", drivers[i].Driver.Lastname, driverPortion.Id) //TODO : n'est pas ok, fixé à straight_1
-				driverToOvertake, err := drivers[i].DriverToOvertake()                               //TODO: pb ici, cherche toujours sur straight_1
+				//driverPortion := drivers[i].Position
+				//fmt.Printf("Portion pilote %s : %s\n", drivers[i].Driver.Lastname, driverPortion.Id) //TODO : n'est pas ok, fixé à straight_1
+				driverToOvertake, err := drivers[i].DriverToOvertake() //TODO: pb ici, cherche toujours sur straight_1
 				if err != nil {
 					log.Printf("Error while getting driver to overtake: %s\n", err)
 				}
@@ -117,7 +117,7 @@ func (r *Race) SimulateRace() error {
 						//On supprime les pilotes crashés
 						for _, crashedDriver := range crashedDrivers {
 							crashedDriver.Status = CRASHED
-							fmt.Println("Le pilote " + crashedDriver.Driver.Lastname + " a crashé")
+							fmt.Println("CRASH : Le pilote " + crashedDriver.Driver.Lastname + " a crashé")
 							r.FinalResult = append(r.FinalResult, crashedDriver.Driver) //on l'ajoute au tableau
 							drivers[i].Position.RemoveDriverOn(crashedDriver)
 							/*fmt.Print("Après remove : ")
@@ -127,7 +127,7 @@ func (r *Race) SimulateRace() error {
 
 						if success {
 							//On met à jour les positions
-							fmt.Println("Le pilote " + drivers[i].Driver.Lastname + " a réussi son dépassement")
+							fmt.Println("OVERTAKE : Le pilote " + drivers[i].Driver.Lastname + " a réussi son dépassement")
 							drivers[i].Position.SwapDrivers(drivers[i], driverToOvertake)
 						}
 					}
@@ -151,7 +151,7 @@ func (r *Race) SimulateRace() error {
 						driver.NbLaps += 1
 						if driver.NbLaps == r.Circuit.NbLaps {
 							//Si on a fini la course, on enlève le pilote du circuit et on le met dans le classement
-							fmt.Printf("\nPilote %s a fini !!! \n", driver.Driver.Lastname)
+							//fmt.Printf("\nPilote %s a fini !!! \n", driver.Driver.Lastname)
 							driver.Status = ARRIVED
 							nbFinish++
 							r.FinalResult = append(r.FinalResult, driver.Driver)
@@ -163,10 +163,11 @@ func (r *Race) SimulateRace() error {
 				}
 			}
 		}
-		fmt.Println("Portion des pilote après maj : ") //est ok
-		for i := range drivers {
-			fmt.Println(drivers[i].Position.Id, drivers[i].Position.DriversOn)
-		}
+		/*
+			fmt.Println("Portion des pilote après maj : ") //est ok
+			for i := range drivers {
+				fmt.Println(drivers[i].Position.Id, drivers[i].Position.DriversOn)
+			}*/
 
 		//On met à jour les positions des pilotes
 		for i := range r.Circuit.Portions {
@@ -178,9 +179,9 @@ func (r *Race) SimulateRace() error {
 		}
 		fmt.Println("Portion des pilote après maj de ler position + maj des portions : ") //est ok
 		for i := range drivers {
-			fmt.Println(drivers[i].Position.Id, drivers[i].Position.DriversOn)
+			fmt.Println("	", drivers[i].Position.Id, drivers[i].Position.DriversOn)
 		}
-		fmt.Println("Classement intermédiaire : ", r.FinalResult)
+		//fmt.Println("Classement intermédiaire : ", r.FinalResult)
 
 	}
 	//On affiche le classement
@@ -188,6 +189,6 @@ func (r *Race) SimulateRace() error {
 	for i := range r.FinalResult {
 		fmt.Printf("%d : %s %s\n", len(r.FinalResult)-i, r.FinalResult[i].Firstname, r.FinalResult[i].Lastname)
 	}
-	time.Sleep(5 * time.Second)
+	//time.Sleep(1 * time.Second)
 	return nil
 }

@@ -179,7 +179,7 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 }
 
 func (d *DriverInRace) Start(position *Portion, nbLaps int) {
-	log.Printf("		Lancement du pilote %s %s\n", d.Driver.Firstname, d.Driver.Lastname)
+	log.Printf("		Lancement du pilote %s %s...\n", d.Driver.Firstname, d.Driver.Lastname)
 
 	for {
 		if d.Status == ARRIVED || d.Status == CRASHED {

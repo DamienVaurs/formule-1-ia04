@@ -591,14 +591,6 @@
         ]
     },
     {
-        "Name": "Interlagos",
-        "Country": "Brazil",
-        "MeteoDistribution": [40,70],
-        "Portions":[
-
-        ]
-    },
-    {
         "Name": "Melbourne",
         "Country": "Australia",
         "MeteoDistribution": [10,75],
@@ -1124,6 +1116,7 @@
         "Name": "Bahrain",
         "Country": "Bahrain",
         "MeteoDistribution": [10,65],
+        "NbLaps": 57,
         "Portions":[
             {
                 "Id": "straight_1",
