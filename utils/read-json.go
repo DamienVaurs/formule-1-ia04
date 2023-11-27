@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/types"
@@ -18,9 +19,9 @@ const (
 
 func ReadCircuit() ([]types.Circuit, error) {
 	// Ouvrir et lire le fichier JSON
-	file, err := os.Open(TEST_PATH)
+	file, err := os.Open(CIRCUITS_PATH)
 	if err != nil {
-		fmt.Println("Erreur lors de l'ouverture du fichier :", err)
+		log.Println("Erreur lors de l'ouverture du fichier :", err)
 		return nil, err
 	}
 	defer file.Close()
@@ -30,7 +31,7 @@ func ReadCircuit() ([]types.Circuit, error) {
 	// Décoder le fichier JSON dans la structure de données
 	decoder := json.NewDecoder(file)
 	if err := decoder.Decode(&circuits); err != nil {
-		fmt.Println("Erreur lors de la lecture du fichier JSON :", err)
+		log.Println("Erreur lors de la lecture du fichier JSON :", err)
 		return nil, err
 	}
 
@@ -63,7 +64,7 @@ func ReadTeams() ([]types.Team, error) {
 	// Ouvrir et lire le fichier JSON
 	file, err := os.Open(TEAMS_PATH)
 	if err != nil {
-		fmt.Println("Erreur lors de l'ouverture du fichier :", err)
+		log.Println("Erreur lors de l'ouverture du fichier :", err)
 		return nil, err
 	}
 	defer file.Close()
@@ -73,7 +74,7 @@ func ReadTeams() ([]types.Team, error) {
 	// Décoder le fichier JSON dans la structure de données
 	decoder := json.NewDecoder(file)
 	if err := decoder.Decode(&teams); err != nil {
-		fmt.Println("Erreur lors de la lecture du fichier JSON :", err)
+		log.Println("Erreur lors de la lecture du fichier JSON :", err)
 		return nil, err
 	}
 	//Ajout d'Id aux pilotes et aux team

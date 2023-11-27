@@ -1,6 +1,9 @@
 package types
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 type PortionType int
 
@@ -53,21 +56,6 @@ func (p *Portion) RemoveDriverOn(driver *DriverInRace) {
 	}
 }
 
-/*func (p *Portion) DriverToOvertake(driver *DriverInRace) (*DriverInRace, error) {
-	fmt.Println("GAGA", p.Id)
-	for i := range p.DriversOn {
-		if p.DriversOn[i] == driver {
-			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil {
-				return p.DriversOn[i+1], nil
-			} else {
-				return nil, nil
-			}
-		}
-	}
-	// TODO : vérifier
-	return nil, fmt.Errorf("Driver %s (%s) not found on portion %s", driver.Driver.Id, driver.Driver.Lastname, p.Id)
-}
-*/
 func (p *Portion) SwapDrivers(driver1 *DriverInRace, driver2 *DriverInRace) error {
 	var i1, i2 int
 	for i, d := range p.DriversOn {
@@ -87,9 +75,9 @@ func (p *Portion) SwapDrivers(driver1 *DriverInRace, driver2 *DriverInRace) erro
 }
 
 func (p *Portion) DisplayDriversOn() {
-	fmt.Println("Drivers on portion", p.Id)
+	log.Print("Drivers on portion", p.Id, " [ ")
 	for i, driver := range p.DriversOn {
-		fmt.Printf("%d : %s\n", len(p.DriversOn)-i, driver.Driver.Lastname)
+		log.Printf("%d : %s, ", len(p.DriversOn)-i, driver.Driver.Lastname)
 	}
-	fmt.Println()
+	log.Println("]")
 }

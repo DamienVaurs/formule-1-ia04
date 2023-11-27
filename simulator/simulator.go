@@ -39,15 +39,33 @@ func (s *Simulator) LaunchSimulation() {
 			new_Race := types.NewRace(id, circuit, date, championship.Teams, meteo)
 
 			//Etape 2 (la principale) : on joue la course
-			err := new_Race.SimulateRace()
+			pointsMap, err := new_Race.SimulateRace()
 			if err != nil {
-				fmt.Printf("Erreur simulation cours %s : %s\n", new_Race.Id, err.Error())
+				log.Printf("Erreur simulation cours %s : %s\n", new_Race.Id, err.Error())
 			}
+
+			//On enregistre les points gagnés par chaque pilote
+			for indT := range championship.Teams {
+				for indD := range championship.Teams[indT].Drivers {
+					championship.Teams[indT].Drivers[indD].ChampionshipPoints += pointsMap[championship.Teams[indT].Drivers[indD].Id]
+				}
+			}
+			/*
+				for _, team := range championship.Teams {
+					log.Printf("%s : %d points\n", team.Name, team.CalcChampionshipPoints())
+					for _, driver := range team.Drivers {
+						log.Printf("	%s %s : %d points\n", driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
+					}
+				}*/
 
 			//Etape 3 : on ajoute la course au championnat
 			fmt.Println("Ajout de la course au championnat...")
 			championship.Races[i] = *new_Race
-			fmt.Println("Ajout réussi!")
 		}
+		//On affiche le classement du championnat
+		log.Printf("\n\n===== Classements du championnat %s =====\n", championship.Name)
+		championship.DisplayTeamRank()
+		championship.DisplayDriverRank()
+
 	}
 }
