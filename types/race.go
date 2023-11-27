@@ -110,13 +110,16 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 				if driverToOvertake != nil {
 					//On vérifie si le pilote a réussi son dépassement
 					success, crashedDrivers := drivers[i].Overtake(driverToOvertake)
+
 					if len(crashedDrivers) > 0 {
-						//On supprime les pilotes crashés
-						if len(crashedDrivers) > 1 {
-							log.Println("CRASH : Plusieurs pilotes sont rentrés en accident : ", crashedDrivers[0].Driver.Lastname, " et ", crashedDrivers[1].Driver.Lastname)
-						} else {
-							log.Println("CRASH : Le pilote " + crashedDrivers[0].Driver.Lastname + " a crashé")
+						//On crée un Highlight de crash
+						highlight, err := NewHighlight(crashedDrivers, CRASH)
+						if err != nil {
+							log.Printf("Error while creating highlight: %s\n", err)
 						}
+						r.HighLigths = append(r.HighLigths, *highlight)
+						log.Println(highlight.Description)
+						//On supprime les pilotes crashés
 						for ind := range crashedDrivers {
 							crashedDrivers[ind].Status = CRASHED
 							r.FinalResult = append(r.FinalResult, crashedDrivers[ind].Driver) //on l'ajoute au tableau
@@ -126,8 +129,14 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 					}
 
 					if success {
+						//On crée un Highlight de dépassement
+						highlight, err := NewHighlight([]*DriverInRace{drivers[i], driverToOvertake}, OVERTAKE)
+						if err != nil {
+							log.Printf("Error while creating highlight: %s\n", err)
+						}
+						r.HighLigths = append(r.HighLigths, *highlight)
+						log.Println(highlight.Description)
 						//On met à jour les positions
-						log.Println("OVERTAKE : Le pilote " + drivers[i].Driver.Lastname + " a réussi son dépassement sur " + driverToOvertake.Driver.Lastname)
 						drivers[i].Position.SwapDrivers(drivers[i], driverToOvertake)
 					}
 
@@ -151,7 +160,14 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 						driver.NbLaps += 1
 						if driver.NbLaps == r.Circuit.NbLaps {
 							//Si on a fini la course, on enlève le pilote du circuit et on le met dans le classement
-							log.Printf("ARRIVEE : Pilote %s est arrivé!\n", driver.Driver.Lastname)
+							//On crée un Highlight d'arrivée
+							highlight, err := NewHighlight([]*DriverInRace{driver}, FINISH)
+							if err != nil {
+								log.Printf("Error while creating highlight: %s\n", err)
+							}
+							r.HighLigths = append(r.HighLigths, *highlight)
+							log.Println(highlight.Description)
+							//On signal que le coureur a fini la course
 							driver.Status = ARRIVED
 							nbFinish++
 							r.FinalResult = append(r.FinalResult, driver.Driver)
@@ -159,6 +175,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 					}
 				}
 				if driver.Status != CRASHED && driver.Status != ARRIVED {
+					//On ajoute le pilote à sa nouvelle position
 					newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
 				}
 			}
