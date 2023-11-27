@@ -178,7 +178,7 @@ func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 	return nil, fmt.Errorf("Driver %s (%s) not found on portion %s", d.Driver.Id, d.Driver.Lastname, p.Id)
 }
 
-// Fonction pourdécider si on veut ESSAYER de doubler ou non
+// Fonction pour décider si on veut ESSAYER de doubler ou non
 func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, error) {
 
 	toOvertake, err := d.DriverToOvertake()
