@@ -22,7 +22,7 @@ func NewRace(id string, circuit *Circuit, date time.Time, teams []*Team, meteo M
 	d := make([]*Team, len(teams))
 	copy(d, teams)
 
-	f := make([]*Driver, 0) //car 2 drivers par team
+	f := make([]*Driver, 0)
 
 	h := make([]Highlight, 0)
 
@@ -53,6 +53,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 	if err != nil {
 		return nil, err
 	}
+	drivers = ShuffleDrivers(drivers)
 	log.Println("\n\nLigne de départ:")
 	for i := range drivers {
 		log.Printf("%d : %s %s\n", len(drivers)-i, drivers[i].Driver.Firstname, drivers[i].Driver.Lastname)

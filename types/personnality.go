@@ -5,9 +5,9 @@ type Personnality struct {
 }
 
 func NewPersonnality(traitsValue map[*Trait]int) *Personnality {
-	m := make(map[*Trait]int)
+
 	return &Personnality{
-		TraitsValue: m,
+		TraitsValue: traitsValue,
 	}
 }
 
@@ -18,7 +18,7 @@ type Trait struct {
 	//Description string // Trait description
 }
 
-type TraitType int
+type TraitType int //Un trait est un entier entre 0 et 5
 
 const (
 	AGRESSIVITY   TraitType = iota //statique -> impacte les proba de tentatives de dépassement
