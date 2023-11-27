@@ -1,6 +1,9 @@
 package types
 
-import "sort"
+import (
+	"log"
+	"sort"
+)
 
 type Championship struct {
 	Id       string     // Championship ID
@@ -39,4 +42,35 @@ func (c *Championship) CalcTeamRank() []*Team {
 	})
 
 	return res
+}
+
+func (c *Championship) DisplayTeamRank() {
+	log.Printf("\n\n====Classement constructeur ====\n")
+	teamRank := c.CalcTeamRank()
+	for i, team := range teamRank {
+		log.Printf("%d : %s : %d points\n", i+1, team.Name, team.CalcChampionshipPoints())
+	}
+}
+
+func (c *Championship) CalcDriverRank() []*Driver {
+
+	res := make([]*Driver, 0)
+	for indT := range c.Teams {
+		for indD := range c.Teams[indT].Drivers {
+			res = append(res, &c.Teams[indT].Drivers[indD])
+		}
+	}
+	sort.Slice(res, func(i, j int) bool {
+		return res[i].ChampionshipPoints > res[j].ChampionshipPoints
+	})
+
+	return res
+}
+
+func (c *Championship) DisplayDriverRank() {
+	log.Printf("\n\n====Classement pilotes ====\n")
+	driverRank := c.CalcDriverRank()
+	for i, driver := range driverRank {
+		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
+	}
 }

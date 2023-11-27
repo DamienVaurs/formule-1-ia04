@@ -62,5 +62,10 @@ func (s *Simulator) LaunchSimulation() {
 			fmt.Println("Ajout de la course au championnat...")
 			championship.Races[i] = *new_Race
 		}
+		//On affiche le classement du championnat
+		log.Printf("\n\n===== Classements du championnat %s =====\n", championship.Name)
+		championship.DisplayTeamRank()
+		championship.DisplayDriverRank()
+
 	}
 }
