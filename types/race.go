@@ -119,14 +119,14 @@ func (r *Race) SimulateRace() error {
 							drivers[i].Position.RemoveDriverOn(crashedDrivers[ind])
 							nbFinish++
 						}
-
-						if success {
-							//On met à jour les positions
-							log.Println("Overtake")
-							log.Println("OVERTAKE : Le pilote " + drivers[i].Driver.Lastname + " a réussi son dépassement sur " + driverToOvertake.Driver.Lastname)
-							drivers[i].Position.SwapDrivers(drivers[i], driverToOvertake)
-						}
 					}
+
+					if success {
+						//On met à jour les positions
+						log.Println("OVERTAKE : Le pilote " + drivers[i].Driver.Lastname + " a réussi son dépassement sur " + driverToOvertake.Driver.Lastname)
+						drivers[i].Position.SwapDrivers(drivers[i], driverToOvertake)
+					}
+
 				}
 			case NOOP:
 				//On ne fait rien
