@@ -185,7 +185,7 @@ func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 	p := d.Position
 	for i := range p.DriversOn {
 		if p.DriversOn[i] == d && d.Status != PITSTOP {
-			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil {
+			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil && p.Difficulty != 0 {
 				return p.DriversOn[i+1], nil
 			} else {
 				return nil, nil
@@ -202,6 +202,15 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	if err != nil {
 		return false, err
 	}
+
+	p := d.Position
+	probaVeutDoubler := 0
+
+	// probaVeutDoubler += d.Driver.Personnality.Agressivity * 2
+	// probaVeutDoubler -= d.Driver.Personnality.Carefulness * 2
+
+	probaVeutDoubler += 20 / p.Difficulty
+
 	if toOvertake != nil {
 		//On décide si on veut doubler
 		//TODO modifier :
