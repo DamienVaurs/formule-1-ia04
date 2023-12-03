@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -205,7 +206,10 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 						}
 					}
 				}
-				if driver.Status != CRASHED && driver.Status != ARRIVED && driver.Status != PITSTOP {
+				if driver.Status == PITSTOP {
+					fmt.Println("ENTREE ICI")
+					newDriversOnPortion[(i)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i)%len(r.Circuit.Portions)], driver)
+				} else if driver.Status != CRASHED && driver.Status != ARRIVED {
 					//On ajoute le pilote à sa nouvelle position
 					newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
 				}
@@ -216,6 +220,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 		for i := range r.Circuit.Portions {
 			r.Circuit.Portions[i].DriversOn = make([]*DriverInRace, len(newDriversOnPortion[i])) //on écrase l'ancien slice
 			copy(r.Circuit.Portions[i].DriversOn, newDriversOnPortion[i])                        //on remplace par le nouveau
+			fmt.Println("DRIVERSON ", r.Circuit.Portions[i].DriversOn)
 		}
 	}
 	//On affiche le classement

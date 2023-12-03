@@ -118,6 +118,7 @@ func (d *DriverInRace) PitStop() bool {
 	probaPitStop += d.TimeWoPitStop * 2
 
 	var dice int = rand.Intn(99) + 1
+	fmt.Println("Dice : ", dice, " probaPitStop : ", probaPitStop)
 
 	if dice < probaPitStop {
 		d.PitstopSteps = 3
@@ -184,8 +185,8 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 	p := d.Position
 	for i := range p.DriversOn {
-		if p.DriversOn[i] == d && d.Status != PITSTOP {
-			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil && p.Difficulty != 0 {
+		if p.DriversOn[i] == d {
+			if len(p.DriversOn) > i+1 && p.DriversOn[i+1] != nil {
 				return p.DriversOn[i+1], nil
 			} else {
 				return nil, nil
@@ -209,7 +210,11 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	// probaVeutDoubler += d.Driver.Personnality.Agressivity * 2
 	// probaVeutDoubler -= d.Driver.Personnality.Carefulness * 2
 
-	probaVeutDoubler += 20 / p.Difficulty
+	if p.Difficulty != 0 {
+		probaVeutDoubler += 20 / p.Difficulty
+	} else {
+		probaVeutDoubler = 0
+	}
 
 	if toOvertake != nil {
 		//On décide si on veut doubler
@@ -217,6 +222,7 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 
 		// Si le pilote est en pitstop, on choisit de doubler
 		if driverToOvertake.Status == PITSTOP {
+			fmt.Println("Pilote en pitstop, on double")
 			return true, nil
 		}
 
@@ -244,10 +250,12 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		}
 		//On décide
 
-		// On regarder si on doit faire un pitstop
+		// On regarde si on doit faire un pitstop
+
+		d.TimeWoPitStop++
 
 		pitstop := d.PitStop()
-		if pitstop {
+		if pitstop && d.Status != PITSTOP {
 			d.ChanEnv <- NOOP
 			d.Status = PITSTOP
 			continue
