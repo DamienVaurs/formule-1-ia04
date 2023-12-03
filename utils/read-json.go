@@ -19,7 +19,7 @@ const (
 
 func ReadCircuit() ([]types.Circuit, error) {
 	// Ouvrir et lire le fichier JSON
-	file, err := os.Open(CIRCUITS_PATH)
+	file, err := os.Open(TEST_PATH)
 	if err != nil {
 		log.Println("Erreur lors de l'ouverture du fichier :", err)
 		return nil, err
