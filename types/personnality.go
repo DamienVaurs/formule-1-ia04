@@ -18,7 +18,7 @@ type Trait struct {
 	//Description string // Trait description
 }
 
-type TraitType int //Un trait est un entier entre 0 et 5
+type TraitType int //Un trait est un entier entre 1 et 5
 
 const (
 	AGRESSIVITY   TraitType = iota //statique -> impacte les proba de tentatives de dépassement
