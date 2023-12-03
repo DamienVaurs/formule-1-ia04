@@ -142,34 +142,33 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	probaDoubler := 75
 
 	if d.Driver.Level > otherDriver.Driver.Level {
-		probaDoubler = 10
+		probaDoubler += 10
 	} else if d.Driver.Level < otherDriver.Driver.Level {
-		probaDoubler = -10
-	} else {
-		probaDoubler = 0
+		probaDoubler -= 10
 	}
 
 	portion := d.Position
 
-	// Pour le moment on prend en compte le niveau des pilotes et la "difficulté" de la portion
-	probaDoubler -= portion.Difficulty * 7
+	// Pour le moment on prend en compte le niveaus des pilotes et la "difficulté" de la portion
+	probaDoubler -= portion.Difficulty * 2
 
 	var dice int = rand.Intn(99) + 1
+	fmt.Println("Dice : ", dice, " probaDoubler : ", probaDoubler)
 
 	// Si on est en dessous de probaDoubler, on double
-	if dice < probaDoubler {
+	if dice <= probaDoubler {
 		return true, []*DriverInRace{}
 	}
 
 	// Sinon, on regarde si on crash
 
 	// Ici on a un échec critique, les deux pilotes crashent
-	if dice > 95 {
+	if dice >= 99 {
 		return false, []*DriverInRace{d, otherDriver}
 	}
 
 	// Ici, un seul pilote crash, on tire au sort lequel
-	if dice > 90 {
+	if dice >= 95 {
 		if dice%2 == 0 {
 			return false, []*DriverInRace{d}
 		} else {
