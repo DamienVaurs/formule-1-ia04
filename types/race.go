@@ -143,7 +143,24 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 				}
 			case NOOP:
-				//On ne fait rien
+				//On vérifie juste si le pilote réussi à passer la portion
+
+				success := drivers[i].PortionSuccess()
+
+				if !success {
+					//On crée un Highlight de crash
+					highlight, err := NewHighlight([]*DriverInRace{drivers[i]}, CRASH)
+					if err != nil {
+						log.Printf("Error while creating highlight: %s\n", err)
+					}
+					r.HighLigths = append(r.HighLigths, *highlight)
+					log.Println(highlight.Description)
+					//On supprime le pilote crashé
+					drivers[i].Status = CRASHED
+					r.FinalResult = append(r.FinalResult, drivers[i].Driver) //on l'ajoute au tableau
+					drivers[i].Position.RemoveDriverOn(drivers[i])
+					nbFinish++
+				}
 
 			}
 		}
