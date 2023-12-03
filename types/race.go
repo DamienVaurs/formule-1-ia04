@@ -142,7 +142,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 					}
 
 				}
-			case NOOP:
+			case CONTINUE:
 				//On vérifie juste si le pilote réussi à passer la portion
 
 				success := drivers[i].PortionSuccess()
@@ -162,15 +162,28 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 					nbFinish++
 				}
 
+			case NOOP:
+				//On ne fait rien
+
+				if drivers[i].Status == PITSTOP && drivers[i].PitstopSteps == 3 {
+					// On crée un highlight de pitstop
+					highlight, err := NewHighlight([]*DriverInRace{drivers[i]}, DRIVER_PITSTOP)
+					if err != nil {
+						log.Printf("Error while creating highlight: %s\n", err)
+					}
+					r.HighLigths = append(r.HighLigths, *highlight)
+					log.Println(highlight.Description)
+				}
+
 			}
 		}
 
-		//On fait avancer tout les pilotes n'ayant pas fini la course et n'étant pas crashés
+		//On fait avancer tout les pilotes n'ayant pas fini la course, n'étant pas crashés et n'étant pas en pitstop
 		newDriversOnPortion := make([][]*DriverInRace, len(r.Circuit.Portions)) //stocke les nouvelles positions des pilotes
 		for i := range r.Circuit.Portions {
 			newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = make([]*DriverInRace, 0)
 			for _, driver := range r.Circuit.Portions[i].DriversOn {
-				if driver.Status != CRASHED && driver.Status != ARRIVED {
+				if driver.Status != CRASHED && driver.Status != ARRIVED && driver.Status != PITSTOP {
 					//On met à jour le champ position du pilote
 					driver.Position = driver.Position.NextPortion
 					if i == len(r.Circuit.Portions)-1 {
@@ -192,7 +205,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 						}
 					}
 				}
-				if driver.Status != CRASHED && driver.Status != ARRIVED {
+				if driver.Status != CRASHED && driver.Status != ARRIVED && driver.Status != PITSTOP {
 					//On ajoute le pilote à sa nouvelle position
 					newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
 				}

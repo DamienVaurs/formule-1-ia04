@@ -47,6 +47,12 @@ func NewHighlight(drivers []*DriverInRace, highlightType HighlightType) (*Highli
 		} else {
 			desc = fmt.Sprintf("ARRIVEE: Le pilote %s est arrivé!", drivers[0].Driver.Lastname)
 		}
+	case DRIVER_PITSTOP:
+		if len(drivers) != 1 {
+			return nil, fmt.Errorf("DRIVER_PITSTOP highlight must include exactly 1 driver")
+		} else {
+			desc = fmt.Sprintf("PITSTOP: Le pilote %s est rentré au stand", drivers[0].Driver.Lastname)
+		}
 	}
 	return &Highlight{
 		Description: desc,
