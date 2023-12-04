@@ -201,13 +201,6 @@ func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 		}
 	}
 
-	fmt.Println("Driver not found on portion")
-	fmt.Println(d.Status, d.Position, d.TimeWoPitStop, d.Driver.Lastname)
-	fmt.Println(p.DriversOn)
-	for i := range p.DriversOn {
-		fmt.Println(p.DriversOn[i].Driver.Lastname)
-	}
-
 	return nil, fmt.Errorf("Driver %s (%s, crashé si =1 : %d) who want to overtake is not found on portion %s", d.Driver.Id, d.Driver.Lastname, d.Status, p.Id)
 }
 
@@ -267,10 +260,6 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 		// On regarde si on doit faire un pitstop
 
 		pitstop := false
-
-		if d.Status == PITSTOP {
-			fmt.Println("PITSTOP : ", d.Driver.Lastname, " pendant encore : ", d.PitstopSteps, " steps")
-		}
 
 		if d.Status != PITSTOP {
 			d.TimeWoPitStop++

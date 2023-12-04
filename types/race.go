@@ -1,7 +1,6 @@
 package types
 
 import (
-	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -101,7 +100,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 			if drivers[i].Status == CRASHED || drivers[i].Status == ARRIVED {
 				continue
 			}
-			time.Sleep(100 * time.Millisecond)
+			//time.Sleep(100 * time.Millisecond)
 			decision := decisionMap[drivers[i].Driver.Id]
 			switch decision {
 			case TRY_OVERTAKE:
@@ -188,7 +187,6 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 		for i := range r.Circuit.Portions {
 			//newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = make([]*DriverInRace, 0)
 			for _, driver := range r.Circuit.Portions[i].DriversOn {
-				fmt.Println("STATUT PILOTE :", driver.Status, r.Circuit.Portions[i].Id, driver.Position.Id, driver.Driver.Lastname)
 				if driver.Status != CRASHED && driver.Status != ARRIVED && driver.Status != PITSTOP {
 					//On met à jour le champ position du pilote
 					driver.Position = driver.Position.NextPortion
@@ -212,19 +210,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 					}
 				}
 				if driver.Status == PITSTOP {
-					/*for k, j := range r.Circuit.Portions {
-						if j.Id == driver.Position.Id {
-							newDriversOnPortion[k] = append(newDriversOnPortion[k], driver)
-							fmt.Println(k, j.Id, driver.Position.Id, driver.Driver.Lastname)
-							test = true
-						}
-					}*/
 					newDriversOnPortion[i] = append(newDriversOnPortion[i], driver)
-					fmt.Println("== PITSTOP ", i, r.Circuit.Portions[i].Id, driver.Position.Id, driver.Driver.Lastname)
-					fmt.Println(newDriversOnPortion[i])
-					for j := range newDriversOnPortion[i] {
-						fmt.Println(newDriversOnPortion[i][j].Driver.Lastname)
-					}
 				} else if driver.Status != CRASHED && driver.Status != ARRIVED {
 					//On ajoute le pilote à sa nouvelle position
 					newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
@@ -234,16 +220,8 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 		//On met à jour les positions des pilotes
 		for i := range r.Circuit.Portions {
-			fmt.Println(newDriversOnPortion[0])
 			r.Circuit.Portions[i].DriversOn = make([]*DriverInRace, len(newDriversOnPortion[i])) //on écrase l'ancien slice
 			copy(r.Circuit.Portions[i].DriversOn, newDriversOnPortion[i])                        //on remplace par le nouveau
-			for j, d := range r.Circuit.Portions[i].DriversOn {
-				if d.Position.Id != r.Circuit.Portions[i].Id {
-					fmt.Println("ERREUR : ", j, d.Position.Id, r.Circuit.Portions[i].Id, d.Driver.Lastname)
-				} else {
-					fmt.Println("OK : ", i, d.Position.Id, r.Circuit.Portions[i].Id, d.Driver.Lastname)
-				}
-			}
 		}
 	}
 	//On affiche le classement
