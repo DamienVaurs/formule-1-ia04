@@ -75,7 +75,6 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 	//On simule tant que tous les pilotes n'ont pas fini la course
 	for nbFinish < nbDrivers {
-		log.Printf("\n\n============ NOUVELLE BOUCLE %s : %d ont fini =================\n\n", r.Circuit.Name, nbFinish)
 		//time.Sleep(5 * time.Second)
 		//Chaque pilote, dans un ordre aléatoire, réalise les tests sur la proba de dépasser etc...
 		drivers = ShuffleDrivers(drivers)
@@ -191,6 +190,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 					//On met à jour le champ position du pilote
 					driver.Position = driver.Position.NextPortion
 					if i == len(r.Circuit.Portions)-1 {
+						log.Println("Tour ", driver.NbLaps, " pour ", driver.Driver.Lastname)
 						//Si on a fait un tour
 						driver.NbLaps += 1
 						if driver.NbLaps == r.Circuit.NbLaps {

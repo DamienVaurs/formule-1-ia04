@@ -78,15 +78,17 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action) *Dr
 func (d *DriverInRace) PortionSuccess() bool {
 	// Pour le moment on prend en compte le niveau du pilote, la difficulté de la portion et l'usure des pneus
 	portion := d.Position
-	probaReussite := 95
-	probaReussite += d.Driver.Level * 2
-	probaReussite -= portion.Difficulty * 2
+
+	probaReussite := 995
+	probaReussite += d.Driver.Level * 20
+	probaReussite -= portion.Difficulty * 40
 	probaReussite -= d.TimeWoPitStop
 
-	var dice int = rand.Intn(99) + 1
+	var dice int = rand.Intn(999) + 1
 
 	return dice <= probaReussite
 }
+
 func MakeSliceOfDriversInRace(teams []*Team, portionDepart *Portion, mapChan sync.Map) ([]*DriverInRace, error) {
 	res := make([]*DriverInRace, 0)
 	for _, team := range teams {
@@ -119,11 +121,11 @@ func (d *DriverInRace) PitStop() bool {
 	probaPitStop := 0
 
 	// On regarde si on doit faire un pitstop
-	probaPitStop += d.TimeWoPitStop
+	probaPitStop += (d.TimeWoPitStop * 10) / 2
 
-	var dice int = rand.Intn(99) + 1
+	var dice int = rand.Intn(999) + 1
 
-	if dice < probaPitStop {
+	if dice <= probaPitStop {
 		d.PitstopSteps = 3
 		d.TimeWoPitStop = 0
 		return true
@@ -156,7 +158,9 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	// Pour le moment on prend en compte le niveaus des pilotes et la "difficulté" de la portion
 	probaDoubler -= portion.Difficulty * 2
 
-	var dice int = rand.Intn(99) + 1
+	probaDoubler *= 10
+
+	var dice int = rand.Intn(999) + 1
 
 	// Si on est en dessous de probaDoubler, on double
 	if dice <= probaDoubler {
@@ -166,12 +170,12 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	// Sinon, on regarde si on crash
 
 	// Ici on a un échec critique, les deux pilotes crashent
-	if dice >= 99 {
+	if dice == 1000 {
 		return false, []*DriverInRace{d, otherDriver}
 	}
 
 	// Ici, un seul pilote crash, on tire au sort lequel
-	if dice >= 95 {
+	if dice >= 996 {
 		if dice%2 == 0 {
 			return false, []*DriverInRace{d}
 		} else {
@@ -233,12 +237,8 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 			return true, nil
 		}
 
-		var dice = rand.Int() % 2
-		if dice == 0 {
-			return true, nil
-		} else {
-			return false, nil
-		}
+		var dice = rand.Intn(99) + 1
+		return dice <= probaVeutDoubler, nil
 	}
 	return false, nil
 }
