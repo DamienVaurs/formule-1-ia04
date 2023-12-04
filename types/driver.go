@@ -112,13 +112,16 @@ func ShuffleDrivers(drivers []*DriverInRace) []*DriverInRace {
 
 func (d *DriverInRace) PitStop() bool {
 
+	if d.Status == PITSTOP {
+		return false
+	}
+
 	probaPitStop := 0
 
 	// On regarde si on doit faire un pitstop
-	probaPitStop += d.TimeWoPitStop * 2
+	probaPitStop += d.TimeWoPitStop
 
 	var dice int = rand.Intn(99) + 1
-	fmt.Println("Dice : ", dice, " probaPitStop : ", probaPitStop)
 
 	if dice < probaPitStop {
 		d.PitstopSteps = 3
@@ -154,7 +157,6 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	probaDoubler -= portion.Difficulty * 2
 
 	var dice int = rand.Intn(99) + 1
-	fmt.Println("Dice : ", dice, " probaDoubler : ", probaDoubler)
 
 	// Si on est en dessous de probaDoubler, on double
 	if dice <= probaDoubler {
@@ -183,6 +185,11 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 }
 
 func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
+
+	if d.Status == PITSTOP {
+		return nil, nil
+	}
+
 	p := d.Position
 	for i := range p.DriversOn {
 		if p.DriversOn[i] == d {
@@ -193,6 +200,14 @@ func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 			}
 		}
 	}
+
+	fmt.Println("Driver not found on portion")
+	fmt.Println(d.Status, d.Position, d.TimeWoPitStop, d.Driver.Lastname)
+	fmt.Println(p.DriversOn)
+	for i := range p.DriversOn {
+		fmt.Println(p.DriversOn[i].Driver.Lastname)
+	}
+
 	return nil, fmt.Errorf("Driver %s (%s, crashé si =1 : %d) who want to overtake is not found on portion %s", d.Driver.Id, d.Driver.Lastname, d.Status, p.Id)
 }
 
@@ -222,7 +237,6 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 
 		// Si le pilote est en pitstop, on choisit de doubler
 		if driverToOvertake.Status == PITSTOP {
-			fmt.Println("Pilote en pitstop, on double")
 			return true, nil
 		}
 
@@ -252,21 +266,25 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 
 		// On regarde si on doit faire un pitstop
 
-		d.TimeWoPitStop++
+		pitstop := false
 
-		pitstop := d.PitStop()
-		if pitstop && d.Status != PITSTOP {
-			d.ChanEnv <- NOOP
-			d.Status = PITSTOP
-			continue
+		if d.Status == PITSTOP {
+			fmt.Println("PITSTOP : ", d.Driver.Lastname, " pendant encore : ", d.PitstopSteps, " steps")
 		}
 
-		if d.Status == PITSTOP && d.PitstopSteps != 0 {
+		if d.Status != PITSTOP {
+			d.TimeWoPitStop++
+			pitstop = d.PitStop()
+		}
+
+		if pitstop {
+			d.Status = PITSTOP
 			d.ChanEnv <- NOOP
-			d.PitstopSteps--
 			continue
-		} else if d.Status == PITSTOP && d.PitstopSteps == 0 {
-			d.Status = RACING
+		} else if d.Status == PITSTOP {
+			d.PitstopSteps--
+			d.ChanEnv <- NOOP
+			continue
 		}
 
 		//On regarde si on peut doubler
