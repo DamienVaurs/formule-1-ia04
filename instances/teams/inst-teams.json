@@ -9,15 +9,28 @@
                 "LastName": "Verstappen",
                 "Country": "Netherlands",
                 "Level": 10,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 5,
+                    "Confidence": 5,
+                    "Docility": 2,
+                    "Concentration": 4
+
+                }
             },
             {
                 "FirstName": "Sergio",
                 "LastName": "Perez",
                 "Country": "Mexico",
                 "Level":7,
-                "Personnality": {}
-            }
+                "Personnality": {
+                    "Aggressivity": 2,
+                    "Confidence": 4,
+                    "Docility": 4,
+                    "Concentration": 5
+
+                }
+                }
+            
         ]
     },
     {
@@ -30,14 +43,26 @@
                 "LastName": "Hamilton",
                 "Country": "UK",
                 "Level": 8,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 4,
+                    "Confidence": 5,
+                    "Docility": 3,
+                    "Concentration": 5
+
+                }
             },
             {
                 "FirstName": "George",
                 "LastName": "Russell",
                 "Country": "UK",
                 "Level": 7,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 5,
+                    "Confidence": 4,
+                    "Docility": 3,
+                    "Concentration": 3
+
+                }
             }
         ]
     },
@@ -51,14 +76,26 @@
                 "LastName": "Leclerc",
                 "Country": "Monaco",
                 "Level": 8,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 4,
+                    "Confidence": 4,
+                    "Docility": 4,
+                    "Concentration": 4
+
+                }
             },
             {
                 "FirstName": "Carlos",
                 "LastName": "Sainz",
                 "Country": "Spain",
                 "Level": 7,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 4,
+                    "Confidence": 3,
+                    "Docility": 3,
+                    "Concentration": 5
+
+                }
             }
         ]
     },
@@ -72,14 +109,26 @@
                 "LastName": "Norris",
                 "Country": "UK",
                 "Level": 7,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 3,
+                    "Confidence": 4,
+                    "Docility": 5,
+                    "Concentration": 4
+
+                }
             },
             {
                 "FirstName": "Oscar",
                 "LastName": "Piastri",
                 "Country": "Australia",
                 "Level": 4,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 4,
+                    "Confidence": 3,
+                    "Docility": 4,
+                    "Concentration": 3
+
+                }
             }
         ]
     },
@@ -93,14 +142,26 @@
                 "LastName": "Gasly",
                 "Country": "France",
                 "Level": 6,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 4,
+                    "Confidence": 3,
+                    "Docility": 4,
+                    "Concentration": 4
+
+                }
             },
             {
                 "FirstName": "Esteban",
                 "LastName": "Ocon",
                 "Country": "France",
                 "Level": 5,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 3,
+                    "Confidence": 4,
+                    "Docility": 3,
+                    "Concentration": 4
+
+                }
             }
         ]
     },
@@ -114,14 +175,26 @@
                 "LastName": "Ricciardo",
                 "Country": "Australia",
                 "Level": 5,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 5,
+                    "Confidence": 3,
+                    "Docility": 4,
+                    "Concentration": 4
+
+                }
             },
             {
                 "FirstName": "Yuki",
                 "LastName": "Tsunoda",
                 "Country": "Japan",
                 "Level": 4,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 4,
+                    "Confidence": 3,
+                    "Docility": 2,
+                    "Concentration": 2
+
+                }
             }
         ]
     },
@@ -135,14 +208,26 @@
                 "LastName": "Alonso",
                 "Country": "Spain",
                 "Level": 7,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 5,
+                    "Confidence": 5,
+                    "Docility": 3,
+                    "Concentration": 4
+
+                }
             },
             {
                 "FirstName": "Lance",
                 "LastName": "Stroll",
                 "Country": "Canada",
                 "Level": 2,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 3,
+                    "Confidence": 2,
+                    "Docility": 3,
+                    "Concentration": 2
+
+                }
             }
         ]
     },
@@ -156,14 +241,26 @@
                 "LastName": "Bottas",
                 "Country": "Finland",
                 "Level": 6,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 3,
+                    "Confidence": 4,
+                    "Docility": 4,
+                    "Concentration": 5
+
+                }
             },
             {
                 "FirstName": "Guanyu",
                 "LastName": "Zhou",
                 "Country": "China",
                 "Level": 3,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 3,
+                    "Confidence": 3,
+                    "Docility": 5,
+                    "Concentration": 4
+
+                }
             }
         ]
     },
@@ -177,14 +274,26 @@
                 "LastName": "Magnussen",
                 "Country": "Denmark",
                 "Level": 3,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 4,
+                    "Confidence": 3,
+                    "Docility": 2,
+                    "Concentration": 3
+
+                }
             },
             {
                 "FirstName": "Niko",
                 "LastName": "Hulkenberg",
                 "Country": "Germany",
                 "Level": 3,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 3,
+                    "Confidence": 3,
+                    "Docility": 4,
+                    "Concentration": 3
+
+                }
             }
         ]
     },
@@ -198,14 +307,26 @@
                 "LastName": "Albon",
                 "Country": "Thailand",
                 "Level": 4,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 4,
+                    "Confidence": 3,
+                    "Docility": 4,
+                    "Concentration": 4
+
+                }
             },
             {
                 "FirstName": "Logan",
                 "LastName": "Sargeant",
                 "Country": "USA",
                 "Level": 2,
-                "Personnality": {}
+                "Personnality": {
+                    "Aggressivity": 2,
+                    "Confidence": 2,
+                    "Docility": 3,
+                    "Concentration": 3
+
+                }
             }
         ]
     }

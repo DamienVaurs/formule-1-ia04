@@ -212,7 +212,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 		newDriversOnPortion := make([][]*DriverInRace, len(r.Circuit.Portions)) //stocke les nouvelles positions des pilotes
 		//newDriversOnPortion[0] = make([]*DriverInRace, 0)
 		for i := range r.Circuit.Portions {
-			//newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = make([]*DriverInRace, 0)
+			//newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = make([]*DriverInRace, 0) // crée la slice de la portion suivante nouvelle
 			for _, driver := range r.Circuit.Portions[i].DriversOn {
 				if driver.Status != CRASHED && driver.Status != ARRIVED && driver.Status != PITSTOP {
 					//On met à jour le champ position du pilote
