@@ -114,7 +114,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 					if len(crashedDrivers) > 0 {
 						//On crée un Highlight de crash
-						highlight, err := NewHighlight(crashedDrivers, CRASH)
+						highlight, err := NewHighlight(crashedDrivers, CRASHOVERTAKE)
 						if err != nil {
 							log.Printf("Error while creating highlight: %s\n", err)
 						}
@@ -149,7 +149,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 				if !success {
 					//On crée un Highlight de crash
-					highlight, err := NewHighlight([]*DriverInRace{drivers[i]}, CRASH)
+					highlight, err := NewHighlight([]*DriverInRace{drivers[i]}, CRASHPORTION)
 					if err != nil {
 						log.Printf("Error while creating highlight: %s\n", err)
 					}
