@@ -2,6 +2,7 @@ package types
 
 import (
 	"log"
+	"math/rand"
 	"sync"
 	"time"
 )
@@ -84,6 +85,13 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 			if drivers[i].Status == CRASHED || drivers[i].Status == ARRIVED {
 				continue //Obligatoire car il ne faut attendre que les pilotes qui courent encore
 			}
+
+			// On ajoute une pénalité aléatoire sur l'usure des pneus si il fait chaud
+			dice := rand.Intn(100)
+			if r.MeteoCondition == HEAT && dice < 25 {
+				drivers[i].TimeWoPitStop += 5
+			}
+
 			drivers[i].ChanEnv <- 1
 		}
 		// On récupère les décisions des pilotes
@@ -145,7 +153,13 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 			case CONTINUE:
 				//On vérifie juste si le pilote réussi à passer la portion
 
-				success := drivers[i].PortionSuccess()
+				pénalité := 0
+
+				if r.MeteoCondition == RAINY {
+					pénalité = 25
+				}
+
+				success := drivers[i].PortionSuccess(pénalité)
 
 				if !success {
 					//On crée un Highlight de crash

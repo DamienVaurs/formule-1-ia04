@@ -86,7 +86,7 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action) *Dr
 }
 
 // Fonction pour tester si un pilote réussit une portion sans se crasher
-func (d *DriverInRace) PortionSuccess() bool {
+func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	// Pour le moment on prend en compte le niveau du pilote, la difficulté de la portion et l'usure des pneus
 	portion := d.Position
 
@@ -94,6 +94,7 @@ func (d *DriverInRace) PortionSuccess() bool {
 	probaReussite += d.Driver.Level * 20
 	probaReussite -= portion.Difficulty * 18
 	probaReussite -= d.TimeWoPitStop
+	probaReussite -= pénalité
 
 	var dice int = rand.Intn(999) + 1
 
