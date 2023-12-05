@@ -114,7 +114,7 @@ func ShuffleDrivers(drivers []*DriverInRace) []*DriverInRace {
 
 func (d *DriverInRace) PitStop() bool {
 
-	if d.Status == PITSTOP {
+	if d.Status == PITSTOP || d.Position.Id != "straight_1" {
 		return false
 	}
 
