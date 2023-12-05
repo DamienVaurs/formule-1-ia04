@@ -17,6 +17,7 @@ const (
 	OVERTAKE
 	FINISH
 	DRIVER_PITSTOP
+	CREVAISON
 	//DRIVER_PENALTY
 	//DRIVER_FASTEST_LAP
 )
@@ -52,6 +53,12 @@ func NewHighlight(drivers []*DriverInRace, highlightType HighlightType) (*Highli
 			return nil, fmt.Errorf("DRIVER_PITSTOP highlight must include exactly 1 driver")
 		} else {
 			desc = fmt.Sprintf("PITSTOP: Le pilote %s est rentré au stand", drivers[0].Driver.Lastname)
+		}
+	case CREVAISON:
+		if len(drivers) != 1 {
+			return nil, fmt.Errorf("CREVAISON highlight must include exactly 1 driver")
+		} else {
+			desc = fmt.Sprintf("CREVAISON: Le pilote %s a crevé au tour %d", drivers[0].Driver.Lastname, drivers[0].NbLaps)
 		}
 	}
 	return &Highlight{

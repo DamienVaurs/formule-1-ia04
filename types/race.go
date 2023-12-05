@@ -177,6 +177,20 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 					drivers[i].Status = RACING
 				}
 
+			case ACCIDENTPNEUS:
+				//On crée un Highlight de crash
+				highlight, err := NewHighlight([]*DriverInRace{drivers[i]}, CREVAISON)
+				if err != nil {
+					log.Printf("Error while creating highlight: %s\n", err)
+				}
+				r.HighLigths = append(r.HighLigths, *highlight)
+				log.Println(highlight.Description)
+
+				drivers[i].Status = CRASHED
+				r.FinalResult = append(r.FinalResult, drivers[i].Driver) //on l'ajoute au tableau
+				drivers[i].Position.RemoveDriverOn(drivers[i])
+				nbFinish++
+
 			}
 		}
 

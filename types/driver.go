@@ -28,6 +28,7 @@ type DriverInRace struct {
 	// - On a un channel pour recevoir et envoyer les actions & l'environnement
 	ChanEnv      chan Action
 	PitstopSteps int // Nombre de steps bloqué en pitstop
+	Pneus        Pneu
 }
 
 //Actions d'un pilote
@@ -38,6 +39,7 @@ const (
 	TRY_OVERTAKE Action = iota
 	NOOP
 	CONTINUE
+	ACCIDENTPNEUS
 )
 
 type DriverStatus int
@@ -47,6 +49,14 @@ const (
 	CRASHED
 	ARRIVED
 	PITSTOP
+)
+
+type Pneu int
+
+const (
+	SOFT Pneu = iota
+	MEDIUM
+	HARD
 )
 
 func NewDriver(id string, firstname string, lastname string, level int, country string, team *Team, personnality Personnality) *Driver {
@@ -71,6 +81,7 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action) *Dr
 		Status:        RACING,
 		TimeWoPitStop: 0,
 		PitstopSteps:  0,
+		Pneus:         SOFT,
 	}
 }
 
@@ -134,6 +145,22 @@ func (d *DriverInRace) PitStop() bool {
 	return false
 }
 
+func (d *DriverInRace) TestPneus() bool {
+
+	if d.Status == PITSTOP {
+		return true
+	}
+
+	probaPneus := 0
+
+	// On regarde si les pneus vont bien
+	probaPneus += d.TimeWoPitStop - (int(d.Pneus)*10 + 100)
+
+	var dice int = rand.Intn(999) + 1
+
+	return dice > probaPneus
+}
+
 func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crashedDrivers []*DriverInRace) {
 
 	// Si l'autre pilote est en pitstop, on est sûr de doubler
@@ -144,6 +171,9 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	if d.Status == PITSTOP {
 		return false, []*DriverInRace{}
 	}
+
+	// On tente un doublement, l'usure des pneus augmente donc
+	d.TimeWoPitStop += 10
 
 	probaDoubler := 75
 
@@ -256,6 +286,13 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 			return
 		}
 		//On décide
+
+		// On regarde si les pneus vont bien
+
+		if !d.TestPneus() {
+			d.ChanEnv <- ACCIDENTPNEUS
+			continue
+		}
 
 		// On regarde si on doit faire un pitstop
 
