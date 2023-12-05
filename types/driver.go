@@ -92,7 +92,7 @@ func (d *DriverInRace) PortionSuccess() bool {
 
 	probaReussite := 995
 	probaReussite += d.Driver.Level * 20
-	probaReussite -= portion.Difficulty * 40
+	probaReussite -= portion.Difficulty * 18
 	probaReussite -= d.TimeWoPitStop
 
 	var dice int = rand.Intn(999) + 1
@@ -200,12 +200,12 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	// Sinon, on regarde si on crash
 
 	// Ici on a un échec critique, les deux pilotes crashent
-	if dice == 1000 {
+	if dice >= 995 {
 		return false, []*DriverInRace{d, otherDriver}
 	}
 
 	// Ici, un seul pilote crash, on tire au sort lequel
-	if dice >= 996 {
+	if dice >= 990 {
 		if dice%2 == 0 {
 			return false, []*DriverInRace{d}
 		} else {
