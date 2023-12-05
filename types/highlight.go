@@ -13,10 +13,12 @@ type Highlight struct {
 type HighlightType int
 
 const (
-	CRASH HighlightType = iota
+	CRASHOVERTAKE HighlightType = iota
+	CRASHPORTION
 	OVERTAKE
 	FINISH
 	DRIVER_PITSTOP
+	CREVAISON
 	//DRIVER_PENALTY
 	//DRIVER_FASTEST_LAP
 )
@@ -28,13 +30,19 @@ func NewHighlight(drivers []*DriverInRace, highlightType HighlightType) (*Highli
 	var desc string
 
 	switch highlightType {
-	case CRASH:
+	case CRASHOVERTAKE:
 		if len(drivers) > 1 {
-			desc = fmt.Sprintf("CRASH au tour %d: Plusieurs pilotes sont rentrés en accident : %s et %s", drivers[0].NbLaps, drivers[0].Driver.Lastname, drivers[1].Driver.Lastname)
+			desc = fmt.Sprintf("CRASH au tour %d: Plusieurs pilotes sont rentrés en accident : %s et %s pendant une tentative de doublement", drivers[0].NbLaps, drivers[0].Driver.Lastname, drivers[1].Driver.Lastname)
 		} else if len(drivers) == 1 {
-			desc = fmt.Sprintf("CRASH au tour %d: Le pilote %s a crashé", drivers[0].NbLaps, drivers[0].Driver.Lastname)
+			desc = fmt.Sprintf("CRASH au tour %d: Le pilote %s s'est crashé pendant une tentative de doublement", drivers[0].NbLaps, drivers[0].Driver.Lastname)
 		} else {
 			return nil, fmt.Errorf("CRASH highlight must include 1 or 2 drivers")
+		}
+	case CRASHPORTION:
+		if len(drivers) != 1 {
+			return nil, fmt.Errorf("CRASHPORTION highlight must include exactly 1 driver")
+		} else {
+			desc = fmt.Sprintf("CRASH au tour %d: Le pilote %s s'est crashé sur la portion %s", drivers[0].NbLaps, drivers[0].Driver.Lastname, drivers[0].Position.Id)
 		}
 	case OVERTAKE:
 		if len(drivers) != 2 {
@@ -46,6 +54,18 @@ func NewHighlight(drivers []*DriverInRace, highlightType HighlightType) (*Highli
 			return nil, fmt.Errorf("FINISH highlight must include exactly 1 driver")
 		} else {
 			desc = fmt.Sprintf("ARRIVEE: Le pilote %s est arrivé!", drivers[0].Driver.Lastname)
+		}
+	case DRIVER_PITSTOP:
+		if len(drivers) != 1 {
+			return nil, fmt.Errorf("DRIVER_PITSTOP highlight must include exactly 1 driver")
+		} else {
+			desc = fmt.Sprintf("PITSTOP: Le pilote %s est rentré au stand", drivers[0].Driver.Lastname)
+		}
+	case CREVAISON:
+		if len(drivers) != 1 {
+			return nil, fmt.Errorf("CREVAISON highlight must include exactly 1 driver")
+		} else {
+			desc = fmt.Sprintf("CREVAISON: Le pilote %s a crevé au tour %d", drivers[0].Driver.Lastname, drivers[0].NbLaps)
 		}
 	}
 	return &Highlight{

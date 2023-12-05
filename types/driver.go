@@ -26,7 +26,9 @@ type DriverInRace struct {
 	TimeWoPitStop int          // Time without pitstop --> increments at each step
 	//Pour l'implémentation:
 	// - On a un channel pour recevoir et envoyer les actions & l'environnement
-	ChanEnv chan Action
+	ChanEnv      chan Action
+	PitstopSteps int // Nombre de steps bloqué en pitstop
+	Pneus        Pneu
 }
 
 //Actions d'un pilote
@@ -36,6 +38,8 @@ type Action int
 const (
 	TRY_OVERTAKE Action = iota
 	NOOP
+	CONTINUE
+	ACCIDENTPNEUS
 )
 
 type DriverStatus int
@@ -45,6 +49,14 @@ const (
 	CRASHED
 	ARRIVED
 	PITSTOP
+)
+
+type Pneu int
+
+const (
+	SOFT Pneu = iota
+	MEDIUM
+	HARD
 )
 
 func NewDriver(id string, firstname string, lastname string, level int, country string, team *Team, personnality Personnality) *Driver {
@@ -67,23 +79,28 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action) *Dr
 		NbLaps:        0,
 		ChanEnv:       channel,
 		Status:        RACING,
-		IsPitStop:     false,
 		TimeWoPitStop: 0,
+		PitstopSteps:  0,
+		Pneus:         SOFT,
 	}
 }
 
 // Fonction pour tester si un pilote réussit une portion sans se crasher
-func (d *DriverInRace) PortionSuccess(portion *Portion) bool {
+func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	// Pour le moment on prend en compte le niveau du pilote, la difficulté de la portion et l'usure des pneus
-	probaReussite := 80
-	probaReussite += d.Driver.Level * 2
-	probaReussite -= portion.Difficulty * 2
-	probaReussite -= d.TimeWoPitStop
+	portion := d.Position
 
-	var dice int = rand.Intn(99) + 1
+	probaReussite := 995
+	probaReussite += d.Driver.Level * 20
+	probaReussite -= portion.Difficulty * 18
+	probaReussite -= d.TimeWoPitStop
+	probaReussite -= pénalité
+
+	var dice int = rand.Intn(999) + 1
 
 	return dice <= probaReussite
 }
+
 func MakeSliceOfDriversInRace(teams []*Team, portionDepart *Portion, mapChan sync.Map) ([]*DriverInRace, error) {
 	res := make([]*DriverInRace, 0)
 	for _, team := range teams {
@@ -107,47 +124,89 @@ func ShuffleDrivers(drivers []*DriverInRace) []*DriverInRace {
 	return drivers
 }
 
-func (d *DriverInRace) PitStop() {
-	d.IsPitStop = true
-	// Envoyer sur un channel vers le contrôleur de jeu que le pilote est en pitstop pendant x steps
-	// On attends ensuite de recevoir un message sur le channel comme quoi le pitstop est terminé ?
-	d.IsPitStop = false
-	d.TimeWoPitStop = 0
+func (d *DriverInRace) PitStop() bool {
+
+	if d.Status == PITSTOP || d.Position.Id != "straight_1" {
+		return false
+	}
+
+	probaPitStop := 0
+
+	// On regarde si on doit faire un pitstop
+	probaPitStop += (d.TimeWoPitStop * 10) / 2
+
+	var dice int = rand.Intn(999) + 1
+
+	if dice <= probaPitStop {
+		d.PitstopSteps = 3
+		d.TimeWoPitStop = 0
+		return true
+	}
+
+	return false
+}
+
+func (d *DriverInRace) TestPneus() bool {
+
+	if d.Status == PITSTOP {
+		return true
+	}
+
+	probaPneus := 0
+
+	// On regarde si les pneus vont bien
+	probaPneus += d.TimeWoPitStop - (int(d.Pneus)*10 + 100)
+
+	var dice int = rand.Intn(999) + 1
+
+	return dice > probaPneus
 }
 
 func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crashedDrivers []*DriverInRace) {
 
+	// Si l'autre pilote est en pitstop, on est sûr de doubler
+	if otherDriver.Status == PITSTOP {
+		return true, []*DriverInRace{}
+	}
+
+	if d.Status == PITSTOP {
+		return false, []*DriverInRace{}
+	}
+
+	// On tente un doublement, l'usure des pneus augmente donc
+	d.TimeWoPitStop += 10
+
 	probaDoubler := 75
 
 	if d.Driver.Level > otherDriver.Driver.Level {
-		probaDoubler = 10
+		probaDoubler += 10
 	} else if d.Driver.Level < otherDriver.Driver.Level {
-		probaDoubler = -10
-	} else {
-		probaDoubler = 0
+		probaDoubler -= 10
 	}
 
 	portion := d.Position
 
-	// Pour le moment on prend en compte le niveau des pilotes et la "difficulté" de la portion
-	probaDoubler -= portion.Difficulty * 7
+	// Pour le moment on prend en compte le niveaus des pilotes et la "difficulté" de la portion
+	probaDoubler -= portion.Difficulty * 2
 
-	var dice int = rand.Intn(99) + 1
+	probaDoubler *= 10
+
+	var dice int = rand.Intn(999) + 1
 
 	// Si on est en dessous de probaDoubler, on double
-	if dice < probaDoubler {
+	if dice <= probaDoubler {
 		return true, []*DriverInRace{}
 	}
 
 	// Sinon, on regarde si on crash
 
 	// Ici on a un échec critique, les deux pilotes crashent
-	if dice > 95 {
+	if dice >= 995 {
 		return false, []*DriverInRace{d, otherDriver}
 	}
 
 	// Ici, un seul pilote crash, on tire au sort lequel
-	if dice > 90 {
+	if dice >= 990 {
 		if dice%2 == 0 {
 			return false, []*DriverInRace{d}
 		} else {
@@ -161,6 +220,11 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 }
 
 func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
+
+	if d.Status == PITSTOP {
+		return nil, nil
+	}
+
 	p := d.Position
 	for i := range p.DriversOn {
 		if p.DriversOn[i] == d {
@@ -171,6 +235,7 @@ func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 			}
 		}
 	}
+
 	return nil, fmt.Errorf("Driver %s (%s, crashé si =1 : %d) who want to overtake is not found on portion %s", d.Driver.Id, d.Driver.Lastname, d.Status, p.Id)
 }
 
@@ -181,15 +246,30 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	if err != nil {
 		return false, err
 	}
+
+	p := d.Position
+	probaVeutDoubler := 0
+
+	// probaVeutDoubler += d.Driver.Personnality.Agressivity * 2
+	// probaVeutDoubler -= d.Driver.Personnality.Carefulness * 2
+
+	if p.Difficulty != 0 {
+		probaVeutDoubler += 20 / p.Difficulty
+	} else {
+		probaVeutDoubler = 0
+	}
+
 	if toOvertake != nil {
 		//On décide si on veut doubler
 		//TODO modifier :
-		var dice = rand.Int() % 2
-		if dice == 0 {
+
+		// Si le pilote est en pitstop, on choisit de doubler
+		if driverToOvertake.Status == PITSTOP {
 			return true, nil
-		} else {
-			return false, nil
 		}
+
+		var dice = rand.Intn(99) + 1
+		return dice <= probaVeutDoubler, nil
 	}
 	return false, nil
 }
@@ -207,6 +287,33 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 			return
 		}
 		//On décide
+
+		// On regarde si les pneus vont bien
+
+		if !d.TestPneus() {
+			d.ChanEnv <- ACCIDENTPNEUS
+			continue
+		}
+
+		// On regarde si on doit faire un pitstop
+
+		pitstop := false
+
+		if d.Status != PITSTOP {
+			d.TimeWoPitStop++
+			pitstop = d.PitStop()
+		}
+
+		if pitstop {
+			d.Status = PITSTOP
+			d.ChanEnv <- NOOP
+			continue
+		} else if d.Status == PITSTOP {
+			d.PitstopSteps--
+			d.ChanEnv <- NOOP
+			continue
+		}
+
 		//On regarde si on peut doubler
 		toOvertake, err := d.DriverToOvertake()
 		if err != nil {
@@ -223,12 +330,12 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 				//On envoie la décision à l'environnement
 				d.ChanEnv <- TRY_OVERTAKE
 			} else {
-				d.ChanEnv <- NOOP
+				d.ChanEnv <- CONTINUE
 			}
 
 		} else {
 			//Si pas de possibilité de doubler, on ne fait rien
-			d.ChanEnv <- NOOP
+			d.ChanEnv <- CONTINUE
 		}
 		//On vérifie si on a fini la course
 		if d.NbLaps == nbLaps {
