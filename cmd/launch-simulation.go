@@ -34,10 +34,6 @@ func main() {
 		pointTabTeam[i] = &tempTeam
 	}
 
-	//On a les équipes et les circuits, on lance la simulation
-	championship := types.NewChampionship("2023", "Championship 1", pointTabCircuit, pointTabTeam)
-	s := simulator.NewSimulator([]types.Championship{*championship})
-
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -46,6 +42,21 @@ func main() {
 	})
 
 	mux.HandleFunc("/api/startSimulation", func(w http.ResponseWriter, r *http.Request) {
+		//On a les équipes et les circuits, on lance la simulation
+		championship := types.NewChampionship("2023", "Championship 1", pointTabCircuit, pointTabTeam)
+		s := simulator.NewSimulator([]types.Championship{*championship})
+		s.LaunchSimulation()
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Simulation démarrée"))
+	})
+
+	mux.HandleFunc("/api/start100Simulation", func(w http.ResponseWriter, r *http.Request) {
+		//On a les équipes et les circuits, on lance la simulation
+		championship := make([]types.Championship, 0)
+		for i := 0; i < 100; i++ {
+			championship = append(championship, *types.NewChampionship("2023", "Championship 1", pointTabCircuit, pointTabTeam))
+		}
+		s := simulator.NewSimulator(championship)
 		s.LaunchSimulation()
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Simulation démarrée"))
