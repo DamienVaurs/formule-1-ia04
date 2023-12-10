@@ -66,6 +66,6 @@ func (s *Simulator) LaunchSimulation() {
 		log.Printf("\n\n===== Classements du championnat %s =====\n", championship.Name)
 		championship.DisplayTeamRank()
 		championship.DisplayDriverRank()
-
+		championship.DisplayPersonalityRepartition()
 	}
 }
