@@ -164,6 +164,8 @@ func (d *DriverInRace) TestPneus() bool {
 
 func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crashedDrivers []*DriverInRace) {
 
+	var probaDoubler int
+
 	// Si l'autre pilote est en pitstop, on est sûr de doubler
 	if otherDriver.Status == PITSTOP {
 		return true, []*DriverInRace{}
@@ -176,7 +178,14 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	// On tente un doublement, l'usure des pneus augmente donc
 	d.TimeWoPitStop += 10
 
-	probaDoubler := 75
+	// En fonction de la valeur des traits de personnalité de confiance et de concentration du pilote, la probabilité de réussir un dépassement varie
+	if d.Driver.Personnality.TraitsValue["Confidence"] > 3 && d.Driver.Personnality.TraitsValue["Concentration"] > 3 {
+		probaDoubler = 75
+	} else if d.Driver.Personnality.TraitsValue["Confidence"] <= 3 && d.Driver.Personnality.TraitsValue["Concentration"] >= 3 {
+		probaDoubler = 65
+	} else {
+		probaDoubler = 50
+	}
 
 	if d.Driver.Level > otherDriver.Driver.Level {
 		probaDoubler += 10
