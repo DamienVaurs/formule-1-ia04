@@ -202,8 +202,12 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 	var dice int = rand.Intn(999) + 1
 
-	// Si on est en dessous de probaDoubler, on double
+	// Si on est en dessous de probaDoubler, on double et la confiance du pilote augmente
 	if dice <= probaDoubler {
+		fmt.Println("confidence driver file : ", d.Driver.Personnality.TraitsValue["Confidence"])
+		if d.Driver.Personnality.TraitsValue["Confidence"] < 5 {
+			d.Driver.Personnality.TraitsValue["Confidence"] += 1
+		}
 		return true, []*DriverInRace{}
 	}
 
@@ -263,7 +267,7 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	if d.Driver.Personnality.TraitsValue["Aggressivity"] > 3 || (d.Driver.Personnality.TraitsValue["Aggressivity"] >= 3 && d.Driver.Personnality.TraitsValue["Confidence"] >= 3) {
 		probaVeutDoubler += d.Driver.Personnality.TraitsValue["Aggressivity"] * 2
 	} else {
-		probaVeutDoubler -= (d.Driver.Personnality.TraitsValue["Aggressivity"] + d.Driver.Personnality.TraitsValue["Confidence"]) * 2
+		probaVeutDoubler -= (d.Driver.Personnality.TraitsValue["Docility"]) * 2
 	}
 
 	if p.Difficulty != 0 {
