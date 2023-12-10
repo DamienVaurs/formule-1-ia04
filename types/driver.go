@@ -259,8 +259,12 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	p := d.Position
 	probaVeutDoubler := 0
 
-	// probaVeutDoubler += d.Driver.Personnality.Agressivity * 2
-	// probaVeutDoubler -= d.Driver.Personnality.Carefulness * 2
+	// L'aggressivité et la confiance du pilote impact les tentatives de dépassement
+	if d.Driver.Personnality.TraitsValue["Aggressivity"] > 3 || (d.Driver.Personnality.TraitsValue["Aggressivity"] >= 3 && d.Driver.Personnality.TraitsValue["Confidence"] >= 3) {
+		probaVeutDoubler += d.Driver.Personnality.TraitsValue["Aggressivity"] * 2
+	} else {
+		probaVeutDoubler -= (d.Driver.Personnality.TraitsValue["Aggressivity"] + d.Driver.Personnality.TraitsValue["Confidence"]) * 2
+	}
 
 	if p.Difficulty != 0 {
 		probaVeutDoubler += 20 / p.Difficulty
@@ -269,9 +273,6 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	}
 
 	if toOvertake != nil {
-		//On décide si on veut doubler
-		//TODO modifier :
-
 		// Si le pilote est en pitstop, on choisit de doubler
 		if driverToOvertake.Status == PITSTOP {
 			return true, nil
