@@ -24,13 +24,9 @@ func GenerateTraits() map[string]int {
 	random_concentration := rand.Intn(5) + 1 // CONCENTRATION 	(statique -> impacte la proba de réussir un dépassement)
 
 	traits := make(map[string]int, 4)
-	aggressivity := random_agressivity
-	confidence := random_confidence
-	docility := random_docility
-	concentration := random_concentration
-	traits["Aggressivity"] = aggressivity
-	traits["Confidence"] = confidence
-	traits["Docility"] = docility
-	traits["Concentration"] = concentration
+	traits["Aggressivity"] = random_agressivity
+	traits["Confidence"] = random_confidence
+	traits["Docility"] = random_docility
+	traits["Concentration"] = random_concentration
 	return traits
 }
