@@ -85,5 +85,11 @@ func ReadTeams() ([]types.Team, error) {
 		}
 	}
 
+	// Ajout des personnalités
+	for i, team := range teams {
+		for j := range team.Drivers {
+			teams[i].Drivers[j].Personnality.TraitsValue = types.GenerateTraits()
+		}
+	}
 	return teams, nil
 }
