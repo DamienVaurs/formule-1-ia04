@@ -72,5 +72,65 @@ func (c *Championship) DisplayDriverRank() {
 	driverRank := c.CalcDriverRank()
 	for i, driver := range driverRank {
 		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
+		log.Printf("%v", driver.Personnality.TraitsValue)
+	}
+}
+
+func (c *Championship) DisplayPersonalityRepartition() {
+	log.Printf("\n\n====Répartition des personnalités ====\n")
+	driverRank := c.CalcDriverRank()
+
+	aggressivity_value_5 := 0
+	aggressivity_value_4 := 0
+	aggressivity_value_3 := 0
+	aggressivity_value_2 := 0
+	aggressivity_value_1 := 0
+	aggressivity_value_0 := 0
+	for i, driver := range driverRank {
+		if i < 15 {
+			switch driver.Personnality.TraitsValue["Aggressivity"] {
+			case 0:
+				aggressivity_value_0 += 1
+			case 1:
+				aggressivity_value_1 += 1
+			case 2:
+				aggressivity_value_2 += 1
+			case 3:
+				aggressivity_value_3 += 1
+			case 4:
+				aggressivity_value_4 += 1
+			case 5:
+				aggressivity_value_5 += 1
+			default:
+				log.Printf("Value of aggressivity out of range : %d", driver.Personnality.TraitsValue["Aggressivity"])
+			}
+		}
+		if i == 4 {
+			log.Printf("Répartition du niveau agressivité du top 5 : \n")
+			log.Printf("Agressivité 5 : %d", aggressivity_value_5)
+			log.Printf("Agressivité 4 : %d", aggressivity_value_4)
+			log.Printf("Agressivité 3 : %d", aggressivity_value_3)
+			log.Printf("Agressivité 2 : %d", aggressivity_value_2)
+			log.Printf("Agressivité 1 : %d", aggressivity_value_1)
+			log.Printf("Agressivité 0 : %d", aggressivity_value_0)
+		}
+		if i == 9 {
+			log.Printf("Répartition du niveau agressivité du top 10 : \n")
+			log.Printf("Agressivité 5 : %d", aggressivity_value_5)
+			log.Printf("Agressivité 4 : %d", aggressivity_value_4)
+			log.Printf("Agressivité 3 : %d", aggressivity_value_3)
+			log.Printf("Agressivité 2 : %d", aggressivity_value_2)
+			log.Printf("Agressivité 1 : %d", aggressivity_value_1)
+			log.Printf("Agressivité 0 : %d", aggressivity_value_0)
+		}
+		if i == 14 {
+			log.Printf("Répartition du niveau agressivité du top 15 : \n")
+			log.Printf("Agressivité 5 : %d", aggressivity_value_5)
+			log.Printf("Agressivité 4 : %d", aggressivity_value_4)
+			log.Printf("Agressivité 3 : %d", aggressivity_value_3)
+			log.Printf("Agressivité 2 : %d", aggressivity_value_2)
+			log.Printf("Agressivité 1 : %d", aggressivity_value_1)
+			log.Printf("Agressivité 0 : %d", aggressivity_value_0)
+		}
 	}
 }
