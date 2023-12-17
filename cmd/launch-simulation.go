@@ -14,7 +14,7 @@ func main() {
 		panic(err)
 	}
 
-	t, err := utils.ReadTeams()
+	t, err, drivers := utils.ReadTeams()
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +33,7 @@ func main() {
 	}
 
 	// lancement du serveur
-	server := restserver.NewRestServer(":8080", pointTabCircuit, pointTabTeam)
+	server := restserver.NewRestServer(":8080", pointTabCircuit, pointTabTeam, drivers)
 	server.Start()
 	fmt.Scanln()
 }

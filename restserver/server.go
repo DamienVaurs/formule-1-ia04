@@ -17,12 +17,13 @@ type RestServer struct {
 	addr            string
 	pointTabCircuit []*types.Circuit
 	pointTabTeam    []*types.Team
+	drivers         []types.Driver
 }
 
 var driversRank []*types.DriverRank
 
-func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team) *RestServer {
-	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam}
+func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team, drivers []types.Driver) *RestServer {
+	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam, drivers: drivers}
 }
 
 // Test de la méthode
@@ -49,6 +50,7 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Simulation terminée"))
 }
 
+// Lancement de 50 simulations
 func (rsa *RestServer) start50Simulation(w http.ResponseWriter, r *http.Request) {
 
 	// vérification de la méthode de la requête
@@ -67,7 +69,8 @@ func (rsa *RestServer) start50Simulation(w http.ResponseWriter, r *http.Request)
 	w.Write([]byte("Simulation de 50 championnats terminée"))
 }
 
-func (rsa *RestServer) getRank(w http.ResponseWriter, r *http.Request) {
+// Obtenir le classements des pilotes à la fin d'un championnat
+func (rsa *RestServer) getChampionshipRank(w http.ResponseWriter, r *http.Request) {
 	// vérification de la méthode de la requête
 	if !rsa.checkMethod("GET", w, r) {
 		return
@@ -77,12 +80,24 @@ func (rsa *RestServer) getRank(w http.ResponseWriter, r *http.Request) {
 	w.Write(serial)
 }
 
+// Obtenir les pilotes avant une simulation
+func (rsa *RestServer) getDrivers(w http.ResponseWriter, r *http.Request) {
+	// vérification de la méthode de la requête
+	if !rsa.checkMethod("GET", w, r) {
+		return
+	}
+
+	serial, _ := json.Marshal(rsa.drivers)
+	w.Write(serial)
+}
+
 func (rsa *RestServer) Start() {
 	// création du multiplexer
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
 	mux.HandleFunc("/api/start50Simulation", rsa.start50Simulation)
-	mux.HandleFunc("/api/driversRank", rsa.getRank)
+	mux.HandleFunc("/api/driversChampionshipRank", rsa.getChampionshipRank)
+	mux.HandleFunc("/api/drivers", rsa.getDrivers)
 
 	// création du serveur http
 	s := &http.Server{
