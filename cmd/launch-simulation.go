@@ -1,7 +1,9 @@
 package main
 
 import (
-	"gitlab.utc.fr/vaursdam/formule-1-ia04/simulator"
+	"fmt"
+
+	"gitlab.utc.fr/vaursdam/formule-1-ia04/restserver"
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/types"
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/utils"
 )
@@ -16,6 +18,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	//On crée des pointeurs vers les équipes et les circuits
 	pointTabCircuit := make([]*types.Circuit, len(c))
 	for i, circuit := range c {
@@ -29,8 +32,8 @@ func main() {
 		pointTabTeam[i] = &tempTeam
 	}
 
-	//On a les équipes et les circuits, on lance la simulation
-	championship := types.NewChampionship("2023", "Championship 1", pointTabCircuit, pointTabTeam)
-	s := simulator.NewSimulator([]types.Championship{*championship})
-	s.LaunchSimulation()
+	// lancement du serveur
+	server := restserver.NewRestServer(":8080", pointTabCircuit, pointTabTeam)
+	server.Start()
+	fmt.Scanln()
 }
