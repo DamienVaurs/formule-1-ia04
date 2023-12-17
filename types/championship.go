@@ -1,7 +1,6 @@
 package types
 
 import (
-	"fmt"
 	"log"
 	"sort"
 )
@@ -68,16 +67,19 @@ func (c *Championship) CalcDriverRank() []*Driver {
 	return res
 }
 
-func (c *Championship) DisplayDriverRank() map[int]string {
+func (c *Championship) DisplayDriverRank() []*DriverRank {
 	log.Printf("\n\n====Classement pilotes ====\n")
-	driverRank := c.CalcDriverRank()
-	driverRankTab := make(map[int]string, 20)
-	for i, driver := range driverRank {
+	driversRank := c.CalcDriverRank()
+	driversRankTab := make([]*DriverRank, 20)
+	for i, driver := range driversRank {
+		driverRank := NewDriverRank(i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
 		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
 		log.Printf("%v", driver.Personnality.TraitsValue)
-		driverRankTab[i+1] = fmt.Sprintf("%s %s %d", driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
+
+		driversRankTab = append(driversRankTab, driverRank)
+
 	}
-	return driverRankTab
+	return driversRankTab[20:] // Les 20 premiers indices sont nulles
 }
 
 func (c *Championship) DisplayPersonalityRepartition() {

@@ -14,16 +14,15 @@ import (
 
 type RestServer struct {
 	sync.Mutex
-	id              string
 	addr            string
 	pointTabCircuit []*types.Circuit
 	pointTabTeam    []*types.Team
 }
 
-var driversRank map[int]string
+var driversRank []*types.DriverRank
 
 func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team) *RestServer {
-	return &RestServer{id: addr, addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam}
+	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam}
 }
 
 // Test de la méthode
