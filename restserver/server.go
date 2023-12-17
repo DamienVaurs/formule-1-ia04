@@ -1,6 +1,7 @@
 package restserver
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -18,6 +19,8 @@ type RestServer struct {
 	pointTabCircuit []*types.Circuit
 	pointTabTeam    []*types.Team
 }
+
+var driversRank map[int]string
 
 func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team) *RestServer {
 	return &RestServer{id: addr, addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam}
@@ -42,7 +45,7 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 
 	championship := types.NewChampionship("2023", "Championship 1", rsa.pointTabCircuit, rsa.pointTabTeam)
 	s := simulator.NewSimulator([]types.Championship{*championship})
-	s.LaunchSimulation()
+	driversRank = s.LaunchSimulation()
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Simulation terminée"))
 }
@@ -65,10 +68,22 @@ func (rsa *RestServer) start50Simulation(w http.ResponseWriter, r *http.Request)
 	w.Write([]byte("Simulation de 50 championnats terminée"))
 }
 
+func (rsa *RestServer) getRank(w http.ResponseWriter, r *http.Request) {
+	// vérification de la méthode de la requête
+	if !rsa.checkMethod("GET", w, r) {
+		return
+	}
+
+	serial, _ := json.Marshal(driversRank)
+	w.Write(serial)
+}
+
 func (rsa *RestServer) Start() {
 	// création du multiplexer
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
+	mux.HandleFunc("/api/start50Simulation", rsa.start50Simulation)
+	mux.HandleFunc("/api/driversRank", rsa.getRank)
 
 	// création du serveur http
 	s := &http.Server{

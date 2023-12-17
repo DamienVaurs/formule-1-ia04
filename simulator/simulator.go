@@ -12,6 +12,8 @@ type Simulator struct {
 	Championships []types.Championship
 }
 
+var driversRank map[int]string
+
 func NewSimulator(championships []types.Championship) *Simulator {
 	c := make([]types.Championship, len(championships))
 	copy(c, championships)
@@ -21,7 +23,7 @@ func NewSimulator(championships []types.Championship) *Simulator {
 	}
 }
 
-func (s *Simulator) LaunchSimulation() {
+func (s *Simulator) LaunchSimulation() map[int]string {
 	log.Println("Lancement d'une nouvelle simulation...")
 	for _, championship := range s.Championships {
 		//On simule chaque championnat
@@ -65,7 +67,8 @@ func (s *Simulator) LaunchSimulation() {
 		//On affiche le classement du championnat
 		log.Printf("\n\n===== Classements du championnat %s =====\n", championship.Name)
 		championship.DisplayTeamRank()
-		championship.DisplayDriverRank()
+		driversRank = championship.DisplayDriverRank()
 		championship.DisplayPersonalityRepartition()
 	}
+	return driversRank
 }
