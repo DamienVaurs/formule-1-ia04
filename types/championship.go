@@ -72,7 +72,7 @@ func (c *Championship) DisplayDriverRank() []*DriverRank {
 	driversRank := c.CalcDriverRank()
 	driversRankTab := make([]*DriverRank, 20)
 	for i, driver := range driversRank {
-		driverRank := NewDriverRank(i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
+		driverRank := NewDriverRank(i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints, driver.Personnality.TraitsValue)
 		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
 		log.Printf("%v", driver.Personnality.TraitsValue)
 
