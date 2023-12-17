@@ -28,8 +28,20 @@ type DriverInRace struct {
 	// - On a un channel pour recevoir et envoyer les actions & l'environnement
 	ChanEnv      chan Action
 	PitstopSteps int // Nombre de steps bloqué en pitstop
-	Pneus        Pneu
+
+	PrevTyre       Tyre
+	CurrentTyre    Tyre         //Type de pneu actuel
+	AvailableTyres map[Tyre]int //Quantity of available tyres by type
+	TyreTypeCount  int          //Nombre de différents types de pneus utilisés pendant la course
+	UsedTyreTypes  []Tyre
+	CurrentRank    int //Classement actuel du pilote, à voir si on l'implémente
 }
+
+/* Pneus
+
+Est-ce que la priorité du nouveau type de pneu se base sur le classement actuel du pilote, ou simplement sur les types de pneus restants ?
+
+*/
 
 //Actions d'un pilote
 
@@ -49,12 +61,14 @@ const (
 	CRASHED
 	ARRIVED
 	PITSTOP
+	PITSTOP_CHANGETYRE
 )
 
-type Pneu int
+type Tyre int
 
 const (
-	SOFT Pneu = iota
+	WET  Tyre = 0
+	SOFT Tyre = iota
 	MEDIUM
 	HARD
 )
@@ -72,16 +86,32 @@ func NewDriver(id string, firstname string, lastname string, level int, country 
 	}
 }
 
-func NewDriverInRace(driver *Driver, position *Portion, channel chan Action) *DriverInRace {
-	return &DriverInRace{
-		Driver:        driver,
-		Position:      position,
-		NbLaps:        0,
-		ChanEnv:       channel,
-		Status:        RACING,
-		TimeWoPitStop: 0,
-		PitstopSteps:  0,
-		Pneus:         SOFT,
+func NewDriverInRace(driver *Driver, position *Portion, channel chan Action, meteoCondition Meteo) *DriverInRace {
+	// WET tyre if RAINY weather
+	if meteoCondition == RAINY {
+		return &DriverInRace{
+			Driver:        driver,
+			Position:      position,
+			NbLaps:        0,
+			ChanEnv:       channel,
+			Status:        RACING,
+			TimeWoPitStop: 0,
+			PitstopSteps:  0,
+			CurrentTyre:   WET,
+			TyreTypeCount: 1,
+		}
+	} else {
+		return &DriverInRace{
+			Driver:        driver,
+			Position:      position,
+			NbLaps:        0,
+			ChanEnv:       channel,
+			Status:        RACING,
+			TimeWoPitStop: 0,
+			PitstopSteps:  0,
+			CurrentTyre:   SOFT,
+			TyreTypeCount: 1,
+		}
 	}
 }
 
@@ -101,7 +131,7 @@ func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	return dice <= probaReussite
 }
 
-func MakeSliceOfDriversInRace(teams []*Team, portionDepart *Portion, mapChan sync.Map) ([]*DriverInRace, error) {
+func MakeSliceOfDriversInRace(teams []*Team, portionDepart *Portion, mapChan sync.Map, meteoCondition Meteo) ([]*DriverInRace, error) {
 	res := make([]*DriverInRace, 0)
 	for _, team := range teams {
 		for _, driver := range team.Drivers {
@@ -110,7 +140,7 @@ func MakeSliceOfDriversInRace(teams []*Team, portionDepart *Portion, mapChan syn
 			if !ok {
 				return nil, fmt.Errorf("error while creating driver in race : %s", driver.Id)
 			}
-			d := NewDriverInRace(&dtamp, portionDepart, c.(chan Action))
+			d := NewDriverInRace(&dtamp, portionDepart, c.(chan Action), meteoCondition)
 			res = append(res, d)
 		}
 	}
@@ -126,7 +156,7 @@ func ShuffleDrivers(drivers []*DriverInRace) []*DriverInRace {
 
 func (d *DriverInRace) PitStop() bool {
 
-	if d.Status == PITSTOP || d.Position.Id != "straight_1" {
+	if d.Status == PITSTOP || d.Status == PITSTOP_CHANGETYRE || d.Position.Id != "straight_1" {
 		return false
 	}
 
@@ -146,16 +176,53 @@ func (d *DriverInRace) PitStop() bool {
 	return false
 }
 
+func (d *DriverInRace) ChangeTyreType() bool {
+	// On garde le pneus WET s'il pleut
+	if d.CurrentTyre == WET {
+		return false
+	}
+
+	// On regarde si on change le type de pneu, plus tendance si plus tard dans la course et types de pneus utilisés < 2
+	probaChangeTyreType := 0
+	TyreTypeCount := len(d.UsedTyreTypes)
+
+	probaChangeTyreType = d.NbLaps + (3-TyreTypeCount)*20
+
+	var dice = rand.Intn(99) + 1
+
+	if dice < probaChangeTyreType {
+		switch d.CurrentTyre {
+		case SOFT:
+			d.PrevTyre = SOFT
+			d.CurrentTyre = MEDIUM
+			d.UsedTyreTypes = append(d.UsedTyreTypes, MEDIUM)
+			return true
+		case MEDIUM:
+			d.PrevTyre = MEDIUM
+			d.CurrentTyre = SOFT
+			d.UsedTyreTypes = append(d.UsedTyreTypes, SOFT)
+			return true
+		case HARD:
+			d.PrevTyre = HARD
+			d.CurrentTyre = MEDIUM
+			d.UsedTyreTypes = append(d.UsedTyreTypes, MEDIUM)
+			return true
+		}
+	}
+
+	return false
+}
+
 func (d *DriverInRace) TestPneus() bool {
 
-	if d.Status == PITSTOP {
+	if d.Status == PITSTOP || d.Status == PITSTOP_CHANGETYRE {
 		return true
 	}
 
 	probaPneus := 0
 
 	// On regarde si les pneus vont bien
-	probaPneus += d.TimeWoPitStop - (int(d.Pneus)*10 + 100)
+	probaPneus += d.TimeWoPitStop - (int(d.CurrentTyre)*10 + 100)
 
 	var dice int = rand.Intn(999) + 1
 
@@ -167,11 +234,11 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	var probaDoubler int
 
 	// Si l'autre pilote est en pitstop, on est sûr de doubler
-	if otherDriver.Status == PITSTOP {
+	if otherDriver.Status == PITSTOP || otherDriver.Status == PITSTOP_CHANGETYRE {
 		return true, []*DriverInRace{}
 	}
 
-	if d.Status == PITSTOP {
+	if d.Status == PITSTOP || d.Status == PITSTOP_CHANGETYRE {
 		return false, []*DriverInRace{}
 	}
 
@@ -236,7 +303,7 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 func (d *DriverInRace) DriverToOvertake() (*DriverInRace, error) {
 
-	if d.Status == PITSTOP {
+	if d.Status == PITSTOP || d.Status == PITSTOP_CHANGETYRE {
 		return nil, nil
 	}
 
@@ -280,7 +347,7 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 
 	if toOvertake != nil {
 		// Si le pilote est en pitstop, on choisit de doubler
-		if driverToOvertake.Status == PITSTOP {
+		if driverToOvertake.Status == PITSTOP || driverToOvertake.Status == PITSTOP_CHANGETYRE {
 			return true, nil
 		}
 
@@ -315,16 +382,22 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 
 		pitstop := false
 
-		if d.Status != PITSTOP {
+		if d.Status != PITSTOP && d.Status != PITSTOP_CHANGETYRE {
 			d.TimeWoPitStop++
 			pitstop = d.PitStop()
 		}
 
 		if pitstop {
-			d.Status = PITSTOP
+			// On regarde si on change le type de pneu
+			changeTyre := d.ChangeTyreType()
+			if changeTyre {
+				d.Status = PITSTOP_CHANGETYRE
+			} else {
+				d.Status = PITSTOP
+			}
 			d.ChanEnv <- NOOP
 			continue
-		} else if d.Status == PITSTOP {
+		} else if d.Status == PITSTOP || d.Status == PITSTOP_CHANGETYRE {
 			d.PitstopSteps--
 			d.ChanEnv <- NOOP
 			continue
