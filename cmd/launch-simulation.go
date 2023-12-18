@@ -14,7 +14,7 @@ func main() {
 		panic(err)
 	}
 
-	t, err, drivers := utils.ReadTeams()
+	t, drivers, err := utils.ReadTeams()
 	if err != nil {
 		panic(err)
 	}
