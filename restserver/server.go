@@ -50,25 +50,6 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Simulation terminée"))
 }
 
-// Lancement de 50 simulations
-func (rsa *RestServer) start50Simulation(w http.ResponseWriter, r *http.Request) {
-
-	// vérification de la méthode de la requête
-	if !rsa.checkMethod("POST", w, r) {
-		return
-	}
-
-	//On a les équipes et les circuits, on lance la simulation
-	championship := make([]types.Championship, 0)
-	for i := 0; i < 50; i++ {
-		championship = append(championship, *types.NewChampionship("2023", "Championship 1", rsa.pointTabCircuit, rsa.pointTabTeam))
-	}
-	s := simulator.NewSimulator(championship)
-	s.LaunchSimulation()
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Simulation de 50 championnats terminée"))
-}
-
 // Obtenir le classements des pilotes à la fin d'un championnat
 func (rsa *RestServer) getChampionshipRank(w http.ResponseWriter, r *http.Request) {
 	// vérification de la méthode de la requête
@@ -80,14 +61,30 @@ func (rsa *RestServer) getChampionshipRank(w http.ResponseWriter, r *http.Reques
 	w.Write(serial)
 }
 
-// Obtenir les pilotes avant une simulation
-func (rsa *RestServer) getDrivers(w http.ResponseWriter, r *http.Request) {
+// Obtenir les personnalités d'une simulation
+func (rsa *RestServer) getPersonalities(w http.ResponseWriter, r *http.Request) {
 	// vérification de la méthode de la requête
 	if !rsa.checkMethod("GET", w, r) {
 		return
 	}
 
-	serial, _ := json.Marshal(rsa.drivers)
+	driversInfosPersonalities := make([]types.PersonnalityInfo, 0)
+
+	for _, team := range rsa.pointTabTeam {
+		team := *team
+		for _, driver := range team.Drivers {
+			driverInfo := types.PersonnalityInfo{
+				IdDriver:     driver.Id,
+				Lastname:     driver.Lastname,
+				Personnality: driver.Personnality.TraitsValue,
+			}
+			driversInfosPersonalities = append(driversInfosPersonalities, driverInfo)
+		}
+
+	}
+
+	serial, _ := json.Marshal(driversInfosPersonalities)
+	w.WriteHeader(http.StatusOK)
 	w.Write(serial)
 }
 
@@ -95,9 +92,8 @@ func (rsa *RestServer) Start() {
 	// création du multiplexer
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
-	mux.HandleFunc("/api/start50Simulation", rsa.start50Simulation)
 	mux.HandleFunc("/api/driversChampionshipRank", rsa.getChampionshipRank)
-	mux.HandleFunc("/api/drivers", rsa.getDrivers)
+	mux.HandleFunc("/personalities", rsa.getPersonalities)
 
 	// création du serveur http
 	s := &http.Server{

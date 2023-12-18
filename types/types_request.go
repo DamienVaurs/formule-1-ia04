@@ -11,3 +11,9 @@ type DriverRank struct {
 func NewDriverRank(rank int, firstname, lastname string, pts int, personnality map[string]int) *DriverRank {
 	return &DriverRank{Rank: rank, FirstName: firstname, Lastname: lastname, Points: pts, Personnality: personnality}
 }
+
+type PersonnalityInfo struct {
+	IdDriver     string         `json:"idDriver"`
+	Lastname     string         `json:"lastname"`
+	Personnality map[string]int `json:"personnalities"`
+}
