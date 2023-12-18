@@ -68,14 +68,22 @@ func (rsa *RestServer) getPersonnalities(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	driversTab := make([]types.Driver, 0)
+	driversInfosPersonnalities := make([]types.PersonnalityInfo, 0)
 
 	for _, team := range rsa.pointTabTeam {
 		team := *team
-		driversTab = append(driversTab, team.Drivers...)
+		for _, driver := range team.Drivers {
+			driverInfo := types.PersonnalityInfo{
+				IdDriver:     driver.Id,
+				Lastname:     driver.Lastname,
+				Personnality: driver.Personnality.TraitsValue,
+			}
+			driversInfosPersonnalities = append(driversInfosPersonnalities, driverInfo)
+		}
+
 	}
 
-	serial, _ := json.Marshal(driversTab)
+	serial, _ := json.Marshal(driversInfosPersonnalities)
 	w.WriteHeader(http.StatusOK)
 	w.Write(serial)
 }
