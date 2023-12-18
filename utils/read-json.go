@@ -60,12 +60,12 @@ func ReadCircuit() ([]types.Circuit, error) {
 	return circuits, nil
 }
 
-func ReadTeams() ([]types.Team, error) {
+func ReadTeams() ([]types.Team, []types.Driver, error) {
 	// Ouvrir et lire le fichier JSON
 	file, err := os.Open(TEAMS_PATH)
 	if err != nil {
 		log.Println("Erreur lors de l'ouverture du fichier :", err)
-		return nil, err
+		return nil, nil, err
 	}
 	defer file.Close()
 
@@ -75,7 +75,7 @@ func ReadTeams() ([]types.Team, error) {
 	decoder := json.NewDecoder(file)
 	if err := decoder.Decode(&teams); err != nil {
 		log.Println("Erreur lors de la lecture du fichier JSON :", err)
-		return nil, err
+		return nil, nil, err
 	}
 	//Ajout d'Id aux pilotes et aux team
 	for i, team := range teams {
@@ -85,11 +85,15 @@ func ReadTeams() ([]types.Team, error) {
 		}
 	}
 
+	drivers := make([]types.Driver, 20)
+
 	// Ajout des personnalités
 	for i, team := range teams {
 		for j := range team.Drivers {
 			teams[i].Drivers[j].Personnality.TraitsValue = types.GenerateTraits()
+			drivers = append(drivers, teams[i].Drivers[j])
 		}
 	}
-	return teams, nil
+
+	return teams, drivers[20:], nil // Les 20 premiers indices sont nulles
 }

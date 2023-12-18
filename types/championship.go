@@ -67,13 +67,19 @@ func (c *Championship) CalcDriverRank() []*Driver {
 	return res
 }
 
-func (c *Championship) DisplayDriverRank() {
+func (c *Championship) DisplayDriverRank() []*DriverRank {
 	log.Printf("\n\n====Classement pilotes ====\n")
-	driverRank := c.CalcDriverRank()
-	for i, driver := range driverRank {
+	driversRank := c.CalcDriverRank()
+	driversRankTab := make([]*DriverRank, 20)
+	for i, driver := range driversRank {
+		driverRank := NewDriverRank(i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints, driver.Personnality.TraitsValue)
 		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
 		log.Printf("%v", driver.Personnality.TraitsValue)
+
+		driversRankTab = append(driversRankTab, driverRank)
+
 	}
+	return driversRankTab[20:] // Les 20 premiers indices sont nulles
 }
 
 func (c *Championship) DisplayPersonalityRepartition() {

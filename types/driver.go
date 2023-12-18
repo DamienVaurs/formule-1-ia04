@@ -8,13 +8,13 @@ import (
 )
 
 type Driver struct {
-	Id                 string       // Driver ID
-	Firstname          string       // Firstname
-	Lastname           string       // Lastname
-	Level              int          // Level of the driver, in [1, 10]
-	Country            string       // Country
-	Personnality       Personnality // Personnality
-	ChampionshipPoints int          // Points in the current champonship
+	Id                 string       `json:"id"`                 // Driver ID
+	Firstname          string       `json:"firstname"`          // Firstname
+	Lastname           string       `json:"lastname"`           // Lastname
+	Level              int          `json:"level"`              // Level of the driver, in [1, 10]
+	Country            string       `json:"country"`            // Country
+	Personnality       Personnality `json:"personnality"`       // Personnality
+	ChampionshipPoints int          `json:"championshipPoints"` // Points in the current champonship
 }
 
 type DriverInRace struct {
