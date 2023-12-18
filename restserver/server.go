@@ -62,13 +62,13 @@ func (rsa *RestServer) getChampionshipRank(w http.ResponseWriter, r *http.Reques
 }
 
 // Obtenir les personnalités d'une simulation
-func (rsa *RestServer) getPersonnalities(w http.ResponseWriter, r *http.Request) {
+func (rsa *RestServer) getPersonalities(w http.ResponseWriter, r *http.Request) {
 	// vérification de la méthode de la requête
 	if !rsa.checkMethod("GET", w, r) {
 		return
 	}
 
-	driversInfosPersonnalities := make([]types.PersonnalityInfo, 0)
+	driversInfosPersonalities := make([]types.PersonnalityInfo, 0)
 
 	for _, team := range rsa.pointTabTeam {
 		team := *team
@@ -78,12 +78,12 @@ func (rsa *RestServer) getPersonnalities(w http.ResponseWriter, r *http.Request)
 				Lastname:     driver.Lastname,
 				Personnality: driver.Personnality.TraitsValue,
 			}
-			driversInfosPersonnalities = append(driversInfosPersonnalities, driverInfo)
+			driversInfosPersonalities = append(driversInfosPersonalities, driverInfo)
 		}
 
 	}
 
-	serial, _ := json.Marshal(driversInfosPersonnalities)
+	serial, _ := json.Marshal(driversInfosPersonalities)
 	w.WriteHeader(http.StatusOK)
 	w.Write(serial)
 }
@@ -93,7 +93,7 @@ func (rsa *RestServer) Start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
 	mux.HandleFunc("/api/driversChampionshipRank", rsa.getChampionshipRank)
-	mux.HandleFunc("/personnalities", rsa.getPersonnalities)
+	mux.HandleFunc("/personalities", rsa.getPersonalities)
 
 	// création du serveur http
 	s := &http.Server{
