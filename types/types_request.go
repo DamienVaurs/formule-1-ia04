@@ -5,7 +5,7 @@ type DriverRank struct {
 	FirstName    string         `json:"firstname"`
 	Lastname     string         `json:"lastname"`
 	Points       int            `json:"points"`
-	Personnality map[string]int `json:"personnality"`
+	Personnality map[string]int `json:"personality"`
 }
 
 func NewDriverRank(rank int, firstname, lastname string, pts int, personnality map[string]int) *DriverRank {
@@ -15,5 +15,5 @@ func NewDriverRank(rank int, firstname, lastname string, pts int, personnality m
 type PersonnalityInfo struct {
 	IdDriver     string         `json:"idDriver"`
 	Lastname     string         `json:"lastname"`
-	Personnality map[string]int `json:"personnalities"`
+	Personnality map[string]int `json:"personality"`
 }
