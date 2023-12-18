@@ -62,13 +62,13 @@ func (rsa *RestServer) getChampionshipRank(w http.ResponseWriter, r *http.Reques
 }
 
 // Obtenir les personnalités d'une simulation
-func (rsa *RestServer) getPersonalities(w http.ResponseWriter, r *http.Request) {
+func (rsa *RestServer) getPersonnalities(w http.ResponseWriter, r *http.Request) {
 	// vérification de la méthode de la requête
 	if !rsa.checkMethod("GET", w, r) {
 		return
 	}
 
-	driversInfosPersonalities := make([]types.PersonnalityInfo, 0)
+	driversInfosPersonnalities := make([]types.PersonnalityInfo, 0)
 
 	for _, team := range rsa.pointTabTeam {
 		team := *team
@@ -78,14 +78,29 @@ func (rsa *RestServer) getPersonalities(w http.ResponseWriter, r *http.Request) 
 				Lastname:     driver.Lastname,
 				Personnality: driver.Personnality.TraitsValue,
 			}
-			driversInfosPersonalities = append(driversInfosPersonalities, driverInfo)
+			driversInfosPersonnalities = append(driversInfosPersonnalities, driverInfo)
 		}
 
 	}
 
-	serial, _ := json.Marshal(driversInfosPersonalities)
+	serial, _ := json.Marshal(driversInfosPersonnalities)
 	w.WriteHeader(http.StatusOK)
 	w.Write(serial)
+}
+
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (rsa *RestServer) Start() {
@@ -93,12 +108,14 @@ func (rsa *RestServer) Start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
 	mux.HandleFunc("/api/driversChampionshipRank", rsa.getChampionshipRank)
-	mux.HandleFunc("/personalities", rsa.getPersonalities)
+	mux.HandleFunc("/personalities", rsa.getPersonnalities)
+
+	corsHandler := corsMiddleware(mux)
 
 	// création du serveur http
 	s := &http.Server{
 		Addr:           rsa.addr,
-		Handler:        mux,
+		Handler:        corsHandler,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20}
