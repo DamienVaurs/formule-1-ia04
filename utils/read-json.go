@@ -17,6 +17,28 @@ const (
 	TEAMS_PATH = "instances/teams/inst-teams.json"
 )
 
+type TeamsJSON struct {
+	Name    string
+	Country string
+	Level   int
+	Drivers []DriverJSON
+}
+
+type DriverJSON struct {
+	FirstName   string
+	LastName    string
+	Country     string
+	Level       int
+	Personality PersonalityJSON
+}
+
+type PersonalityJSON struct {
+	Aggressivity  int
+	Confidence    int
+	Docility      int
+	Concentration int
+}
+
 func ReadCircuit() ([]types.Circuit, error) {
 	// Ouvrir et lire le fichier JSON
 	file, err := os.Open(CIRCUITS_PATH)
@@ -64,19 +86,43 @@ func ReadTeams() ([]types.Team, error) {
 	// Ouvrir et lire le fichier JSON
 	file, err := os.Open(TEAMS_PATH)
 	if err != nil {
-		log.Println("Erreur lors de l'ouverture du fichier :", err)
+		log.Println("Erreur lors de l'ouverture du fichier pour lecture des équipes :", err)
 		return nil, err
 	}
-	defer file.Close()
 
+	teamsJSON := make([]TeamsJSON, 0)
 	teams := make([]types.Team, 0)
-
-	// Décoder le fichier JSON dans la structure de données
+	// Décoder le fichier JSON pour créer les équipes
 	decoder := json.NewDecoder(file)
 	if err := decoder.Decode(&teams); err != nil {
-		log.Println("Erreur lors de la lecture du fichier JSON :", err)
+		log.Println("Erreur lors de la lecture du fichier JSON pour les équipes :", err)
 		return nil, err
 	}
+	file.Close()
+	file, err = os.Open(TEAMS_PATH)
+	if err != nil {
+		log.Println("Erreur lors de l'ouverture du fichier pour lecture des personnalités:", err)
+		return nil, err
+	}
+	decoder = json.NewDecoder(file)
+	if err := decoder.Decode(&teamsJSON); err != nil {
+		log.Println("Erreur lors de la lecture du fichier JSON pour les personnalités :", err)
+		return nil, err
+	}
+	fmt.Println(teamsJSON)
+
+	//Ajout des personnalités aux pilotes
+	for i, team := range teams {
+		for j := range team.Drivers {
+			m := make(map[string]int)
+			m["Aggressivity"] = teamsJSON[i].Drivers[j].Personality.Aggressivity
+			m["Confidence"] = teamsJSON[i].Drivers[j].Personality.Confidence
+			m["Docility"] = teamsJSON[i].Drivers[j].Personality.Docility
+			m["Concentration"] = teamsJSON[i].Drivers[j].Personality.Concentration
+			teams[i].Drivers[j].Personality = *types.NewPersonality(m)
+		}
+	}
+
 	//Ajout d'Id aux pilotes et aux team
 	for i, team := range teams {
 		teams[i].Id = fmt.Sprintf("team-%d", i)
@@ -85,5 +131,6 @@ func ReadTeams() ([]types.Team, error) {
 		}
 	}
 
+	fmt.Println(teams)
 	return teams, nil
 }
