@@ -163,11 +163,11 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 				if !success {
 					// En cas de crash la confiance et la docilité du pilote est impacté
-					if drivers[i].Driver.Personnality.TraitsValue["Confidence"] > 0 {
-						drivers[i].Driver.Personnality.TraitsValue["Confidence"] -= 1
+					if drivers[i].Driver.Personality.TraitsValue["Confidence"] > 0 {
+						drivers[i].Driver.Personality.TraitsValue["Confidence"] -= 1
 					}
-					if drivers[i].Driver.Personnality.TraitsValue["Docility"] < 5 {
-						drivers[i].Driver.Personnality.TraitsValue["Docility"] += 1
+					if drivers[i].Driver.Personality.TraitsValue["Docility"] < 5 {
+						drivers[i].Driver.Personality.TraitsValue["Docility"] += 1
 					}
 					//On crée un Highlight de crash
 					highlight, err := NewHighlight([]*DriverInRace{drivers[i]}, CRASHPORTION)

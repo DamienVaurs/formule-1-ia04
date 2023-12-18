@@ -17,13 +17,12 @@ type RestServer struct {
 	addr            string
 	pointTabCircuit []*types.Circuit
 	pointTabTeam    []*types.Team
-	drivers         []types.Driver
 }
 
 var driversRank []*types.DriverRank
 
-func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team, drivers []types.Driver) *RestServer {
-	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam, drivers: drivers}
+func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team) *RestServer {
+	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam}
 }
 
 // Test de la méthode
@@ -68,20 +67,22 @@ func (rsa *RestServer) getPersonnalities(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	driversInfosPersonnalities := make([]types.PersonnalityInfo, 0)
+	driversInfosPersonnalities := make([]types.PersonalityInfo, 0)
 
 	for _, team := range rsa.pointTabTeam {
 		team := *team
 		for _, driver := range team.Drivers {
-			driverInfo := types.PersonnalityInfo{
-				IdDriver:     driver.Id,
-				Lastname:     driver.Lastname,
-				Personnality: driver.Personnality.TraitsValue,
+			fmt.Println(driver)
+			driverInfo := types.PersonalityInfo{
+				IdDriver:    driver.Id,
+				Lastname:    driver.Lastname,
+				Personality: driver.Personality.TraitsValue,
 			}
 			driversInfosPersonnalities = append(driversInfosPersonnalities, driverInfo)
 		}
 
 	}
+	fmt.Println(driversInfosPersonnalities[0])
 
 	serial, _ := json.Marshal(driversInfosPersonnalities)
 	w.WriteHeader(http.StatusOK)

@@ -8,13 +8,13 @@ import (
 )
 
 type Driver struct {
-	Id                 string       `json:"id"`                 // Driver ID
-	Firstname          string       `json:"firstname"`          // Firstname
-	Lastname           string       `json:"lastname"`           // Lastname
-	Level              int          `json:"level"`              // Level of the driver, in [1, 10]
-	Country            string       `json:"country"`            // Country
-	Personnality       Personnality `json:"personnality"`       // Personnality
-	ChampionshipPoints int          `json:"championshipPoints"` // Points in the current champonship
+	Id                 string      `json:"id"`                 // Driver ID
+	Firstname          string      `json:"firstname"`          // Firstname
+	Lastname           string      `json:"lastname"`           // Lastname
+	Level              int         `json:"level"`              // Level of the driver, in [1, 10]
+	Country            string      `json:"country"`            // Country
+	Personality        Personality `json:"personality"`        // Personality
+	ChampionshipPoints int         `json:"championshipPoints"` // Points in the current champonship
 }
 
 type DriverInRace struct {
@@ -73,7 +73,7 @@ const (
 	HARD
 )
 
-func NewDriver(id string, firstname string, lastname string, level int, country string, team *Team, personnality Personnality) *Driver {
+func NewDriver(id string, firstname string, lastname string, level int, country string, team *Team, personality Personality) *Driver {
 
 	return &Driver{
 		Id:                 id,
@@ -81,7 +81,7 @@ func NewDriver(id string, firstname string, lastname string, level int, country 
 		Lastname:           lastname,
 		Level:              level,
 		Country:            country,
-		Personnality:       personnality,
+		Personality:        personality,
 		ChampionshipPoints: 0,
 	}
 }
@@ -246,9 +246,9 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	d.TimeWoPitStop += 10
 
 	// En fonction de la valeur des traits de personnalité de confiance et de concentration du pilote, la probabilité de réussir un dépassement varie
-	if d.Driver.Personnality.TraitsValue["Confidence"] > 3 && d.Driver.Personnality.TraitsValue["Concentration"] > 3 {
+	if d.Driver.Personality.TraitsValue["Confidence"] > 3 && d.Driver.Personality.TraitsValue["Concentration"] > 3 {
 		probaDoubler = 75
-	} else if d.Driver.Personnality.TraitsValue["Confidence"] <= 3 && d.Driver.Personnality.TraitsValue["Concentration"] >= 3 {
+	} else if d.Driver.Personality.TraitsValue["Confidence"] <= 3 && d.Driver.Personality.TraitsValue["Concentration"] >= 3 {
 		probaDoubler = 65
 	} else {
 		probaDoubler = 50
@@ -271,11 +271,11 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 	// Si on est en dessous de probaDoubler, on double et la confiance du pilote augmente
 	if dice <= probaDoubler {
-		if d.Driver.Personnality.TraitsValue["Confidence"] < 5 {
-			d.Driver.Personnality.TraitsValue["Confidence"] += 1
+		if d.Driver.Personality.TraitsValue["Confidence"] < 5 {
+			d.Driver.Personality.TraitsValue["Confidence"] += 1
 			// Si la confiance du pilote est déjà au max et il réussit son dépassement, il devient moins docile
-		} else if d.Driver.Personnality.TraitsValue["Confidence"] == 5 && d.Driver.Personnality.TraitsValue["Docility"] > 0 {
-			d.Driver.Personnality.TraitsValue["Docility"] -= 1
+		} else if d.Driver.Personality.TraitsValue["Confidence"] == 5 && d.Driver.Personality.TraitsValue["Docility"] > 0 {
+			d.Driver.Personality.TraitsValue["Docility"] -= 1
 		}
 		return true, []*DriverInRace{}
 	}
@@ -333,10 +333,10 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	probaVeutDoubler := 0
 
 	// L'aggressivité et la confiance du pilote impact les tentatives de dépassement
-	if d.Driver.Personnality.TraitsValue["Aggressivity"] > 3 || (d.Driver.Personnality.TraitsValue["Aggressivity"] >= 3 && d.Driver.Personnality.TraitsValue["Confidence"] >= 3) {
-		probaVeutDoubler += d.Driver.Personnality.TraitsValue["Aggressivity"] * 2
+	if d.Driver.Personality.TraitsValue["Aggressivity"] > 3 || (d.Driver.Personality.TraitsValue["Aggressivity"] >= 3 && d.Driver.Personality.TraitsValue["Confidence"] >= 3) {
+		probaVeutDoubler += d.Driver.Personality.TraitsValue["Aggressivity"] * 2
 	} else {
-		probaVeutDoubler -= (d.Driver.Personnality.TraitsValue["Docility"]) * 2
+		probaVeutDoubler -= (d.Driver.Personality.TraitsValue["Docility"]) * 2
 	}
 
 	if p.Difficulty != 0 {

@@ -72,9 +72,9 @@ func (c *Championship) DisplayDriverRank() []*DriverRank {
 	driversRank := c.CalcDriverRank()
 	driversRankTab := make([]*DriverRank, 20)
 	for i, driver := range driversRank {
-		driverRank := NewDriverRank(i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints, driver.Personnality.TraitsValue)
+		driverRank := NewDriverRank(i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints, driver.Personality.TraitsValue)
 		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
-		log.Printf("%v", driver.Personnality.TraitsValue)
+		log.Printf("%v", driver.Personality.TraitsValue)
 
 		driversRankTab = append(driversRankTab, driverRank)
 
@@ -94,7 +94,7 @@ func (c *Championship) DisplayPersonalityRepartition() {
 	aggressivity_value_0 := 0
 	for i, driver := range driverRank {
 		if i < 15 {
-			switch driver.Personnality.TraitsValue["Aggressivity"] {
+			switch driver.Personality.TraitsValue["Aggressivity"] {
 			case 0:
 				aggressivity_value_0 += 1
 			case 1:
@@ -108,7 +108,7 @@ func (c *Championship) DisplayPersonalityRepartition() {
 			case 5:
 				aggressivity_value_5 += 1
 			default:
-				log.Printf("Value of aggressivity out of range : %d", driver.Personnality.TraitsValue["Aggressivity"])
+				log.Printf("Value of aggressivity out of range : %d", driver.Personality.TraitsValue["Aggressivity"])
 			}
 		}
 		if i == 4 {

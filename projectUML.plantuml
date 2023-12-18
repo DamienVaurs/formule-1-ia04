@@ -12,7 +12,7 @@ class Driver {
   - country : string
   - championshipPoints: int
 
-  + Driver(team : *Team, personnality: Personnality, firstName, lastName, country : string, level: int)
+  + Driver(team : *Team, personality: Personality, firstName, lastName, country : string, level: int)
   
   }
   
@@ -66,10 +66,10 @@ enum Meteo{
   Heat
 }
 
-class Personnality{
+class Personality{
   - TraitsValue : map[*Trait]int
 
-  + Personnality(traitsValue : map[*Trait]int)
+  + Personality(traitsValue : map[*Trait]int)
 }
 
 class Trait{
@@ -120,8 +120,8 @@ Portion  <|--  Straight
 Portion "1" --o "*" Driver : est sur <
 Championship "*" o-- "1..n" Team : prend par à <
 Team "1" o-- "2" Driver : appartient à <
-Personnality "1" --o "1" Driver : a <
-Trait "1..*" --o "*" Personnality : forme >
+Personality "1" --o "1" Driver : a <
+Trait "1..*" --o "*" Personality : forme >
 
 
 @enduml

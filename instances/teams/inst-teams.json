@@ -9,7 +9,7 @@
                 "LastName": "Verstappen",
                 "Country": "Netherlands",
                 "Level": 10,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 5,
                     "Confidence": 5,
                     "Docility": 2,
@@ -22,7 +22,7 @@
                 "LastName": "Perez",
                 "Country": "Mexico",
                 "Level":7,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 2,
                     "Confidence": 4,
                     "Docility": 4,
@@ -43,7 +43,7 @@
                 "LastName": "Hamilton",
                 "Country": "UK",
                 "Level": 8,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 4,
                     "Confidence": 5,
                     "Docility": 3,
@@ -56,7 +56,7 @@
                 "LastName": "Russell",
                 "Country": "UK",
                 "Level": 7,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 5,
                     "Confidence": 4,
                     "Docility": 3,
@@ -76,7 +76,7 @@
                 "LastName": "Leclerc",
                 "Country": "Monaco",
                 "Level": 8,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 4,
                     "Confidence": 4,
                     "Docility": 4,
@@ -89,7 +89,7 @@
                 "LastName": "Sainz",
                 "Country": "Spain",
                 "Level": 7,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 4,
                     "Confidence": 3,
                     "Docility": 3,
@@ -109,7 +109,7 @@
                 "LastName": "Norris",
                 "Country": "UK",
                 "Level": 7,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 3,
                     "Confidence": 4,
                     "Docility": 5,
@@ -122,7 +122,7 @@
                 "LastName": "Piastri",
                 "Country": "Australia",
                 "Level": 4,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 4,
                     "Confidence": 3,
                     "Docility": 4,
@@ -142,7 +142,7 @@
                 "LastName": "Gasly",
                 "Country": "France",
                 "Level": 6,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 4,
                     "Confidence": 3,
                     "Docility": 4,
@@ -155,7 +155,7 @@
                 "LastName": "Ocon",
                 "Country": "France",
                 "Level": 5,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 3,
                     "Confidence": 4,
                     "Docility": 3,
@@ -175,7 +175,7 @@
                 "LastName": "Ricciardo",
                 "Country": "Australia",
                 "Level": 5,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 5,
                     "Confidence": 3,
                     "Docility": 4,
@@ -188,7 +188,7 @@
                 "LastName": "Tsunoda",
                 "Country": "Japan",
                 "Level": 4,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 4,
                     "Confidence": 3,
                     "Docility": 2,
@@ -208,7 +208,7 @@
                 "LastName": "Alonso",
                 "Country": "Spain",
                 "Level": 7,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 5,
                     "Confidence": 5,
                     "Docility": 3,
@@ -221,7 +221,7 @@
                 "LastName": "Stroll",
                 "Country": "Canada",
                 "Level": 2,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 3,
                     "Confidence": 2,
                     "Docility": 3,
@@ -241,7 +241,7 @@
                 "LastName": "Bottas",
                 "Country": "Finland",
                 "Level": 6,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 3,
                     "Confidence": 4,
                     "Docility": 4,
@@ -254,7 +254,7 @@
                 "LastName": "Zhou",
                 "Country": "China",
                 "Level": 3,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 3,
                     "Confidence": 3,
                     "Docility": 5,
@@ -274,7 +274,7 @@
                 "LastName": "Magnussen",
                 "Country": "Denmark",
                 "Level": 3,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 4,
                     "Confidence": 3,
                     "Docility": 2,
@@ -287,7 +287,7 @@
                 "LastName": "Hulkenberg",
                 "Country": "Germany",
                 "Level": 3,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 3,
                     "Confidence": 3,
                     "Docility": 4,
@@ -307,7 +307,7 @@
                 "LastName": "Albon",
                 "Country": "Thailand",
                 "Level": 4,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 4,
                     "Confidence": 3,
                     "Docility": 4,
@@ -320,7 +320,7 @@
                 "LastName": "Sargeant",
                 "Country": "USA",
                 "Level": 2,
-                "Personnality": {
+                "Personality": {
                     "Aggressivity": 2,
                     "Confidence": 2,
                     "Docility": 3,
