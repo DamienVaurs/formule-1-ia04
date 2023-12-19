@@ -20,5 +20,5 @@ type PersonalityInfo struct {
 
 type UpdatePersonalityInfo struct {
 	IdDriver    string         `json:"idDriver"`
-	Personality map[string]int `json:"personnalities"`
+	Personality map[string]int `json:"personality"`
 }
