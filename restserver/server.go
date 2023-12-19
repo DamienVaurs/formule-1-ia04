@@ -1,8 +1,6 @@
 package restserver
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -25,20 +23,10 @@ func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam [
 	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam}
 }
 
-// Test de la méthode
-func (rsa *RestServer) checkMethod(method string, w http.ResponseWriter, r *http.Request) bool {
-	if r.Method != method {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprintf(w, "method %q not allowed", r.Method)
-		return false
-	}
-	return true
-}
-
 func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 
 	// vérification de la méthode de la requête
-	if !rsa.checkMethod("POST", w, r) {
+	if r.Method != "POST" {
 		return
 	}
 
@@ -47,46 +35,6 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	driversRank = s.LaunchSimulation()
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Simulation terminée"))
-}
-
-// Obtenir le classements des pilotes à la fin d'un championnat
-func (rsa *RestServer) getChampionshipRank(w http.ResponseWriter, r *http.Request) {
-	// vérification de la méthode de la requête
-	if !rsa.checkMethod("GET", w, r) {
-		return
-	}
-
-	serial, _ := json.Marshal(driversRank)
-	w.Write(serial)
-}
-
-// Obtenir les personnalités d'une simulation
-func (rsa *RestServer) getPersonnalities(w http.ResponseWriter, r *http.Request) {
-	// vérification de la méthode de la requête
-	if !rsa.checkMethod("GET", w, r) {
-		return
-	}
-
-	driversInfosPersonnalities := make([]types.PersonalityInfo, 0)
-
-	for _, team := range rsa.pointTabTeam {
-		team := *team
-		for _, driver := range team.Drivers {
-			fmt.Println(driver)
-			driverInfo := types.PersonalityInfo{
-				IdDriver:    driver.Id,
-				Lastname:    driver.Lastname,
-				Personality: driver.Personality.TraitsValue,
-			}
-			driversInfosPersonnalities = append(driversInfosPersonnalities, driverInfo)
-		}
-
-	}
-	fmt.Println(driversInfosPersonnalities[0])
-
-	serial, _ := json.Marshal(driversInfosPersonnalities)
-	w.WriteHeader(http.StatusOK)
-	w.Write(serial)
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -109,7 +57,7 @@ func (rsa *RestServer) Start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
 	mux.HandleFunc("/api/driversChampionshipRank", rsa.getChampionshipRank)
-	mux.HandleFunc("/personalities", rsa.getPersonnalities)
+	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonalities)
 
 	corsHandler := corsMiddleware(mux)
 

@@ -17,3 +17,8 @@ type PersonalityInfo struct {
 	Lastname    string         `json:"lastname"`
 	Personality map[string]int `json:"personality"`
 }
+
+type UpdatePersonalityInfo struct {
+	IdDriver    string         `json:"idDriver"`
+	Personality map[string]int `json:"personality"`
+}
