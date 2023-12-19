@@ -26,7 +26,7 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	// Lancement de la simulation
 	driverTotalPoints, teamTotalPoints, personalityTotalPoints = s.LaunchSimulation()
 	lastChampionshipStatistics := types.NewLastChampionshipStatistics(driverTotalPoints, teamTotalPoints, personalityTotalPoints, nil)
-	simulateChampionship := types.NewSimulateChampionship(championship.Name, *lastChampionshipStatistics)
+	simulateChampionship := types.NewSimulateChampionship(championship.Name, types.TotalStatistics{}, *lastChampionshipStatistics)
 	w.WriteHeader(http.StatusOK)
 	serial, _ := json.Marshal(simulateChampionship)
 	w.Write(serial)

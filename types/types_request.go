@@ -24,10 +24,17 @@ type UpdatePersonalityInfo struct {
 }
 
 type SimulateChampionship struct {
-	LastChampionship           string                     `json:"lastChampionship"`
+	LastChampionship           string `json:"lastChampionship"`
+	TotalStatistics            TotalStatistics
 	LastChampionshipStatistics LastChampionshipStatistics `json:"lastChampionshipStatistics"`
 }
 
+type TotalStatistics struct {
+	DriversTotalPoints       []*DriverTotalPoints      `json:"driversTotalPoints"`
+	TeamsTotalPoints         []*TeamTotalPoints        `json:"teamsTotalPoints"`
+	PersonalitiesTotalPoints []*PersonalityTotalPoints `json:"personnalityTotalPoints"`
+	NbCrashsPersonnality     []*NbCrashsPersonnality   `json:"nbCrashsPersonnality"`
+}
 type LastChampionshipStatistics struct {
 	DriversTotalPoints       []*DriverTotalPoints      `json:"driversTotalPoints"`
 	TeamsTotalPoints         []*TeamTotalPoints        `json:"teamsTotalPoints"`
@@ -71,6 +78,6 @@ func NewLastChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, team
 	return &LastChampionshipStatistics{DriversTotalPoints: driversTotalPoints, TeamsTotalPoints: teamTotalPoints, PersonalitiesTotalPoints: personalityTotalPoints, NbCrashsPersonnality: nbCrashsPersonnality}
 }
 
-func NewSimulateChampionship(lastChampionship string, lastChampionshipStatistics LastChampionshipStatistics) *SimulateChampionship {
-	return &SimulateChampionship{LastChampionship: lastChampionship, LastChampionshipStatistics: lastChampionshipStatistics}
+func NewSimulateChampionship(lastChampionship string, totalStatistics TotalStatistics, lastChampionshipStatistics LastChampionshipStatistics) *SimulateChampionship {
+	return &SimulateChampionship{LastChampionship: lastChampionship, TotalStatistics: totalStatistics, LastChampionshipStatistics: lastChampionshipStatistics}
 }
