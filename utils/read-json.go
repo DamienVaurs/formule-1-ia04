@@ -130,7 +130,5 @@ func ReadTeams() ([]types.Team, error) {
 			teams[i].Drivers[j].Id = fmt.Sprintf("driver-%d-%d", i, j)
 		}
 	}
-
-	fmt.Println(teams)
 	return teams, nil
 }
