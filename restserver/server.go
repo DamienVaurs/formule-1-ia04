@@ -36,7 +36,8 @@ func (rsa *RestServer) checkMethod(method string, w http.ResponseWriter, r *http
 	return true
 }
 
-func (*RestServer) decodeUpdatePersonalityRequest(r *http.Request) (req types.UpdatePersonalityInfo, err error) {
+// Décodage de la requête /personalities/update
+func (*RestServer) decodeUpdatePersonalityRequest(r *http.Request) (req []types.UpdatePersonalityInfo, err error) {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
 	err = json.Unmarshal(buf.Bytes(), &req)
@@ -110,27 +111,40 @@ func (rsa *RestServer) updatePersonalities(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// Map pour stocker les nouvelles valeurs de personnalité
-	newPersonality := map[string]int{
-		"Aggressivity":  req.Personality["Aggressivity"],
-		"Confidence":    req.Personality["Confidence"],
-		"Docility":      req.Personality["Docility"],
-		"Concentration": req.Personality["Concentration"],
-	}
-
 	// Réponse à renvoyer
-	var resp types.UpdatePersonalityInfo
+	var resp []types.UpdatePersonalityInfo
 
 	// Parcours des équipes et des pilotes
 	for _, team := range rsa.pointTabTeam {
 		for i := 0; i < 2; i++ {
-			if req.IdDriver == team.Drivers[i].Id {
-				// Mise à jour des valeurs de personnalité du pilote
-				team.Drivers[i].Personality.TraitsValue = newPersonality
+			for _, updateReq := range req {
+				if updateReq.IdDriver == team.Drivers[i].Id {
+					// Test des valeurs des différentes personnalités
+					if updateReq.Personality["Aggressivity"] > 5 || updateReq.Personality["Aggressivity"] < 1 ||
+						updateReq.Personality["Confidence"] > 5 || updateReq.Personality["Confidence"] < 1 ||
+						updateReq.Personality["Docility"] > 5 || updateReq.Personality["Docility"] < 1 ||
+						updateReq.Personality["Concentration"] > 5 || updateReq.Personality["Concentration"] < 1 {
+						msg := "Une des valeurs des personnalités entrée est supérieur à 5 ou inférieur à 1"
+						w.WriteHeader(http.StatusBadRequest)
+						serial, _ := json.Marshal(msg)
+						w.Write(serial)
+						return
+					} else {
+						// Mise à jour des valeurs de personnalité du pilote
+						team.Drivers[i].Personality.TraitsValue = map[string]int{
+							"Aggressivity":  updateReq.Personality["Aggressivity"],
+							"Confidence":    updateReq.Personality["Confidence"],
+							"Docility":      updateReq.Personality["Docility"],
+							"Concentration": updateReq.Personality["Concentration"],
+						}
+					}
 
-				// Remplissage de la réponse
-				resp.IdDriver = team.Drivers[i].Id
-				resp.Personality = newPersonality
+					// Remplissage de la réponse
+					resp = append(resp, types.UpdatePersonalityInfo{
+						IdDriver:    team.Drivers[i].Id,
+						Personality: team.Drivers[i].Personality.TraitsValue,
+					})
+				}
 			}
 		}
 	}
