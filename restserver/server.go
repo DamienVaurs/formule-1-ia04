@@ -1,6 +1,7 @@
 package restserver
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -33,6 +34,13 @@ func (rsa *RestServer) checkMethod(method string, w http.ResponseWriter, r *http
 		return false
 	}
 	return true
+}
+
+func (*RestServer) decodeUpdatePersonalityRequest(r *http.Request) (req types.UpdatePersonalityInfo, err error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	err = json.Unmarshal(buf.Bytes(), &req)
+	return
 }
 
 func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
@@ -89,6 +97,52 @@ func (rsa *RestServer) getPersonnalities(w http.ResponseWriter, r *http.Request)
 	w.Write(serial)
 }
 
+// Mettre à jour les personnalités
+func (rsa *RestServer) updatePersonalities(w http.ResponseWriter, r *http.Request) {
+	// vérification de la méthode de la requête
+	if !rsa.checkMethod("PUT", w, r) {
+		return
+	}
+
+	// décodage de la requête
+	req, err := rsa.decodeUpdatePersonalityRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, err.Error())
+		return
+	}
+
+	// Map pour stocker les nouvelles valeurs de personnalité
+	newPersonality := map[string]int{
+		"Aggressivity":  req.Personality["Aggressivity"],
+		"Confidence":    req.Personality["Confidence"],
+		"Docility":      req.Personality["Docility"],
+		"Concentration": req.Personality["Concentration"],
+	}
+
+	// Réponse à renvoyer
+	var resp types.UpdatePersonalityInfo
+
+	// Parcours des équipes et des pilotes
+	for _, team := range rsa.pointTabTeam {
+		for i := 0; i < 2; i++ {
+			if req.IdDriver == team.Drivers[i].Id {
+				// Mise à jour des valeurs de personnalité du pilote
+				team.Drivers[i].Personality.TraitsValue = newPersonality
+
+				// Remplissage de la réponse
+				resp.IdDriver = team.Drivers[i].Id
+				resp.Personality = newPersonality
+			}
+		}
+	}
+
+	serial, _ := json.Marshal(resp)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(serial)
+}
+
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -110,6 +164,7 @@ func (rsa *RestServer) Start() {
 	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
 	mux.HandleFunc("/api/driversChampionshipRank", rsa.getChampionshipRank)
 	mux.HandleFunc("/personalities", rsa.getPersonnalities)
+	mux.HandleFunc("/personalities/update", rsa.updatePersonalities)
 
 	corsHandler := corsMiddleware(mux)
 
