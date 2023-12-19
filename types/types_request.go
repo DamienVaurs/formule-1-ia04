@@ -24,8 +24,8 @@ type UpdatePersonalityInfo struct {
 }
 
 type SimulateChampionship struct {
-	LastChampionship           string `json:"lastChampionship"`
-	TotalStatistics            TotalStatistics
+	LastChampionship           string                     `json:"lastChampionship"`
+	TotalStatistics            TotalStatistics            `json:"totalStatistics"`
 	LastChampionshipStatistics LastChampionshipStatistics `json:"lastChampionshipStatistics"`
 }
 
