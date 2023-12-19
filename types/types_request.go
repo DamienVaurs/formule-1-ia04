@@ -22,3 +22,35 @@ type UpdatePersonalityInfo struct {
 	IdDriver    string         `json:"idDriver"`
 	Personality map[string]int `json:"personality"`
 }
+
+type SimulateChampionship struct {
+	LastChampionship           string                     `json:"lastChampionship"`
+	LastChampionshipStatistics LastChampionshipStatistics `json:"lastChampionshipStatistics"`
+}
+
+type LastChampionshipStatistics struct {
+	DriversTotalPoints       []DriverTotalPoints      `json:"driversTotalPoints"`
+	TeamsTotalPoints         []TeamTotalPoints        `json:"teamsTotalPoints"`
+	PersonalitiesTotalPoints []PersonalityTotalPoints `json:"personnalityTotalPoints"`
+	NbCrashsPersonnality     []NbCrashsPersonnality   `json:"nbCrashsPersonnality"`
+}
+
+type DriverTotalPoints struct {
+	Driver      string `json:"driver"`
+	TotalPoints int    `json:"totalPoints"`
+}
+
+type TeamTotalPoints struct {
+	Team        string `json:"team"`
+	TotalPoints int    `json:"totalPoints"`
+}
+
+type PersonalityTotalPoints struct {
+	Personality map[string]int `json:"personnality"`
+	TotalPoints int            `json:"totalPoints"`
+}
+
+type NbCrashsPersonnality struct {
+	Personality map[string]int `json:"personnality"`
+	NbCrash     int            `json:"nbCrash"`
+}
