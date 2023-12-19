@@ -29,10 +29,10 @@ type SimulateChampionship struct {
 }
 
 type LastChampionshipStatistics struct {
-	DriversTotalPoints       []DriverTotalPoints      `json:"driversTotalPoints"`
-	TeamsTotalPoints         []TeamTotalPoints        `json:"teamsTotalPoints"`
-	PersonalitiesTotalPoints []PersonalityTotalPoints `json:"personnalityTotalPoints"`
-	NbCrashsPersonnality     []NbCrashsPersonnality   `json:"nbCrashsPersonnality"`
+	DriversTotalPoints       []*DriverTotalPoints      `json:"driversTotalPoints"`
+	TeamsTotalPoints         []*TeamTotalPoints        `json:"teamsTotalPoints"`
+	PersonalitiesTotalPoints []*PersonalityTotalPoints `json:"personnalityTotalPoints"`
+	NbCrashsPersonnality     []*NbCrashsPersonnality   `json:"nbCrashsPersonnality"`
 }
 
 type DriverTotalPoints struct {
@@ -53,4 +53,24 @@ type PersonalityTotalPoints struct {
 type NbCrashsPersonnality struct {
 	Personality map[string]int `json:"personnality"`
 	NbCrash     int            `json:"nbCrash"`
+}
+
+func NewDriverTotalPoints(lastname string, pts int) *DriverTotalPoints {
+	return &DriverTotalPoints{Driver: lastname, TotalPoints: pts}
+}
+
+func NewTeamTotalPoints(team string, pts int) *TeamTotalPoints {
+	return &TeamTotalPoints{Team: team, TotalPoints: pts}
+}
+
+func NewPersonalityTotalPoints(personality map[string]int, pts int) *PersonalityTotalPoints {
+	return &PersonalityTotalPoints{Personality: personality, TotalPoints: pts}
+}
+
+func NewLastChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, teamTotalPoints []*TeamTotalPoints, personalityTotalPoints []*PersonalityTotalPoints, nbCrashsPersonnality []*NbCrashsPersonnality) *LastChampionshipStatistics {
+	return &LastChampionshipStatistics{DriversTotalPoints: driversTotalPoints, TeamsTotalPoints: teamTotalPoints, PersonalitiesTotalPoints: personalityTotalPoints, NbCrashsPersonnality: nbCrashsPersonnality}
+}
+
+func NewSimulateChampionship(lastChampionship string, lastChampionshipStatistics LastChampionshipStatistics) *SimulateChampionship {
+	return &SimulateChampionship{LastChampionship: lastChampionship, LastChampionshipStatistics: lastChampionshipStatistics}
 }
