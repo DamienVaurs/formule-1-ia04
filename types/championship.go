@@ -44,12 +44,18 @@ func (c *Championship) CalcTeamRank() []*Team {
 	return res
 }
 
-func (c *Championship) DisplayTeamRank() {
+func (c *Championship) DisplayTeamRank() []*TeamTotalPoints {
 	log.Printf("\n\n====Classement constructeur ====\n")
 	teamRank := c.CalcTeamRank()
+	teamsRankTab := make([]*TeamTotalPoints, 0)
 	for i, team := range teamRank {
+		teamRank := NewTeamTotalPoints(team.Name, team.CalcChampionshipPoints())
 		log.Printf("%d : %s : %d points\n", i+1, team.Name, team.CalcChampionshipPoints())
+
+		teamsRankTab = append(teamsRankTab, teamRank)
 	}
+
+	return teamsRankTab
 }
 
 func (c *Championship) CalcDriverRank() []*Driver {
@@ -67,19 +73,22 @@ func (c *Championship) CalcDriverRank() []*Driver {
 	return res
 }
 
-func (c *Championship) DisplayDriverRank() []*DriverRank {
+func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*PersonalityTotalPoints) {
 	log.Printf("\n\n====Classement pilotes ====\n")
 	driversRank := c.CalcDriverRank()
-	driversRankTab := make([]*DriverRank, 20)
+	driversRankTab := make([]*DriverTotalPoints, 0)
+	personalityRankTab := make([]*PersonalityTotalPoints, 0)
 	for i, driver := range driversRank {
-		driverRank := NewDriverRank(i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints, driver.Personality.TraitsValue)
+		driverRank := NewDriverTotalPoints(driver.Lastname, driver.ChampionshipPoints)
+		personalityRank := NewPersonalityTotalPoints(driver.Personality.TraitsValue, driver.ChampionshipPoints)
 		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
 		log.Printf("%v", driver.Personality.TraitsValue)
 
 		driversRankTab = append(driversRankTab, driverRank)
+		personalityRankTab = append(personalityRankTab, personalityRank)
 
 	}
-	return driversRankTab[20:] // Les 20 premiers indices sont nulles
+	return driversRankTab, personalityRankTab
 }
 
 func (c *Championship) DisplayPersonalityRepartition() {
