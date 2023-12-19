@@ -109,7 +109,6 @@ func ReadTeams() ([]types.Team, error) {
 		log.Println("Erreur lors de la lecture du fichier JSON pour les personnalités :", err)
 		return nil, err
 	}
-	fmt.Println(teamsJSON)
 
 	//Ajout des personnalités aux pilotes
 	for i, team := range teams {
