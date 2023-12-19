@@ -60,7 +60,7 @@ func (rsa *RestServer) getChampionshipRank(w http.ResponseWriter, r *http.Reques
 }
 
 // Obtenir les personnalités d'une simulation
-func (rsa *RestServer) getAndUpdatePersonnalities(w http.ResponseWriter, r *http.Request) {
+func (rsa *RestServer) getAndUpdatePersonalities(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" { // Obtenir les personnalités
 		driversInfosPersonnalities := make([]types.PersonalityInfo, 0)
 
@@ -160,7 +160,7 @@ func (rsa *RestServer) Start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
 	mux.HandleFunc("/api/driversChampionshipRank", rsa.getChampionshipRank)
-	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonnalities)
+	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonalities)
 
 	corsHandler := corsMiddleware(mux)
 
