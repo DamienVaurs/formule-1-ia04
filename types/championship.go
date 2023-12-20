@@ -73,19 +73,42 @@ func (c *Championship) CalcDriverRank() []*Driver {
 	return res
 }
 
-func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*PersonalityTotalPoints) {
+func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*PersonalityAveragePoints) {
 	log.Printf("\n\n====Classement pilotes ====\n")
 	driversRank := c.CalcDriverRank()
 	driversRankTab := make([]*DriverTotalPoints, 0)
-	personalityRankTab := make([]*PersonalityTotalPoints, 0)
-	for i, driver := range driversRank {
+	personalityRankTab := make([]*PersonalityAveragePoints, 0)
+	for _, driver := range driversRank {
 		driverRank := NewDriverTotalPoints(driver.Lastname, driver.ChampionshipPoints)
-		personalityRank := NewPersonalityTotalPoints(driver.Personality.TraitsValue, driver.ChampionshipPoints)
-		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
-		log.Printf("%v", driver.Personality.TraitsValue)
-
+		//Si la personnalité est déjà dans le tableau, on ajoute le nombre de points. Sinon, on crée un nouvel objet
+		var found bool
+		for indPers := range personalityRankTab {
+			if personalityRankTab[indPers].Personality["Aggressivity"] == driver.Personality.TraitsValue["Aggressivity"] &&
+				personalityRankTab[indPers].Personality["Concentration"] == driver.Personality.TraitsValue["Concentration"] &&
+				personalityRankTab[indPers].Personality["Confidence"] == driver.Personality.TraitsValue["Confidence"] &&
+				personalityRankTab[indPers].Personality["Docility"] == driver.Personality.TraitsValue["Docility"] {
+				personalityRankTab[indPers].AveragePoints += float64(driver.ChampionshipPoints)
+				personalityRankTab[indPers].NbDrivers += 1
+				found = true
+				break
+			}
+		}
+		if !found {
+			personalityRank := NewPersonalityAveragePoints(driver.Personality.TraitsValue, driver.ChampionshipPoints, 1)
+			personalityRankTab = append(personalityRankTab, personalityRank)
+		}
+		/*
+			log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
+			log.Printf("%v", driver.Personality.TraitsValue)
+		*/
 		driversRankTab = append(driversRankTab, driverRank)
-		personalityRankTab = append(personalityRankTab, personalityRank)
+
+	}
+	//Calcule des moyennes
+	for indPers := range personalityRankTab {
+		if personalityRankTab[indPers].NbDrivers > 1 {
+			personalityRankTab[indPers].AveragePoints = personalityRankTab[indPers].AveragePoints / float64(personalityRankTab[indPers].NbDrivers)
+		}
 
 	}
 	return driversRankTab, personalityRankTab

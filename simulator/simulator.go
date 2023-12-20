@@ -14,7 +14,7 @@ type Simulator struct {
 
 var driverTotalPoints []*types.DriverTotalPoints
 var teamTotalPoints []*types.TeamTotalPoints
-var personalityTotalPoints []*types.PersonalityTotalPoints
+var personalityAveragePoints []*types.PersonalityAveragePoints
 
 func NewSimulator(championships []types.Championship) *Simulator {
 	c := make([]types.Championship, len(championships))
@@ -25,7 +25,7 @@ func NewSimulator(championships []types.Championship) *Simulator {
 	}
 }
 
-func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.TeamTotalPoints, []*types.PersonalityTotalPoints) {
+func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.TeamTotalPoints, []*types.PersonalityAveragePoints) {
 	log.Println("Lancement d'une nouvelle simulation...")
 	for _, championship := range s.Championships {
 		//On simule chaque championnat
@@ -69,8 +69,8 @@ func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.Tea
 		//On affiche le classement du championnat
 		log.Printf("\n\n===== Classements du championnat %s =====\n", championship.Name)
 		teamTotalPoints = championship.DisplayTeamRank()
-		driverTotalPoints, personalityTotalPoints = championship.DisplayDriverRank()
-		championship.DisplayPersonalityRepartition()
+		driverTotalPoints, personalityAveragePoints = championship.DisplayDriverRank()
+		//championship.DisplayPersonalityRepartition()
 	}
-	return driverTotalPoints, teamTotalPoints, personalityTotalPoints
+	return driverTotalPoints, teamTotalPoints, personalityAveragePoints
 }

@@ -13,7 +13,7 @@ import (
 
 var driverTotalPoints []*types.DriverTotalPoints
 var teamTotalPoints []*types.TeamTotalPoints
-var personalityTotalPoints []*types.PersonalityTotalPoints
+var personalityAveragePoints []*types.PersonalityAveragePoints
 var nextChampionship = "2023/2024"
 
 func getNextChampionshipName(currChampionship string) (string, error) {
@@ -43,13 +43,12 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 		panic("Error /simulateChampionship : can't create new Dates" + err.Error())
 	}
 	nextChampionship = ch
-	fmt.Println(nextChampionship)
 
 	s := simulator.NewSimulator([]types.Championship{*championship})
 
 	// Lancement de la simulation
-	driverTotalPoints, teamTotalPoints, personalityTotalPoints = s.LaunchSimulation()
-	lastChampionshipStatistics := types.NewLastChampionshipStatistics(driverTotalPoints, teamTotalPoints, personalityTotalPoints, nil)
+	driverTotalPoints, teamTotalPoints, personalityAveragePoints = s.LaunchSimulation()
+	lastChampionshipStatistics := types.NewLastChampionshipStatistics(driverTotalPoints, teamTotalPoints, personalityAveragePoints, nil)
 	simulateChampionship := types.NewSimulateChampionship(championship.Name, types.TotalStatistics{}, *lastChampionshipStatistics)
 	w.WriteHeader(http.StatusOK)
 	serial, _ := json.Marshal(simulateChampionship)

@@ -30,16 +30,16 @@ type SimulateChampionship struct {
 }
 
 type TotalStatistics struct {
-	DriversTotalPoints       []*DriverTotalPoints      `json:"driversTotalPoints"`
-	TeamsTotalPoints         []*TeamTotalPoints        `json:"teamsTotalPoints"`
-	PersonalitiesTotalPoints []*PersonalityTotalPoints `json:"personnalityTotalPoints"`
-	NbCrashsPersonnality     []*NbCrashsPersonnality   `json:"nbCrashsPersonnality"`
+	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
+	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
+	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
+	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
 }
 type LastChampionshipStatistics struct {
-	DriversTotalPoints       []*DriverTotalPoints      `json:"driversTotalPoints"`
-	TeamsTotalPoints         []*TeamTotalPoints        `json:"teamsTotalPoints"`
-	PersonalitiesTotalPoints []*PersonalityTotalPoints `json:"personnalityTotalPoints"`
-	NbCrashsPersonnality     []*NbCrashsPersonnality   `json:"nbCrashsPersonnality"`
+	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
+	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
+	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
+	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
 }
 
 type DriverTotalPoints struct {
@@ -52,9 +52,10 @@ type TeamTotalPoints struct {
 	TotalPoints int    `json:"totalPoints"`
 }
 
-type PersonalityTotalPoints struct {
-	Personality map[string]int `json:"personnality"`
-	TotalPoints int            `json:"totalPoints"`
+type PersonalityAveragePoints struct {
+	Personality   map[string]int `json:"personnality"`
+	AveragePoints float64        `json:"averagePoints"`
+	NbDrivers     int            `json:"nbDrivers"`
 }
 
 type NbCrashsPersonnality struct {
@@ -70,12 +71,12 @@ func NewTeamTotalPoints(team string, pts int) *TeamTotalPoints {
 	return &TeamTotalPoints{Team: team, TotalPoints: pts}
 }
 
-func NewPersonalityTotalPoints(personality map[string]int, pts int) *PersonalityTotalPoints {
-	return &PersonalityTotalPoints{Personality: personality, TotalPoints: pts}
+func NewPersonalityAveragePoints(personality map[string]int, pts int, nbDrivers int) *PersonalityAveragePoints {
+	return &PersonalityAveragePoints{Personality: personality, AveragePoints: float64(pts), NbDrivers: nbDrivers}
 }
 
-func NewLastChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, teamTotalPoints []*TeamTotalPoints, personalityTotalPoints []*PersonalityTotalPoints, nbCrashsPersonnality []*NbCrashsPersonnality) *LastChampionshipStatistics {
-	return &LastChampionshipStatistics{DriversTotalPoints: driversTotalPoints, TeamsTotalPoints: teamTotalPoints, PersonalitiesTotalPoints: personalityTotalPoints, NbCrashsPersonnality: nbCrashsPersonnality}
+func NewLastChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, teamTotalPoints []*TeamTotalPoints, personalityTotalPoints []*PersonalityAveragePoints, nbCrashsPersonnality []*NbCrashsPersonnality) *LastChampionshipStatistics {
+	return &LastChampionshipStatistics{DriversTotalPoints: driversTotalPoints, TeamsTotalPoints: teamTotalPoints, PersonalityAveragePoints: personalityTotalPoints, NbCrashsPersonnality: nbCrashsPersonnality}
 }
 
 func NewSimulateChampionship(lastChampionship string, totalStatistics TotalStatistics, lastChampionshipStatistics LastChampionshipStatistics) *SimulateChampionship {
