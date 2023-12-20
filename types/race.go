@@ -163,7 +163,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 				if !success {
 					// En cas de crash la confiance et la docilité du pilote est impacté
-					if drivers[i].Driver.Personality.TraitsValue["Confidence"] > 0 {
+					if drivers[i].Driver.Personality.TraitsValue["Confidence"] > 1 {
 						drivers[i].Driver.Personality.TraitsValue["Confidence"] -= 1
 					}
 					if drivers[i].Driver.Personality.TraitsValue["Docility"] < 5 {

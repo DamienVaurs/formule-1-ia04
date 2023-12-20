@@ -274,7 +274,7 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 		if d.Driver.Personality.TraitsValue["Confidence"] < 5 {
 			d.Driver.Personality.TraitsValue["Confidence"] += 1
 			// Si la confiance du pilote est déjà au max et il réussit son dépassement, il devient moins docile
-		} else if d.Driver.Personality.TraitsValue["Confidence"] == 5 && d.Driver.Personality.TraitsValue["Docility"] > 0 {
+		} else if d.Driver.Personality.TraitsValue["Confidence"] == 5 && d.Driver.Personality.TraitsValue["Docility"] > 1 {
 			d.Driver.Personality.TraitsValue["Docility"] -= 1
 		}
 		return true, []*DriverInRace{}

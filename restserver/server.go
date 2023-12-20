@@ -6,7 +6,6 @@ import (
 	"sync"
 	"time"
 
-	"gitlab.utc.fr/vaursdam/formule-1-ia04/simulator"
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/types"
 )
 
@@ -17,24 +16,8 @@ type RestServer struct {
 	pointTabTeam    []*types.Team
 }
 
-var driversRank []*types.DriverRank
-
 func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team) *RestServer {
 	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam}
-}
-
-func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
-
-	// vérification de la méthode de la requête
-	if r.Method != "POST" {
-		return
-	}
-
-	championship := types.NewChampionship("2023", "Championship 1", rsa.pointTabCircuit, rsa.pointTabTeam)
-	s := simulator.NewSimulator([]types.Championship{*championship})
-	driversRank = s.LaunchSimulation()
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Simulation terminée"))
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -55,9 +38,9 @@ func corsMiddleware(next http.Handler) http.Handler {
 func (rsa *RestServer) Start() {
 	// création du multiplexer
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/startSimulation", rsa.startSimulation)
-	mux.HandleFunc("/api/driversChampionshipRank", rsa.getChampionshipRank)
+	mux.HandleFunc("/simulateChampionship", rsa.startSimulation)
 	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonalities)
+	mux.HandleFunc("/statisticsChampionship", rsa.statisticsChampionship)
 
 	corsHandler := corsMiddleware(mux)
 
@@ -65,8 +48,8 @@ func (rsa *RestServer) Start() {
 	s := &http.Server{
 		Addr:           rsa.addr,
 		Handler:        corsHandler,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
+		ReadTimeout:    20 * time.Second,
+		WriteTimeout:   20 * time.Second,
 		MaxHeaderBytes: 1 << 20}
 
 	// lancement du serveur
