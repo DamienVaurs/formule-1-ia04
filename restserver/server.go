@@ -40,6 +40,7 @@ func (rsa *RestServer) Start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/simulateChampionship", rsa.startSimulation)
 	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonalities)
+	mux.HandleFunc("/statisticsChampionship", rsa.statisticsChampionship)
 
 	corsHandler := corsMiddleware(mux)
 

@@ -16,6 +16,7 @@ var teamTotalPoints []*types.TeamTotalPoints
 var personalityAveragePoints []*types.PersonalityAveragePoints
 var nextChampionship = "2023/2024"
 var nbSimulation int
+var statistics *types.SimulateChampionship = &types.SimulateChampionship{} // var globale pour être utilisée dans /statisticsChampionship
 
 func getNextChampionshipName(currChampionship string) (string, error) {
 	years := strings.Split(currChampionship, "/")
@@ -30,7 +31,7 @@ func getNextChampionshipName(currChampionship string) (string, error) {
 
 }
 
-// Lancement d'une simulation d'un championnat
+// Lancement d'une simulation d'un championnat et retour de statistiques
 func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 
 	// vérification de la méthode de la requête
@@ -51,8 +52,8 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	// Lancement de la simulation
 	driverTotalPoints, teamTotalPoints, personalityAveragePoints = s.LaunchSimulation()
 	lastChampionshipStatistics := types.NewLastChampionshipStatistics(driverTotalPoints, teamTotalPoints, personalityAveragePoints, nil)
-	simulateChampionship := types.NewSimulateChampionship(championship.Name, nbSimulation, types.TotalStatistics{}, *lastChampionshipStatistics)
+	statistics = types.NewSimulateChampionship(championship.Name, nbSimulation, types.TotalStatistics{}, *lastChampionshipStatistics)
 	w.WriteHeader(http.StatusOK)
-	serial, _ := json.Marshal(simulateChampionship)
+	serial, _ := json.Marshal(statistics)
 	w.Write(serial)
 }
