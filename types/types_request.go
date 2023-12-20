@@ -53,13 +53,13 @@ type TeamTotalPoints struct {
 }
 
 type PersonalityAveragePoints struct {
-	Personality   map[string]int `json:"personnality"`
+	Personality   map[string]int `json:"personality"`
 	AveragePoints float64        `json:"averagePoints"`
 	NbDrivers     int            `json:"nbDrivers"`
 }
 
 type NbCrashsPersonnality struct {
-	Personality map[string]int `json:"personnality"`
+	Personality map[string]int `json:"personality"`
 	NbCrash     int            `json:"nbCrash"`
 }
 
