@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/restserver"
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/types"
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/utils"
@@ -35,5 +33,4 @@ func main() {
 	// lancement du serveur
 	server := restserver.NewRestServer(":8080", pointTabCircuit, pointTabTeam)
 	server.Start()
-	fmt.Scanln()
 }

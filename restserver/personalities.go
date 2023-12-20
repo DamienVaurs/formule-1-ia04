@@ -42,7 +42,6 @@ func (rsa *RestServer) getAndUpdatePersonalities(w http.ResponseWriter, r *http.
 	} else if r.Method == "PUT" { // Mettre à jour les personnalités
 		// décodage de la requête
 		req, err := rsa.decodeUpdatePersonalityRequest(r)
-		fmt.Println(req)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprint(w, err.Error())
