@@ -11,12 +11,65 @@ import (
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/types"
 )
 
-var driverTotalPoints []*types.DriverTotalPoints
-var teamTotalPoints []*types.TeamTotalPoints
-var personalityAveragePoints []*types.PersonalityAveragePoints
 var nextChampionship = "2023/2024"
 var nbSimulation int
 var statistics *types.SimulateChampionship = &types.SimulateChampionship{} // var globale pour être utilisée dans /statisticsChampionship
+
+func addNewStatistsicsToPrevious(lastStats types.LastChampionshipStatistics) {
+	//modifie l'objets "statistics" pour ajouter correctement les dernières stats
+	if statistics.LastChampionship == "" {
+		fmt.Println("First championship simulated")
+		//Si on est au premier championnat, le total vaut la dernière simulation
+		statistics.TotalStatistics = types.TotalStatistics(lastStats)
+		statistics.LastChampionshipStatistics = lastStats
+		return
+	} else {
+		//Ajout des points des pilotes
+		statistics.LastChampionshipStatistics = lastStats
+		mapScoreDrivers := make(map[string]int)
+		for _, driver := range lastStats.DriversTotalPoints {
+			mapScoreDrivers[driver.Driver] = driver.TotalPoints
+		}
+		for i := range statistics.TotalStatistics.DriversTotalPoints {
+			statistics.TotalStatistics.DriversTotalPoints[i].TotalPoints += mapScoreDrivers[statistics.TotalStatistics.DriversTotalPoints[i].Driver]
+		}
+
+		//Ajout des points des teams
+		mapScoreTeams := make(map[string]int)
+		for _, team := range lastStats.TeamsTotalPoints {
+			mapScoreTeams[team.Team] = team.TotalPoints
+		}
+		for i := range statistics.TotalStatistics.TeamsTotalPoints {
+			statistics.TotalStatistics.TeamsTotalPoints[i].TotalPoints += mapScoreTeams[statistics.TotalStatistics.TeamsTotalPoints[i].Team]
+		}
+
+		//Ajout des points des personnalités
+		for _, personality := range lastStats.PersonalityAveragePoints {
+			var found bool
+			for i := range statistics.TotalStatistics.PersonalityAveragePoints {
+				if personality.Personality["Concentration"] == statistics.TotalStatistics.PersonalityAveragePoints[i].Personality["Concentration"] &&
+					personality.Personality["Aggressivity"] == statistics.TotalStatistics.PersonalityAveragePoints[i].Personality["Aggressivity"] &&
+					personality.Personality["Confidence"] == statistics.TotalStatistics.PersonalityAveragePoints[i].Personality["Confidence"] &&
+					personality.Personality["Docility"] == statistics.TotalStatistics.PersonalityAveragePoints[i].Personality["Docility"] {
+					found = true
+					//On repasse à la somme
+					statistics.TotalStatistics.PersonalityAveragePoints[i].AveragePoints = statistics.TotalStatistics.PersonalityAveragePoints[i].AveragePoints*float64(statistics.TotalStatistics.PersonalityAveragePoints[i].NbDrivers) + personality.AveragePoints*float64(personality.NbDrivers)
+					//Maj du nb de pilotes
+					statistics.TotalStatistics.PersonalityAveragePoints[i].NbDrivers += personality.NbDrivers
+					//Maj de la moyenne
+					statistics.TotalStatistics.PersonalityAveragePoints[i].AveragePoints = statistics.TotalStatistics.PersonalityAveragePoints[i].AveragePoints / float64(statistics.TotalStatistics.PersonalityAveragePoints[i].NbDrivers)
+					break
+				}
+			}
+			if !found {
+				//Si la personnalité explorée n'a pas été recensée
+				statistics.TotalStatistics.PersonalityAveragePoints = append(statistics.TotalStatistics.PersonalityAveragePoints, personality)
+			}
+		}
+
+	}
+
+}
 
 func getNextChampionshipName(currChampionship string) (string, error) {
 	years := strings.Split(currChampionship, "/")
@@ -50,9 +103,14 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	nbSimulation += 1
 
 	// Lancement de la simulation
-	driverTotalPoints, teamTotalPoints, personalityAveragePoints = s.LaunchSimulation()
-	lastChampionshipStatistics := types.NewLastChampionshipStatistics(driverTotalPoints, teamTotalPoints, personalityAveragePoints, nil)
-	statistics = types.NewSimulateChampionship(championship.Name, nbSimulation, types.TotalStatistics{}, *lastChampionshipStatistics)
+	driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints := s.LaunchSimulation()
+	lastChampionshipstatistics := types.NewLastChampionshipStatistics(driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, nil)
+
+	//Ajoute les nouvelles statistics
+	addNewStatistsicsToPrevious(*lastChampionshipstatistics)
+	statistics.LastChampionship = championship.Name
+	statistics.NbSimulations = nbSimulation
+
 	w.WriteHeader(http.StatusOK)
 	serial, _ := json.Marshal(statistics)
 	w.Write(serial)

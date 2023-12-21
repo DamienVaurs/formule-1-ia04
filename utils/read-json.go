@@ -82,12 +82,12 @@ func ReadCircuit() ([]types.Circuit, error) {
 	return circuits, nil
 }
 
-func ReadTeams() ([]types.Team, error) {
+func ReadTeams() ([]types.Team, map[string]types.Personality, error) {
 	// Ouvrir et lire le fichier JSON
 	file, err := os.Open(TEAMS_PATH)
 	if err != nil {
 		log.Println("Erreur lors de l'ouverture du fichier pour lecture des équipes :", err)
-		return nil, err
+		return nil, nil, err
 	}
 
 	teamsJSON := make([]TeamsJSON, 0)
@@ -96,18 +96,18 @@ func ReadTeams() ([]types.Team, error) {
 	decoder := json.NewDecoder(file)
 	if err := decoder.Decode(&teams); err != nil {
 		log.Println("Erreur lors de la lecture du fichier JSON pour les équipes :", err)
-		return nil, err
+		return nil, nil, err
 	}
 	file.Close()
 	file, err = os.Open(TEAMS_PATH)
 	if err != nil {
 		log.Println("Erreur lors de l'ouverture du fichier pour lecture des personnalités:", err)
-		return nil, err
+		return nil, nil, err
 	}
 	decoder = json.NewDecoder(file)
 	if err := decoder.Decode(&teamsJSON); err != nil {
 		log.Println("Erreur lors de la lecture du fichier JSON pour les personnalités :", err)
-		return nil, err
+		return nil, nil, err
 	}
 
 	//Ajout des personnalités aux pilotes
@@ -129,5 +129,19 @@ func ReadTeams() ([]types.Team, error) {
 			teams[i].Drivers[j].Id = fmt.Sprintf("driver-%d-%d", i, j)
 		}
 	}
-	return teams, nil
+
+	//Stockage des personnalités initiales
+	mapPersonality := make(map[string]types.Personality)
+	for i, team := range teams {
+		for j := range team.Drivers {
+			var perso types.Personality
+			perso.TraitsValue = make(map[string]int)
+			perso.TraitsValue["Aggressivity"] = teamsJSON[i].Drivers[j].Personality.Aggressivity
+			perso.TraitsValue["Confidence"] = teamsJSON[i].Drivers[j].Personality.Confidence
+			perso.TraitsValue["Docility"] = teamsJSON[i].Drivers[j].Personality.Docility
+			perso.TraitsValue["Concentration"] = teamsJSON[i].Drivers[j].Personality.Concentration
+			mapPersonality[teams[i].Drivers[j].Id] = perso
+		}
+	}
+	return teams, mapPersonality, nil
 }

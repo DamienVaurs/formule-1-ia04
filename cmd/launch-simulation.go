@@ -12,7 +12,7 @@ func main() {
 		panic(err)
 	}
 
-	t, err := utils.ReadTeams()
+	t, initPersonalities, err := utils.ReadTeams()
 	if err != nil {
 		panic(err)
 	}
@@ -23,14 +23,15 @@ func main() {
 		tempCircuit := circuit //sans tampon, tous les éléments du tableau contiendront la même adresse
 		pointTabCircuit[i] = &tempCircuit
 	}
-
+	initTeams := make([]types.Team, len(t))
 	pointTabTeam := make([]*types.Team, len(t))
 	for i, team := range t {
 		tempTeam := team //sans tampon, tous les éléments du tableau contiendront la même adresse
 		pointTabTeam[i] = &tempTeam
+		initTeams[i] = tempTeam
 	}
 
 	// lancement du serveur
-	server := restserver.NewRestServer(":8080", pointTabCircuit, pointTabTeam)
+	server := restserver.NewRestServer(":8080", pointTabCircuit, pointTabTeam, initPersonalities)
 	server.Start()
 }

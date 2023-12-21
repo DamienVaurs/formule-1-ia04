@@ -9,7 +9,7 @@ import (
 	"gitlab.utc.fr/vaursdam/formule-1-ia04/types"
 )
 
-// Décodage de la requête /personalities/update
+// Décodage de la requête /personalities
 func (*RestServer) decodeUpdatePersonalityRequest(r *http.Request) (req []types.UpdatePersonalityInfo, err error) {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)

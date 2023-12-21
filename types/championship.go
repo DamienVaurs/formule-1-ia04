@@ -20,6 +20,12 @@ func NewChampionship(id string, name string, circuits []*Circuit, teams []*Team)
 
 	t := make([]*Team, len(teams))
 	copy(t, teams)
+	for i := range t {
+		for j := range t[i].Drivers {
+			t[i].Drivers[j].ChampionshipPoints = 0
+		}
+
+	}
 
 	r := make([]Race, len(circuits))
 

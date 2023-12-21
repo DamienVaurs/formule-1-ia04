@@ -11,13 +11,14 @@ import (
 
 type RestServer struct {
 	sync.Mutex
-	addr            string
-	pointTabCircuit []*types.Circuit
-	pointTabTeam    []*types.Team
+	addr              string
+	pointTabCircuit   []*types.Circuit //circuits
+	pointTabTeam      []*types.Team    //current teams
+	initPersonalities map[string]types.Personality
 }
 
-func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team) *RestServer {
-	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam}
+func NewRestServer(addr string, pointTabCircuit []*types.Circuit, pointTabTeam []*types.Team, personalities map[string]types.Personality) *RestServer {
+	return &RestServer{addr: addr, pointTabCircuit: pointTabCircuit, pointTabTeam: pointTabTeam, initPersonalities: personalities}
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -41,7 +42,7 @@ func (rsa *RestServer) Start() {
 	mux.HandleFunc("/simulateChampionship", rsa.startSimulation)
 	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonalities)
 	mux.HandleFunc("/statisticsChampionship", rsa.statisticsChampionship)
-
+	mux.HandleFunc("/reset", rsa.reset)
 	corsHandler := corsMiddleware(mux)
 
 	// création du serveur http
