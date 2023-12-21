@@ -84,7 +84,7 @@ func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*Personality
 	driversRank := c.CalcDriverRank()
 	driversRankTab := make([]*DriverTotalPoints, 0)
 	personalityRankTab := make([]*PersonalityAveragePoints, 0)
-	for _, driver := range driversRank {
+	for i, driver := range driversRank {
 		driverRank := NewDriverTotalPoints(driver.Lastname, driver.ChampionshipPoints)
 		//Si la personnalité est déjà dans le tableau, on ajoute le nombre de points. Sinon, on crée un nouvel objet
 		var found bool
@@ -103,10 +103,10 @@ func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*Personality
 			personalityRank := NewPersonalityAveragePoints(driver.Personality.TraitsValue, driver.ChampionshipPoints, 1)
 			personalityRankTab = append(personalityRankTab, personalityRank)
 		}
-		/*
-			log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
-			log.Printf("%v", driver.Personality.TraitsValue)
-		*/
+
+		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
+		log.Printf("%v", driver.Personality.TraitsValue)
+
 		driversRankTab = append(driversRankTab, driverRank)
 
 	}

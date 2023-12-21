@@ -91,6 +91,7 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		return
 	}
+	fmt.Println("GET /simulateChampionship")
 
 	championship := types.NewChampionship(nextChampionship, nextChampionship, rsa.pointTabCircuit, rsa.pointTabTeam)
 	ch, err := getNextChampionshipName(nextChampionship)

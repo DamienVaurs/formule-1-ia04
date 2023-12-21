@@ -2,6 +2,7 @@ package restserver
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -15,6 +16,7 @@ func (rsa *RestServer) statisticsChampionship(w http.ResponseWriter, r *http.Req
 	if r.Method != "GET" {
 		return
 	}
+	fmt.Println("GET /statisticsChampionship")
 	w.WriteHeader(http.StatusOK)
 	serial, _ := json.Marshal(statistics) //statistics is defined in simulateChampionship.go
 	w.Write(serial)

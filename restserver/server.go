@@ -37,6 +37,16 @@ func corsMiddleware(next http.Handler) http.Handler {
 }
 
 func (rsa *RestServer) Start() {
+	//initialise statistics
+	statistics = &types.SimulateChampionship{}
+	for _, team := range rsa.pointTabTeam {
+		for _, driver := range team.Drivers {
+			statistics.TotalStatistics.DriversTotalPoints = append(statistics.TotalStatistics.DriversTotalPoints, &types.DriverTotalPoints{Driver: driver.Lastname, TotalPoints: 0})
+			statistics.LastChampionshipStatistics.DriversTotalPoints = append(statistics.LastChampionshipStatistics.DriversTotalPoints, &types.DriverTotalPoints{Driver: driver.Lastname, TotalPoints: 0})
+		}
+		statistics.TotalStatistics.TeamsTotalPoints = append(statistics.TotalStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
+		statistics.LastChampionshipStatistics.TeamsTotalPoints = append(statistics.LastChampionshipStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
+	}
 	// création du multiplexer
 	mux := http.NewServeMux()
 	mux.HandleFunc("/simulateChampionship", rsa.startSimulation)

@@ -20,6 +20,7 @@ func (*RestServer) decodeUpdatePersonalityRequest(r *http.Request) (req []types.
 // Obtenir les personnalités d'une simulation
 func (rsa *RestServer) getAndUpdatePersonalities(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" { // Obtenir les personnalités
+		fmt.Println("GET /personalities")
 		driversInfosPersonalities := make([]types.PersonalityInfo, 0)
 
 		for _, team := range rsa.pointTabTeam {
@@ -40,6 +41,7 @@ func (rsa *RestServer) getAndUpdatePersonalities(w http.ResponseWriter, r *http.
 		w.Write(serial)
 		return
 	} else if r.Method == "PUT" { // Mettre à jour les personnalités
+		fmt.Println("PUT /personalities")
 		// décodage de la requête
 		req, err := rsa.decodeUpdatePersonalityRequest(r)
 		if err != nil {
