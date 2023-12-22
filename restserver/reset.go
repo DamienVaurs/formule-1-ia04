@@ -14,7 +14,7 @@ func (rsa *RestServer) reset(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("GET /reset")
-	fmt.Println("Avant RESET : ", rsa.initPersonalities["driver-0-0"])
+	//fmt.Println("Avant RESET : ", rsa.initPersonalities["driver-0-0"])
 	// reset des variables globales
 	nextChampionship = "2023/2024"
 	nbSimulation = 0
@@ -55,7 +55,7 @@ func (rsa *RestServer) reset(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
-	fmt.Println("Après RESET : ", rsa.initPersonalities["driver-0-0"])
+	//fmt.Println("Après RESET : ", rsa.initPersonalities["driver-0-0"])
 	serial, err := json.Marshal(statistics) //statistics is defined in simulateChampionship.go
 	if err != nil {
 		panic("Error /reset : can't marshal statistics" + err.Error())

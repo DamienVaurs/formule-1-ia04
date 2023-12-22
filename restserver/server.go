@@ -48,6 +48,19 @@ func (rsa *RestServer) Start() {
 		statistics.LastChampionshipStatistics.TeamsTotalPoints = append(statistics.LastChampionshipStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
 	}
 
+	//Initialise personnalités dans les statistiques
+	statistics.TotalStatistics.PersonalityAveragePoints = make([]*types.PersonalityAveragePoints, 0)
+	statistics.LastChampionshipStatistics.PersonalityAveragePoints = make([]*types.PersonalityAveragePoints, 0)
+	for indeTeam := range rsa.pointTabTeam {
+		for indDriv := range rsa.pointTabTeam[indeTeam].Drivers {
+			d := rsa.pointTabTeam[indeTeam].Drivers[indDriv].Id
+			statistics.TotalStatistics.PersonalityAveragePoints = append(statistics.TotalStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: rsa.initPersonalities[d].TraitsValue, AveragePoints: 0, NbDrivers: 0})
+			statistics.LastChampionshipStatistics.PersonalityAveragePoints = append(statistics.LastChampionshipStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: rsa.initPersonalities[d].TraitsValue, AveragePoints: 0, NbDrivers: 0})
+
+		}
+
+	}
+
 	// création du multiplexer
 	mux := http.NewServeMux()
 	mux.HandleFunc("/simulateChampionship", rsa.startSimulation)
