@@ -18,7 +18,6 @@ var statistics *types.SimulateChampionship = &types.SimulateChampionship{} // va
 func addNewStatistsicsToPrevious(lastStats types.LastChampionshipStatistics) {
 	//modifie l'objets "statistics" pour ajouter correctement les dernières stats
 	if statistics.LastChampionship == "" {
-		fmt.Println("First championship simulated")
 		//Si on est au premier championnat, le total vaut la dernière simulation
 		statistics.TotalStatistics = types.TotalStatistics(lastStats)
 		statistics.LastChampionshipStatistics = lastStats

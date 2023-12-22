@@ -18,6 +18,9 @@ func (rsa *RestServer) statisticsChampionship(w http.ResponseWriter, r *http.Req
 	}
 	fmt.Println("GET /statisticsChampionship")
 	w.WriteHeader(http.StatusOK)
-	serial, _ := json.Marshal(statistics) //statistics is defined in simulateChampionship.go
+	serial, err := json.Marshal(statistics) //statistics is defined in simulateChampionship.go
+	if err != nil {
+		panic("Error /statisticsChampionship : can't marshal statistics" + err.Error())
+	}
 	w.Write(serial)
 }

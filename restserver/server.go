@@ -47,6 +47,7 @@ func (rsa *RestServer) Start() {
 		statistics.TotalStatistics.TeamsTotalPoints = append(statistics.TotalStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
 		statistics.LastChampionshipStatistics.TeamsTotalPoints = append(statistics.LastChampionshipStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
 	}
+
 	// création du multiplexer
 	mux := http.NewServeMux()
 	mux.HandleFunc("/simulateChampionship", rsa.startSimulation)
