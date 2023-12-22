@@ -34,7 +34,7 @@ func (rsa *RestServer) reset(w http.ResponseWriter, r *http.Request) {
 		for indDriver := 0; indDriver < 2; indDriver++ {
 			var d string = rsa.pointTabTeam[indTeam].Drivers[indDriver].Id
 			var perso types.Personality
-			//Obliger de faire ça, sinon effet de bord sur initPersonalities
+			//Obligé de faire ça, sinon effet de bord sur initPersonalities
 			perso.TraitsValue = make(map[string]int)
 			perso.TraitsValue["Confidence"] = rsa.initPersonalities[d].TraitsValue["Confidence"]
 			perso.TraitsValue["Aggressivity"] = rsa.initPersonalities[d].TraitsValue["Aggressivity"]
@@ -49,8 +49,14 @@ func (rsa *RestServer) reset(w http.ResponseWriter, r *http.Request) {
 	for indeTeam := range rsa.pointTabTeam {
 		for indDriv := range rsa.pointTabTeam[indeTeam].Drivers {
 			d := rsa.pointTabTeam[indeTeam].Drivers[indDriv].Id
-			statistics.TotalStatistics.PersonalityAveragePoints = append(statistics.TotalStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: rsa.initPersonalities[d].TraitsValue, AveragePoints: 0, NbDrivers: 0})
-			statistics.LastChampionshipStatistics.PersonalityAveragePoints = append(statistics.LastChampionshipStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: rsa.initPersonalities[d].TraitsValue, AveragePoints: 0, NbDrivers: 0})
+			var perso types.Personality
+			perso.TraitsValue = make(map[string]int)
+			perso.TraitsValue["Confidence"] = rsa.initPersonalities[d].TraitsValue["Confidence"]
+			perso.TraitsValue["Aggressivity"] = rsa.initPersonalities[d].TraitsValue["Aggressivity"]
+			perso.TraitsValue["Docility"] = rsa.initPersonalities[d].TraitsValue["Docility"]
+			perso.TraitsValue["Concentration"] = rsa.initPersonalities[d].TraitsValue["Concentration"]
+			statistics.TotalStatistics.PersonalityAveragePoints = append(statistics.TotalStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: perso.TraitsValue, AveragePoints: 0, NbDrivers: 0})
+			statistics.LastChampionshipStatistics.PersonalityAveragePoints = append(statistics.LastChampionshipStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: perso.TraitsValue, AveragePoints: 0, NbDrivers: 0})
 
 		}
 

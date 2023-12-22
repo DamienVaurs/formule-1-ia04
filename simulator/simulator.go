@@ -11,10 +11,6 @@ type Simulator struct {
 	Championships []types.Championship
 }
 
-var driverTotalPoints []*types.DriverTotalPoints
-var teamTotalPoints []*types.TeamTotalPoints
-var personalityAveragePoints []*types.PersonalityAveragePoints
-
 func NewSimulator(championships []types.Championship) *Simulator {
 	c := make([]types.Championship, len(championships))
 	copy(c, championships)
@@ -25,6 +21,11 @@ func NewSimulator(championships []types.Championship) *Simulator {
 }
 
 func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.TeamTotalPoints, []*types.PersonalityAveragePoints) {
+
+	var driverTotalPoints []*types.DriverTotalPoints
+	var teamTotalPoints []*types.TeamTotalPoints
+	var personalityAveragePoints []*types.PersonalityAveragePoints
+
 	log.Println("Lancement d'une nouvelle simulation...")
 	for _, championship := range s.Championships {
 		//On simule chaque championnat

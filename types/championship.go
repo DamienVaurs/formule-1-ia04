@@ -100,7 +100,14 @@ func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*Personality
 			}
 		}
 		if !found {
-			personalityRank := NewPersonalityAveragePoints(driver.Personality.TraitsValue, driver.ChampionshipPoints, 1)
+			var perso Personality
+			perso.TraitsValue = make(map[string]int)
+			perso.TraitsValue["Confidence"] = driver.Personality.TraitsValue["Confidence"]
+			perso.TraitsValue["Aggressivity"] = driver.Personality.TraitsValue["Aggressivity"]
+			perso.TraitsValue["Docility"] = driver.Personality.TraitsValue["Docility"]
+			perso.TraitsValue["Concentration"] = driver.Personality.TraitsValue["Concentration"]
+			//on ne peut pas passer le map directement en paramètre, il faut le copier
+			personalityRank := NewPersonalityAveragePoints(perso.TraitsValue, driver.ChampionshipPoints, 1)
 			personalityRankTab = append(personalityRankTab, personalityRank)
 		}
 
