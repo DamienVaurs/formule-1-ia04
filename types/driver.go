@@ -128,6 +128,7 @@ func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	probaReussite -= portion.Difficulty * 18
 	probaReussite -= d.TimeWoPitStop
 	probaReussite -= pénalité
+	probaReussite -= d.Speed * 5
 
 	var dice int = rand.Intn(999) + 1
 
