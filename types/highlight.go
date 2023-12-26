@@ -18,6 +18,7 @@ const (
 	OVERTAKE
 	FINISH
 	DRIVER_PITSTOP
+	DRIVER_PITSTOP_CHANGETYRE
 	CREVAISON
 	//DRIVER_PENALTY
 	//DRIVER_FASTEST_LAP
@@ -60,6 +61,12 @@ func NewHighlight(drivers []*DriverInRace, highlightType HighlightType) (*Highli
 			return nil, fmt.Errorf("DRIVER_PITSTOP highlight must include exactly 1 driver")
 		} else {
 			desc = fmt.Sprintf("PITSTOP: Le pilote %s est rentré au stand", drivers[0].Driver.Lastname)
+		}
+	case DRIVER_PITSTOP_CHANGETYRE:
+		if len(drivers) != 1 {
+			return nil, fmt.Errorf("DRIVER_PITSTOP_CHANGETYRE highlight must include exactly 1 driver")
+		} else {
+			desc = fmt.Sprintf("PITSTOP: Le pilote %s est rentré au stand (changement pneu %d -> %d)", drivers[0].Driver.Lastname, drivers[0].PrevTyre, drivers[0].CurrentTyre)
 		}
 	case CREVAISON:
 		if len(drivers) != 1 {

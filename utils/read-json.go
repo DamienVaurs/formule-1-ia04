@@ -17,6 +17,28 @@ const (
 	TEAMS_PATH = "instances/teams/inst-teams.json"
 )
 
+type TeamsJSON struct {
+	Name    string
+	Country string
+	Level   int
+	Drivers []DriverJSON
+}
+
+type DriverJSON struct {
+	FirstName   string
+	LastName    string
+	Country     string
+	Level       int
+	Personality PersonalityJSON
+}
+
+type PersonalityJSON struct {
+	Aggressivity  int
+	Confidence    int
+	Docility      int
+	Concentration int
+}
+
 func ReadCircuit() ([]types.Circuit, error) {
 	// Ouvrir et lire le fichier JSON
 	file, err := os.Open(CIRCUITS_PATH)
@@ -60,23 +82,46 @@ func ReadCircuit() ([]types.Circuit, error) {
 	return circuits, nil
 }
 
-func ReadTeams() ([]types.Team, error) {
+func ReadTeams() ([]types.Team, map[string]types.Personality, error) {
 	// Ouvrir et lire le fichier JSON
 	file, err := os.Open(TEAMS_PATH)
 	if err != nil {
-		log.Println("Erreur lors de l'ouverture du fichier :", err)
-		return nil, err
+		log.Println("Erreur lors de l'ouverture du fichier pour lecture des équipes :", err)
+		return nil, nil, err
 	}
-	defer file.Close()
 
+	teamsJSON := make([]TeamsJSON, 0)
 	teams := make([]types.Team, 0)
-
-	// Décoder le fichier JSON dans la structure de données
+	// Décoder le fichier JSON pour créer les équipes
 	decoder := json.NewDecoder(file)
 	if err := decoder.Decode(&teams); err != nil {
-		log.Println("Erreur lors de la lecture du fichier JSON :", err)
-		return nil, err
+		log.Println("Erreur lors de la lecture du fichier JSON pour les équipes :", err)
+		return nil, nil, err
 	}
+	file.Close()
+	file, err = os.Open(TEAMS_PATH)
+	if err != nil {
+		log.Println("Erreur lors de l'ouverture du fichier pour lecture des personnalités:", err)
+		return nil, nil, err
+	}
+	decoder = json.NewDecoder(file)
+	if err := decoder.Decode(&teamsJSON); err != nil {
+		log.Println("Erreur lors de la lecture du fichier JSON pour les personnalités :", err)
+		return nil, nil, err
+	}
+
+	//Ajout des personnalités aux pilotes
+	for i, team := range teams {
+		for j := range team.Drivers {
+			m := make(map[string]int)
+			m["Aggressivity"] = teamsJSON[i].Drivers[j].Personality.Aggressivity
+			m["Confidence"] = teamsJSON[i].Drivers[j].Personality.Confidence
+			m["Docility"] = teamsJSON[i].Drivers[j].Personality.Docility
+			m["Concentration"] = teamsJSON[i].Drivers[j].Personality.Concentration
+			teams[i].Drivers[j].Personality = *types.NewPersonality(m)
+		}
+	}
+
 	//Ajout d'Id aux pilotes et aux team
 	for i, team := range teams {
 		teams[i].Id = fmt.Sprintf("team-%d", i)
@@ -85,5 +130,18 @@ func ReadTeams() ([]types.Team, error) {
 		}
 	}
 
-	return teams, nil
+	//Stockage des personnalités initiales
+	mapPersonality := make(map[string]types.Personality)
+	for i, team := range teams {
+		for j := range team.Drivers {
+			var perso types.Personality
+			perso.TraitsValue = make(map[string]int)
+			perso.TraitsValue["Aggressivity"] = teamsJSON[i].Drivers[j].Personality.Aggressivity
+			perso.TraitsValue["Confidence"] = teamsJSON[i].Drivers[j].Personality.Confidence
+			perso.TraitsValue["Docility"] = teamsJSON[i].Drivers[j].Personality.Docility
+			perso.TraitsValue["Concentration"] = teamsJSON[i].Drivers[j].Personality.Concentration
+			mapPersonality[teams[i].Drivers[j].Id] = perso
+		}
+	}
+	return teams, mapPersonality, nil
 }

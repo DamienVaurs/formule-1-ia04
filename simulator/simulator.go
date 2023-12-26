@@ -1,7 +1,6 @@
 package simulator
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -21,7 +20,12 @@ func NewSimulator(championships []types.Championship) *Simulator {
 	}
 }
 
-func (s *Simulator) LaunchSimulation() {
+func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.TeamTotalPoints, []*types.PersonalityAveragePoints) {
+
+	var driverTotalPoints []*types.DriverTotalPoints
+	var teamTotalPoints []*types.TeamTotalPoints
+	var personalityAveragePoints []*types.PersonalityAveragePoints
+
 	log.Println("Lancement d'une nouvelle simulation...")
 	for _, championship := range s.Championships {
 		//On simule chaque championnat
@@ -59,13 +63,14 @@ func (s *Simulator) LaunchSimulation() {
 				}*/
 
 			//Etape 3 : on ajoute la course au championnat
-			fmt.Println("Ajout de la course au championnat...")
+			//fmt.Println("Ajout de la course au championnat...")
 			championship.Races[i] = *new_Race
 		}
 		//On affiche le classement du championnat
 		log.Printf("\n\n===== Classements du championnat %s =====\n", championship.Name)
-		championship.DisplayTeamRank()
-		championship.DisplayDriverRank()
-
+		teamTotalPoints = championship.DisplayTeamRank()
+		driverTotalPoints, personalityAveragePoints = championship.DisplayDriverRank()
+		//championship.DisplayPersonalityRepartition()
 	}
+	return driverTotalPoints, teamTotalPoints, personalityAveragePoints
 }

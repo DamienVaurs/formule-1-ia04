@@ -50,7 +50,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 	}
 	//On crée les instances des pilotes en course
 
-	drivers, err := MakeSliceOfDriversInRace(r.Teams, &(r.Circuit.Portions[0]), mapChan)
+	drivers, err := MakeSliceOfDriversInRace(r.Teams, &(r.Circuit.Portions[0]), mapChan, r.MeteoCondition)
 	if err != nil {
 		return nil, err
 	}
@@ -162,6 +162,13 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 				success := drivers[i].PortionSuccess(pénalité)
 
 				if !success {
+					// En cas de crash la confiance et la docilité du pilote est impacté
+					if drivers[i].Driver.Personality.TraitsValue["Confidence"] > 1 {
+						drivers[i].Driver.Personality.TraitsValue["Confidence"] -= 1
+					}
+					if drivers[i].Driver.Personality.TraitsValue["Docility"] < 5 {
+						drivers[i].Driver.Personality.TraitsValue["Docility"] += 1
+					}
 					//On crée un Highlight de crash
 					highlight, err := NewHighlight([]*DriverInRace{drivers[i]}, CRASHPORTION)
 					if err != nil {
@@ -179,15 +186,23 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 			case NOOP:
 				//On ne fait rien
 
-				if drivers[i].Status == PITSTOP && drivers[i].PitstopSteps == 3 {
+				if (drivers[i].Status == PITSTOP || drivers[i].Status == PITSTOP_CHANGETYRE) && drivers[i].PitstopSteps == 3 {
 					// On crée un highlight de pitstop
-					highlight, err := NewHighlight([]*DriverInRace{drivers[i]}, DRIVER_PITSTOP)
+					var highlight *Highlight
+					var err error
+					switch drivers[i].Status {
+					case PITSTOP:
+						highlight, err = NewHighlight([]*DriverInRace{drivers[i]}, DRIVER_PITSTOP)
+					case PITSTOP_CHANGETYRE:
+						highlight, err = NewHighlight([]*DriverInRace{drivers[i]}, DRIVER_PITSTOP_CHANGETYRE)
+					}
+
 					if err != nil {
 						log.Printf("Error while creating highlight: %s\n", err)
 					}
 					r.HighLigths = append(r.HighLigths, *highlight)
 					log.Println(highlight.Description)
-				} else if drivers[i].Status == PITSTOP && drivers[i].PitstopSteps == 0 {
+				} else if (drivers[i].Status == PITSTOP || drivers[i].Status == PITSTOP_CHANGETYRE) && drivers[i].PitstopSteps == 0 {
 					drivers[i].Status = RACING
 				}
 
@@ -214,7 +229,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 		for i := range r.Circuit.Portions {
 			//newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = make([]*DriverInRace, 0) // crée la slice de la portion suivante nouvelle
 			for _, driver := range r.Circuit.Portions[i].DriversOn {
-				if driver.Status != CRASHED && driver.Status != ARRIVED && driver.Status != PITSTOP {
+				if driver.Status != CRASHED && driver.Status != ARRIVED && (driver.Status != PITSTOP && driver.Status != PITSTOP_CHANGETYRE) {
 					//On met à jour le champ position du pilote
 					driver.Position = driver.Position.NextPortion
 					if i == len(r.Circuit.Portions)-1 {
@@ -237,7 +252,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 						}
 					}
 				}
-				if driver.Status == PITSTOP {
+				if driver.Status == PITSTOP || driver.Status == PITSTOP_CHANGETYRE {
 					newDriversOnPortion[i] = append(newDriversOnPortion[i], driver)
 				} else if driver.Status != CRASHED && driver.Status != ARRIVED {
 					//On ajoute le pilote à sa nouvelle position

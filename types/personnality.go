@@ -1,30 +1,11 @@
 package types
 
-type Personnality struct {
-	TraitsValue map[*Trait]int // Dictionnary of traits
+type Personality struct {
+	TraitsValue map[string]int `json:"personality"` // Dictionnaire de traits
 }
 
-func NewPersonnality(traitsValue map[*Trait]int) *Personnality {
-
-	return &Personnality{
+func NewPersonality(traitsValue map[string]int) *Personality {
+	return &Personality{
 		TraitsValue: traitsValue,
 	}
 }
-
-// Les traits sont à définir au lancement du programme. La personnalité utilisera les différents traits
-type Trait struct {
-	Id   string    // Trait ID
-	Type TraitType // Trait name
-	//Description string // Trait description
-}
-
-type TraitType int //Un trait est un entier entre 1 et 5
-
-const (
-	AGRESSIVITY   TraitType = iota //statique -> impacte les proba de tentatives de dépassement
-	CONFIDENCE                     // dynamique -> impatce un peu la proba de tenter et la proba de réussir un dépassement
-	DOCILITY                       // dynamique -> impacte la proba d'écouter la stratégie de l'équipe
-	CONCENTRATION                  //statique -> impacte la proba de réussir un dépassement
-
-	//TODO compléter avec les autres traits
-)

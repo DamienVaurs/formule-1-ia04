@@ -20,6 +20,12 @@ func NewChampionship(id string, name string, circuits []*Circuit, teams []*Team)
 
 	t := make([]*Team, len(teams))
 	copy(t, teams)
+	for i := range t {
+		for j := range t[i].Drivers {
+			t[i].Drivers[j].ChampionshipPoints = 0
+		}
+
+	}
 
 	r := make([]Race, len(circuits))
 
@@ -44,12 +50,18 @@ func (c *Championship) CalcTeamRank() []*Team {
 	return res
 }
 
-func (c *Championship) DisplayTeamRank() {
+func (c *Championship) DisplayTeamRank() []*TeamTotalPoints {
 	log.Printf("\n\n====Classement constructeur ====\n")
 	teamRank := c.CalcTeamRank()
+	teamsRankTab := make([]*TeamTotalPoints, 0)
 	for i, team := range teamRank {
+		teamRank := NewTeamTotalPoints(team.Name, team.CalcChampionshipPoints())
 		log.Printf("%d : %s : %d points\n", i+1, team.Name, team.CalcChampionshipPoints())
+
+		teamsRankTab = append(teamsRankTab, teamRank)
 	}
+
+	return teamsRankTab
 }
 
 func (c *Championship) CalcDriverRank() []*Driver {
@@ -67,10 +79,109 @@ func (c *Championship) CalcDriverRank() []*Driver {
 	return res
 }
 
-func (c *Championship) DisplayDriverRank() {
+func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*PersonalityAveragePoints) {
 	log.Printf("\n\n====Classement pilotes ====\n")
-	driverRank := c.CalcDriverRank()
-	for i, driver := range driverRank {
+	driversRank := c.CalcDriverRank()
+	driversRankTab := make([]*DriverTotalPoints, 0)
+	personalityRankTab := make([]*PersonalityAveragePoints, 0)
+	for i, driver := range driversRank {
+		driverRank := NewDriverTotalPoints(driver.Lastname, driver.ChampionshipPoints)
+		//Si la personnalité est déjà dans le tableau, on ajoute le nombre de points. Sinon, on crée un nouvel objet
+		var found bool
+		for indPers := range personalityRankTab {
+			if personalityRankTab[indPers].Personality["Aggressivity"] == driver.Personality.TraitsValue["Aggressivity"] &&
+				personalityRankTab[indPers].Personality["Concentration"] == driver.Personality.TraitsValue["Concentration"] &&
+				personalityRankTab[indPers].Personality["Confidence"] == driver.Personality.TraitsValue["Confidence"] &&
+				personalityRankTab[indPers].Personality["Docility"] == driver.Personality.TraitsValue["Docility"] {
+				personalityRankTab[indPers].AveragePoints += float64(driver.ChampionshipPoints)
+				personalityRankTab[indPers].NbDrivers += 1
+				found = true
+				break
+			}
+		}
+		if !found {
+			var perso Personality
+			perso.TraitsValue = make(map[string]int)
+			perso.TraitsValue["Confidence"] = driver.Personality.TraitsValue["Confidence"]
+			perso.TraitsValue["Aggressivity"] = driver.Personality.TraitsValue["Aggressivity"]
+			perso.TraitsValue["Docility"] = driver.Personality.TraitsValue["Docility"]
+			perso.TraitsValue["Concentration"] = driver.Personality.TraitsValue["Concentration"]
+			//on ne peut pas passer le map directement en paramètre, il faut le copier
+			personalityRank := NewPersonalityAveragePoints(perso.TraitsValue, driver.ChampionshipPoints, 1)
+			personalityRankTab = append(personalityRankTab, personalityRank)
+		}
+
 		log.Printf("%d : %s %s : %d points\n", i+1, driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
+		log.Printf("%v", driver.Personality.TraitsValue)
+
+		driversRankTab = append(driversRankTab, driverRank)
+
+	}
+	//Calcule des moyennes
+	for indPers := range personalityRankTab {
+		if personalityRankTab[indPers].NbDrivers > 1 {
+			personalityRankTab[indPers].AveragePoints = personalityRankTab[indPers].AveragePoints / float64(personalityRankTab[indPers].NbDrivers)
+		}
+
+	}
+	return driversRankTab, personalityRankTab
+}
+
+func (c *Championship) DisplayPersonalityRepartition() {
+	log.Printf("\n\n====Répartition des personnalités ====\n")
+	driverRank := c.CalcDriverRank()
+
+	aggressivity_value_5 := 0
+	aggressivity_value_4 := 0
+	aggressivity_value_3 := 0
+	aggressivity_value_2 := 0
+	aggressivity_value_1 := 0
+	aggressivity_value_0 := 0
+	for i, driver := range driverRank {
+		if i < 15 {
+			switch driver.Personality.TraitsValue["Aggressivity"] {
+			case 0:
+				aggressivity_value_0 += 1
+			case 1:
+				aggressivity_value_1 += 1
+			case 2:
+				aggressivity_value_2 += 1
+			case 3:
+				aggressivity_value_3 += 1
+			case 4:
+				aggressivity_value_4 += 1
+			case 5:
+				aggressivity_value_5 += 1
+			default:
+				log.Printf("Value of aggressivity out of range : %d", driver.Personality.TraitsValue["Aggressivity"])
+			}
+		}
+		if i == 4 {
+			log.Printf("Répartition du niveau agressivité du top 5 : \n")
+			log.Printf("Agressivité 5 : %d", aggressivity_value_5)
+			log.Printf("Agressivité 4 : %d", aggressivity_value_4)
+			log.Printf("Agressivité 3 : %d", aggressivity_value_3)
+			log.Printf("Agressivité 2 : %d", aggressivity_value_2)
+			log.Printf("Agressivité 1 : %d", aggressivity_value_1)
+			log.Printf("Agressivité 0 : %d", aggressivity_value_0)
+		}
+		if i == 9 {
+			log.Printf("Répartition du niveau agressivité du top 10 : \n")
+			log.Printf("Agressivité 5 : %d", aggressivity_value_5)
+			log.Printf("Agressivité 4 : %d", aggressivity_value_4)
+			log.Printf("Agressivité 3 : %d", aggressivity_value_3)
+			log.Printf("Agressivité 2 : %d", aggressivity_value_2)
+			log.Printf("Agressivité 1 : %d", aggressivity_value_1)
+			log.Printf("Agressivité 0 : %d", aggressivity_value_0)
+		}
+		if i == 14 {
+			log.Printf("Répartition du niveau agressivité du top 15 : \n")
+			log.Printf("Agressivité 5 : %d", aggressivity_value_5)
+			log.Printf("Agressivité 4 : %d", aggressivity_value_4)
+			log.Printf("Agressivité 3 : %d", aggressivity_value_3)
+			log.Printf("Agressivité 2 : %d", aggressivity_value_2)
+			log.Printf("Agressivité 1 : %d", aggressivity_value_1)
+			log.Printf("Agressivité 0 : %d", aggressivity_value_0)
+		}
 	}
 }
