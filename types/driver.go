@@ -132,7 +132,7 @@ func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	var dice int = rand.Intn(999) + 1
 
 	if dice <= 10 && d.Speed < 10 {
-		d.Speed++
+		d.Speed += int(d.CurrentTyre)
 	} else if dice >= 990 && d.Speed > 1 {
 		d.Speed--
 	}
@@ -280,7 +280,7 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 	// En fonction du résultat du dé, cela a un impact sur la vitesse du pilote
 	if dice <= 10 && d.Speed < 10 {
-		d.Speed++
+		d.Speed += int(d.CurrentTyre)
 	} else if dice >= 990 && d.Speed > 1 {
 		d.Speed--
 	}
