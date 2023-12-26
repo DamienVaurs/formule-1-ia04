@@ -131,6 +131,12 @@ func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 
 	var dice int = rand.Intn(999) + 1
 
+	if dice <= 10 && d.Speed < 10 {
+		d.Speed++
+	} else if dice >= 990 && d.Speed > 1 {
+		d.Speed--
+	}
+
 	return dice <= probaReussite
 }
 
@@ -271,6 +277,13 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	probaDoubler *= 10
 
 	var dice int = rand.Intn(999) + 1
+
+	// En fonction du résultat du dé, cela a un impact sur la vitesse du pilote
+	if dice <= 10 && d.Speed < 10 {
+		d.Speed++
+	} else if dice >= 990 && d.Speed > 1 {
+		d.Speed--
+	}
 
 	// Si on est en dessous de probaDoubler, on double et la confiance du pilote augmente
 	if dice <= probaDoubler {

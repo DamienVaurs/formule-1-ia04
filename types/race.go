@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 	"sync"
@@ -254,6 +255,18 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 				}
 				if driver.Status == PITSTOP || driver.Status == PITSTOP_CHANGETYRE {
 					newDriversOnPortion[i] = append(newDriversOnPortion[i], driver)
+				} else if driver.Speed > 5 {
+
+					// Si le pilote est actuellement premier sur sa portion et qu'il n'y a personne sur le portion i+1
+					canJump := r.Circuit.Portions[i].DriversOn[0] == driver && r.Circuit.Portions[(i+1)%len(r.Circuit.Portions)].DriversOn[0] == nil
+					fmt.Println("canjump : ", canJump)
+					if canJump {
+						driver.Position = driver.Position.NextPortion
+						newDriversOnPortion[(i+2)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+2)%len(r.Circuit.Portions)], driver)
+					} else {
+						newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
+					}
+
 				} else if driver.Status != CRASHED && driver.Status != ARRIVED {
 					//On ajoute le pilote à sa nouvelle position
 					newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
