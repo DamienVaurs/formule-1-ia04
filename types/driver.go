@@ -35,6 +35,7 @@ type DriverInRace struct {
 	TyreTypeCount  int          //Nombre de différents types de pneus utilisés pendant la course
 	UsedTyreTypes  []Tyre
 	CurrentRank    int //Classement actuel du pilote, à voir si on l'implémente
+	Speed          int //Vitesse du pilote
 }
 
 /* Pneus
@@ -99,6 +100,7 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action, met
 			PitstopSteps:  0,
 			CurrentTyre:   WET,
 			TyreTypeCount: 1,
+			Speed:         1,
 		}
 	} else {
 		return &DriverInRace{
@@ -111,6 +113,7 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action, met
 			PitstopSteps:  0,
 			CurrentTyre:   SOFT,
 			TyreTypeCount: 1,
+			Speed:         1,
 		}
 	}
 }
