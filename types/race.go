@@ -256,11 +256,12 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 				if driver.Status == PITSTOP || driver.Status == PITSTOP_CHANGETYRE {
 					newDriversOnPortion[i] = append(newDriversOnPortion[i], driver)
 				} else if driver.Speed > 5 {
+					fmt.Println("Vitesse du pilote ", driver.Driver.Lastname, " : ", driver.Speed)
 
 					// Si le pilote est actuellement premier sur sa portion et qu'il n'y a personne sur le portion i+1
-					canJump := r.Circuit.Portions[i].DriversOn[0] == driver && r.Circuit.Portions[(i+1)%len(r.Circuit.Portions)].DriversOn[0] == nil
-					fmt.Println("canjump : ", canJump)
+					canJump := r.Circuit.Portions[i].DriversOn[0] == driver && len(r.Circuit.Portions[(i+1)%len(r.Circuit.Portions)].DriversOn) == 0
 					if canJump {
+						fmt.Println("Le pilote ", driver.Driver.Lastname, " saute la portion ", r.Circuit.Portions[i].Id, " et passe à la portion ", r.Circuit.Portions[(i+1)%len(r.Circuit.Portions)].Id)
 						driver.Position = driver.Position.NextPortion
 						newDriversOnPortion[(i+2)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+2)%len(r.Circuit.Portions)], driver)
 					} else {
