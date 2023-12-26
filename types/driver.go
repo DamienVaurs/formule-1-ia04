@@ -376,6 +376,36 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	return false, nil
 }
 
+func (d *DriverInRace) ChangeSpeed() {
+
+	// On change la vitesse du pilote en fonction de sa personnalité
+	if d.Driver.Personality.TraitsValue["Confidence"] > 3 && d.Driver.Personality.TraitsValue["Concentration"] > 3 {
+		d.Speed += 2
+	}
+	if d.Driver.Personality.TraitsValue["Confidence"] <= 3 && d.Driver.Personality.TraitsValue["Concentration"] >= 3 {
+		d.Speed += 1
+	}
+	if d.Driver.Personality.TraitsValue["Confidence"] <= 3 && d.Driver.Personality.TraitsValue["Concentration"] <= 3 {
+		d.Speed -= 1
+	}
+	if d.Driver.Personality.TraitsValue["Confidence"] > 3 && d.Driver.Personality.TraitsValue["Concentration"] <= 3 {
+		d.Speed -= 2
+	}
+	if d.Driver.Personality.TraitsValue["Aggressivity"] > 3 {
+		d.Speed += 2
+	}
+	if d.Driver.Personality.TraitsValue["Aggressivity"] <= 3 {
+		d.Speed -= 2
+	}
+
+	if d.Speed > 10 {
+		d.Speed = 10
+	} else if d.Speed < 1 {
+		d.Speed = 1
+	}
+
+}
+
 func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 	log.Printf("		Lancement du pilote %s %s...\n", d.Driver.Firstname, d.Driver.Lastname)
 
@@ -389,6 +419,9 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 			return
 		}
 		//On décide
+
+		// On change la vitesse du pilote en fonction de sa personnalité
+		d.ChangeSpeed()
 
 		// On regarde si les pneus vont bien
 
