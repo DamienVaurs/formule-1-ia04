@@ -313,6 +313,8 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	}
 
 	// Dans le cas par défaut, le doublement est échoué mais aucun crash n'a lieu
+	// On reset la vitesse du pilote
+	d.Speed = 1
 	return false, []*DriverInRace{}
 
 }
