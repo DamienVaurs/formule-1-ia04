@@ -79,19 +79,26 @@ func (c *Championship) CalcDriverRank() []*Driver {
 	return res
 }
 
-func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*PersonalityAveragePoints, map[int]float64) {
+func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*PersonalityAveragePoints, map[string]map[int]float64) {
 	log.Printf("\n\n====Classement pilotes ====\n")
 	driversRank := c.CalcDriverRank()
 	driversRankTab := make([]*DriverTotalPoints, 0)
 	personalityRankTab := make([]*PersonalityAveragePoints, 0)
-	aggressivityAverage := make(map[int]float64)
-	nb := make(map[int]int)
+	personnalityAverage := make(map[string]map[int]float64)
+	nb := make(map[string]map[int]int)
 
 	for i, driver := range driversRank {
 		driverRank := NewDriverTotalPoints(driver.Lastname, driver.ChampionshipPoints)
 
-		aggressivityAverage[driver.Personality.TraitsValue["Aggressivity"]] += float64(driver.ChampionshipPoints)
-		nb[driver.Personality.TraitsValue["Aggressivity"]] += 1
+		//On ajoute les points du pilote à la personnalité
+		for personnality, level := range driver.Personality.TraitsValue {
+			if _, ok := personnalityAverage[personnality]; !ok {
+				personnalityAverage[personnality] = make(map[int]float64)
+				nb[personnality] = make(map[int]int)
+			}
+			personnalityAverage[personnality][level] += float64(driver.ChampionshipPoints)
+			nb[personnality][level] += 1
+		}
 
 		//Si la personnalité est déjà dans le tableau, on ajoute le nombre de points. Sinon, on crée un nouvel objet
 		var found bool
@@ -131,15 +138,14 @@ func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*Personality
 		}
 
 	}
-	//Calcule de la moyenne d'agressivité
-	for i := 1; i < 6; i++ {
-		if nb[i] > 0 {
-			aggressivityAverage[i] = aggressivityAverage[i] / float64(nb[i])
-		} else {
-			aggressivityAverage[i] = 0
+	//Calcule des moyennes de personnalités
+	for personnality, level := range personnalityAverage {
+		for level, points := range level {
+			personnalityAverage[personnality][level] = points / float64(nb[personnality][level])
 		}
 	}
-	return driversRankTab, personalityRankTab, aggressivityAverage
+
+	return driversRankTab, personalityRankTab, personnalityAverage
 }
 
 func (c *Championship) DisplayPersonalityRepartition() {

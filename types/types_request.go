@@ -34,14 +34,14 @@ type TotalStatistics struct {
 	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
 	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
 	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
-	AggressivityAverage      map[int]float64             `json:"aggressivityAverage"`
+	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
 	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
 }
 type LastChampionshipStatistics struct {
 	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
 	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
 	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
-	AggressivityAverage      map[int]float64             `json:"aggressivityAverage"`
+	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
 	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
 }
 
@@ -78,8 +78,8 @@ func NewPersonalityAveragePoints(personality map[string]int, pts int, nbDrivers 
 	return &PersonalityAveragePoints{Personality: personality, AveragePoints: float64(pts), NbDrivers: nbDrivers}
 }
 
-func NewLastChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, teamTotalPoints []*TeamTotalPoints, personalityTotalPoints []*PersonalityAveragePoints, aggressivityAverage map[int]float64, nbCrashsPersonnality []*NbCrashsPersonnality) *LastChampionshipStatistics {
-	return &LastChampionshipStatistics{DriversTotalPoints: driversTotalPoints, TeamsTotalPoints: teamTotalPoints, PersonalityAveragePoints: personalityTotalPoints, AggressivityAverage: aggressivityAverage, NbCrashsPersonnality: nbCrashsPersonnality}
+func NewLastChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, teamTotalPoints []*TeamTotalPoints, personalityTotalPoints []*PersonalityAveragePoints, personnalityAverage map[string]map[int]float64, nbCrashsPersonnality []*NbCrashsPersonnality) *LastChampionshipStatistics {
+	return &LastChampionshipStatistics{DriversTotalPoints: driversTotalPoints, TeamsTotalPoints: teamTotalPoints, PersonalityAveragePoints: personalityTotalPoints, PersonalityAverage: personnalityAverage, NbCrashsPersonnality: nbCrashsPersonnality}
 }
 
 func NewSimulateChampionship(lastChampionship string, nbSim int, totalStatistics TotalStatistics, lastChampionshipStatistics LastChampionshipStatistics) *SimulateChampionship {
