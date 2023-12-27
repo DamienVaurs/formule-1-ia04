@@ -123,3 +123,9 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	serial, _ := json.Marshal(statistics)
 	w.Write(serial)
 }
+
+func (rsa *RestServer) start50Simulations(w http.ResponseWriter, r *http.Request) {
+	for i := 0; i < 50; i++ {
+		rsa.startSimulation(w, r)
+	}
+}
