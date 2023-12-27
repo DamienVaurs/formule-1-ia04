@@ -12,23 +12,15 @@ import (
 *
  */
 func (rsa *RestServer) statisticsChampionship(w http.ResponseWriter, r *http.Request) {
-	// Vérification de la méthode de la requête
+	// vérification de la méthode de la requête
 	if r.Method != "GET" {
 		return
 	}
 	fmt.Println("GET /statisticsChampionship")
-
-	// Marshal des statistiques en JSON
-	serial, err := json.Marshal(statistics)
+	w.WriteHeader(http.StatusOK)
+	serial, err := json.Marshal(statistics) //statistics is defined in simulateChampionship.go
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		panic("Error /statisticsChampionship : can't marshal statistics" + err.Error())
 	}
-
-	// En-tête Content-Disposition pour indiquer le téléchargement du fichier
-	w.Header().Set("Content-Disposition", "attachment; filename=statistics.json")
-	w.Header().Set("Content-Type", "application/json")
-
-	// Écriture des données dans la réponse
 	w.Write(serial)
 }
