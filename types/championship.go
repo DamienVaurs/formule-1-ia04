@@ -138,6 +138,16 @@ func (c *Championship) DisplayDriverRank() ([]*DriverTotalPoints, []*Personality
 		}
 
 	}
+
+	for personnality := range personnalityAverage {
+		for i := 1; i < 6; i++ {
+			if _, ok := personnalityAverage[personnality][i]; !ok {
+				personnalityAverage[personnality][i] = 0
+				nb[personnality][i] = 1
+			}
+		}
+	}
+
 	//Calcule des moyennes de personnalités
 	for personnality, level := range personnalityAverage {
 		for level, points := range level {
