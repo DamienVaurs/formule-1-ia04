@@ -123,6 +123,11 @@ func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	// Pour le moment on prend en compte le niveau du pilote, la difficulté de la portion et l'usure des pneus
 	portion := d.Position
 
+	// Si la vitesse est faible, on considère que la portion est réussie sans difficulté
+	if d.Speed < 3 {
+		return true
+	}
+
 	probaReussite := 995
 	probaReussite += d.Driver.Level * 20
 	probaReussite -= portion.Difficulty * 18
