@@ -35,6 +35,7 @@ type DriverInRace struct {
 	TyreTypeCount  int          //Nombre de différents types de pneus utilisés pendant la course
 	UsedTyreTypes  []Tyre
 	CurrentRank    int //Classement actuel du pilote, à voir si on l'implémente
+	Speed          int //Vitesse du pilote
 }
 
 /* Pneus
@@ -99,6 +100,7 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action, met
 			PitstopSteps:  0,
 			CurrentTyre:   WET,
 			TyreTypeCount: 1,
+			Speed:         1,
 		}
 	} else {
 		return &DriverInRace{
@@ -111,6 +113,7 @@ func NewDriverInRace(driver *Driver, position *Portion, channel chan Action, met
 			PitstopSteps:  0,
 			CurrentTyre:   SOFT,
 			TyreTypeCount: 1,
+			Speed:         1,
 		}
 	}
 }
@@ -120,13 +123,25 @@ func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	// Pour le moment on prend en compte le niveau du pilote, la difficulté de la portion et l'usure des pneus
 	portion := d.Position
 
+	// Si la vitesse est faible, on considère que la portion est réussie sans difficulté
+	if d.Speed < 3 {
+		return true
+	}
+
 	probaReussite := 995
 	probaReussite += d.Driver.Level * 20
 	probaReussite -= portion.Difficulty * 18
 	probaReussite -= d.TimeWoPitStop
 	probaReussite -= pénalité
+	probaReussite -= d.Speed * 5
 
 	var dice int = rand.Intn(999) + 1
+
+	if dice <= 10 && d.Speed < 10 {
+		d.Speed += int(d.CurrentTyre)
+	} else if dice >= 990 && d.Speed > 1 {
+		d.Speed--
+	}
 
 	return dice <= probaReussite
 }
@@ -269,6 +284,13 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 
 	var dice int = rand.Intn(999) + 1
 
+	// En fonction du résultat du dé, cela a un impact sur la vitesse du pilote
+	if dice <= 10 && d.Speed < 10 {
+		d.Speed += int(d.CurrentTyre)
+	} else if dice >= 990 && d.Speed > 1 {
+		d.Speed--
+	}
+
 	// Si on est en dessous de probaDoubler, on double et la confiance du pilote augmente
 	if dice <= probaDoubler {
 		if d.Driver.Personality.TraitsValue["Confidence"] < 5 {
@@ -297,6 +319,8 @@ func (d *DriverInRace) Overtake(otherDriver *DriverInRace) (reussite bool, crash
 	}
 
 	// Dans le cas par défaut, le doublement est échoué mais aucun crash n'a lieu
+	// On reset la vitesse du pilote
+	d.Speed = 1
 	return false, []*DriverInRace{}
 
 }
@@ -357,6 +381,36 @@ func (d *DriverInRace) OvertakeDecision(driverToOvertake *DriverInRace) (bool, e
 	return false, nil
 }
 
+func (d *DriverInRace) ChangeSpeed() {
+
+	// On change la vitesse du pilote en fonction de sa personnalité
+	if d.Driver.Personality.TraitsValue["Confidence"] > 3 && d.Driver.Personality.TraitsValue["Concentration"] > 3 {
+		d.Speed += 2
+	}
+	if d.Driver.Personality.TraitsValue["Confidence"] <= 3 && d.Driver.Personality.TraitsValue["Concentration"] >= 3 {
+		d.Speed += 1
+	}
+	if d.Driver.Personality.TraitsValue["Confidence"] <= 3 && d.Driver.Personality.TraitsValue["Concentration"] <= 3 {
+		d.Speed -= 1
+	}
+	if d.Driver.Personality.TraitsValue["Confidence"] > 3 && d.Driver.Personality.TraitsValue["Concentration"] <= 3 {
+		d.Speed -= 2
+	}
+	if d.Driver.Personality.TraitsValue["Aggressivity"] > 3 {
+		d.Speed += 2
+	}
+	if d.Driver.Personality.TraitsValue["Aggressivity"] <= 3 {
+		d.Speed -= 2
+	}
+
+	if d.Speed > 10 {
+		d.Speed = 10
+	} else if d.Speed < 1 {
+		d.Speed = 1
+	}
+
+}
+
 func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 	log.Printf("		Lancement du pilote %s %s...\n", d.Driver.Firstname, d.Driver.Lastname)
 
@@ -370,6 +424,9 @@ func (d *DriverInRace) Start(position *Portion, nbLaps int) {
 			return
 		}
 		//On décide
+
+		// On change la vitesse du pilote en fonction de sa personnalité
+		d.ChangeSpeed()
 
 		// On regarde si les pneus vont bien
 

@@ -229,6 +229,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 		for i := range r.Circuit.Portions {
 			//newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = make([]*DriverInRace, 0) // crée la slice de la portion suivante nouvelle
 			for _, driver := range r.Circuit.Portions[i].DriversOn {
+				previousPortion := driver.Position
 				if driver.Status != CRASHED && driver.Status != ARRIVED && (driver.Status != PITSTOP && driver.Status != PITSTOP_CHANGETYRE) {
 					//On met à jour le champ position du pilote
 					driver.Position = driver.Position.NextPortion
@@ -254,6 +255,28 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 				}
 				if driver.Status == PITSTOP || driver.Status == PITSTOP_CHANGETYRE {
 					newDriversOnPortion[i] = append(newDriversOnPortion[i], driver)
+				} else if driver.Speed > 5 && (driver.Status != CRASHED && driver.Status != ARRIVED) {
+					// Si le pilote est actuellement premier sur sa portion et qu'il n'y a personne sur le portion i+1
+					canJump := r.Circuit.Portions[i].DriversOn[0] == driver && len(r.Circuit.Portions[(i+1)%len(r.Circuit.Portions)].DriversOn) == 0
+					dice := rand.Intn(15) + 1
+					if canJump && dice < driver.Speed {
+						driver.Position = driver.Position.NextPortion
+						newDriversOnPortion[(i+2)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+2)%len(r.Circuit.Portions)], driver)
+					} else {
+						newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
+					}
+
+				} else if driver.Speed <= 5 && (driver.Status != CRASHED && driver.Status != ARRIVED) {
+					// Si le pilote est actuellement dernier sur sa portion et qu'il ne va pas très vite, il peut "stagner"
+					canStay := r.Circuit.Portions[i].DriversOn[len(r.Circuit.Portions[i].DriversOn)-1] == driver
+					dice := rand.Intn(6) + 1
+					if canStay && dice > driver.Speed { // A vitesse = 5, chance de rester = 1/6, à vitesse = 1, chance de rester = 5/6
+						driver.Position = previousPortion
+						driver.Speed++ // On augmente la vitesse du pilote pour éviter qu'il reste 1000 ans sur la même portion
+						newDriversOnPortion[i] = append(newDriversOnPortion[i], driver)
+					} else {
+						newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
+					}
 				} else if driver.Status != CRASHED && driver.Status != ARRIVED {
 					//On ajoute le pilote à sa nouvelle position
 					newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = append(newDriversOnPortion[(i+1)%len(r.Circuit.Portions)], driver)
