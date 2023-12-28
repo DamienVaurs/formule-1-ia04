@@ -124,7 +124,7 @@ func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	portion := d.Position
 
 	// Si la vitesse est faible, on considère que la portion est réussie sans difficulté
-	if d.Speed < 3 {
+	if d.Speed <= 3 {
 		return true
 	}
 
@@ -134,6 +134,7 @@ func (d *DriverInRace) PortionSuccess(pénalité int) bool {
 	probaReussite -= d.TimeWoPitStop
 	probaReussite -= pénalité
 	probaReussite -= d.Speed * 5
+	probaReussite += d.Driver.Personality.TraitsValue["Concentration"] * 10
 
 	var dice int = rand.Intn(999) + 1
 
