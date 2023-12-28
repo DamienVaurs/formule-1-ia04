@@ -43,6 +43,12 @@ func addNewStatistsicsToPrevious(lastStats types.LastChampionshipStatistics) {
 			statistics.TotalStatistics.TeamsTotalPoints[i].TotalPoints += mapScoreTeams[statistics.TotalStatistics.TeamsTotalPoints[i].Team]
 		}
 
+		for personality := range lastStats.PersonalityAverage {
+			for i := range statistics.TotalStatistics.PersonalityAverage[personality] {
+				statistics.TotalStatistics.PersonalityAverage[personality][i] += lastStats.PersonalityAverage[personality][i]
+			}
+		}
+
 		//Ajout des points des personnalités
 		//Pb ici : des personnalités sont écrasées? J'ai l'impression que quand la simulation change la valeur ça modifie dans statistiques en même temps...
 		for _, personality := range lastStats.PersonalityAveragePoints {
