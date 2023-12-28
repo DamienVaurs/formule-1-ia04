@@ -111,8 +111,8 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	nbSimulation += 1
 
 	// Lancement de la simulation
-	driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints := s.LaunchSimulation()
-	lastChampionshipstatistics := types.NewLastChampionshipStatistics(driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, nil)
+	driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, personnalityAverage := s.LaunchSimulation()
+	lastChampionshipstatistics := types.NewLastChampionshipStatistics(driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, personnalityAverage, nil)
 
 	//Ajoute les nouvelles statistics
 	addNewStatistsicsToPrevious(*lastChampionshipstatistics)
@@ -122,4 +122,10 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	serial, _ := json.Marshal(statistics)
 	w.Write(serial)
+}
+
+func (rsa *RestServer) start50Simulations(w http.ResponseWriter, r *http.Request) {
+	for i := 0; i < 50; i++ {
+		rsa.startSimulation(w, r)
+	}
 }
