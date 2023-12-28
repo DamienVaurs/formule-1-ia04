@@ -162,8 +162,8 @@ func (rsa *RestServer) startSimulationRandom(w http.ResponseWriter, r *http.Requ
 	w.Write(serial)
 }
 
-func (rsa *RestServer) start50Simulations(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 50; i++ {
+func (rsa *RestServer) start100Simulations(w http.ResponseWriter, r *http.Request) {
+	for i := 0; i < 100; i++ {
 		rsa.startSimulationRandom(w, r)
 	}
 }
