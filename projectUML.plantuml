@@ -1,7 +1,7 @@
 @startuml IA04 - Modélisation Championnat de Formule 1
 
 
-title Projet IA04 - Modélisation Championnat de Formule 1
+title Projet IA04 - Première modélisation d'un Championnat de Formule 1
 
 
 class Driver {
