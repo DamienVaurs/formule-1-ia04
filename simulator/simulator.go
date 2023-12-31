@@ -1,7 +1,6 @@
 package simulator
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -9,12 +8,8 @@ import (
 )
 
 type Simulator struct {
-	Championships []types.Championship
+	Championships []types.Championship //Contient les championnats à simuler. Nous n'en passons qu'un en se servant d'un simulator différent pour chaque championnat
 }
-
-var driverTotalPoints []*types.DriverTotalPoints
-var teamTotalPoints []*types.TeamTotalPoints
-var personalityAveragePoints []*types.PersonalityAveragePoints
 
 func NewSimulator(championships []types.Championship) *Simulator {
 	c := make([]types.Championship, len(championships))
@@ -25,7 +20,13 @@ func NewSimulator(championships []types.Championship) *Simulator {
 	}
 }
 
-func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.TeamTotalPoints, []*types.PersonalityAveragePoints) {
+func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.TeamTotalPoints, []*types.PersonalityAveragePoints, map[string]map[int]float64) {
+
+	var driverTotalPoints []*types.DriverTotalPoints
+	var teamTotalPoints []*types.TeamTotalPoints
+	var personalityAveragePoints []*types.PersonalityAveragePoints
+	var personnalityAverage map[string]map[int]float64
+
 	log.Println("Lancement d'une nouvelle simulation...")
 	for _, championship := range s.Championships {
 		//On simule chaque championnat
@@ -63,14 +64,14 @@ func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.Tea
 				}*/
 
 			//Etape 3 : on ajoute la course au championnat
-			fmt.Println("Ajout de la course au championnat...")
+			//fmt.Println("Ajout de la course au championnat...")
 			championship.Races[i] = *new_Race
 		}
 		//On affiche le classement du championnat
 		log.Printf("\n\n===== Classements du championnat %s =====\n", championship.Name)
 		teamTotalPoints = championship.DisplayTeamRank()
-		driverTotalPoints, personalityAveragePoints = championship.DisplayDriverRank()
+		driverTotalPoints, personalityAveragePoints, personnalityAverage = championship.DisplayDriverRank()
 		//championship.DisplayPersonalityRepartition()
 	}
-	return driverTotalPoints, teamTotalPoints, personalityAveragePoints
+	return driverTotalPoints, teamTotalPoints, personalityAveragePoints, personnalityAverage
 }

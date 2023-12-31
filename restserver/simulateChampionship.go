@@ -18,12 +18,12 @@ var statistics *types.SimulateChampionship = &types.SimulateChampionship{} // va
 func addNewStatistsicsToPrevious(lastStats types.LastChampionshipStatistics) {
 	//modifie l'objets "statistics" pour ajouter correctement les dernières stats
 	if statistics.LastChampionship == "" {
-		fmt.Println("First championship simulated")
-		//Si on est au premier championnat, le total vaut la dernière simulation
+		//Cas particlier : si on est au premier championnat, le total vaut la dernière simulation
 		statistics.TotalStatistics = types.TotalStatistics(lastStats)
 		statistics.LastChampionshipStatistics = lastStats
 		return
 	} else {
+		//Cas général
 		//Ajout des points des pilotes
 		statistics.LastChampionshipStatistics = lastStats
 		mapScoreDrivers := make(map[string]int)
@@ -44,8 +44,9 @@ func addNewStatistsicsToPrevious(lastStats types.LastChampionshipStatistics) {
 		}
 
 		//Ajout des points des personnalités
+		//Pb ici : des personnalités sont écrasées? J'ai l'impression que quand la simulation change la valeur ça modifie dans statistiques en même temps...
 		for _, personality := range lastStats.PersonalityAveragePoints {
-			var found bool
+			var found bool //set to true if personnality is found
 			for i := range statistics.TotalStatistics.PersonalityAveragePoints {
 				if personality.Personality["Concentration"] == statistics.TotalStatistics.PersonalityAveragePoints[i].Personality["Concentration"] &&
 					personality.Personality["Aggressivity"] == statistics.TotalStatistics.PersonalityAveragePoints[i].Personality["Aggressivity"] &&
@@ -63,7 +64,13 @@ func addNewStatistsicsToPrevious(lastStats types.LastChampionshipStatistics) {
 			}
 			if !found {
 				//Si la personnalité explorée n'a pas été recensée
-				statistics.TotalStatistics.PersonalityAveragePoints = append(statistics.TotalStatistics.PersonalityAveragePoints, personality)
+				var perso types.Personality
+				perso.TraitsValue = make(map[string]int)
+				perso.TraitsValue["Confidence"] = personality.Personality["Confidence"]
+				perso.TraitsValue["Aggressivity"] = personality.Personality["Aggressivity"]
+				perso.TraitsValue["Docility"] = personality.Personality["Docility"]
+				perso.TraitsValue["Concentration"] = personality.Personality["Concentration"]
+				statistics.TotalStatistics.PersonalityAveragePoints = append(statistics.TotalStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: perso.TraitsValue, AveragePoints: personality.AveragePoints, NbDrivers: personality.NbDrivers})
 			}
 		}
 
@@ -104,8 +111,8 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	nbSimulation += 1
 
 	// Lancement de la simulation
-	driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints := s.LaunchSimulation()
-	lastChampionshipstatistics := types.NewLastChampionshipStatistics(driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, nil)
+	driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, personnalityAverage := s.LaunchSimulation()
+	lastChampionshipstatistics := types.NewLastChampionshipStatistics(driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, personnalityAverage, nil)
 
 	//Ajoute les nouvelles statistics
 	addNewStatistsicsToPrevious(*lastChampionshipstatistics)
@@ -115,4 +122,10 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	serial, _ := json.Marshal(statistics)
 	w.Write(serial)
+}
+
+func (rsa *RestServer) start50Simulations(w http.ResponseWriter, r *http.Request) {
+	for i := 0; i < 50; i++ {
+		rsa.startSimulation(w, r)
+	}
 }
