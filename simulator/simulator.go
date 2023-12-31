@@ -8,7 +8,7 @@ import (
 )
 
 type Simulator struct {
-	Championships []types.Championship
+	Championships []types.Championship //Contient les championnats à simuler. Nous n'en passons qu'un en se servant d'un simulator différent pour chaque championnat
 }
 
 func NewSimulator(championships []types.Championship) *Simulator {

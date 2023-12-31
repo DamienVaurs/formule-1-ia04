@@ -297,12 +297,11 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 	}
 	//time.Sleep(1 * time.Second)
 	//On retourne le classement et les points attribués
-	res := r.CalcDiversPoints()
+	res := r.CalcDriversPoints()
 	return res, nil
 }
 
-func (r *Race) CalcDiversPoints() map[string]int {
-	//TODO : ajouter meilleur temps?
+func (r *Race) CalcDriversPoints() map[string]int {
 	var n int = len(r.FinalResult)
 	res := make(map[string]int, n)
 	for i := 0; i < len(r.FinalResult); i++ {

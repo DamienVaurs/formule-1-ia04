@@ -38,12 +38,6 @@ type DriverInRace struct {
 	Speed          int //Vitesse du pilote
 }
 
-/* Pneus
-
-Est-ce que la priorité du nouveau type de pneu se base sur le classement actuel du pilote, ou simplement sur les types de pneus restants ?
-
-*/
-
 //Actions d'un pilote
 
 type Action int
