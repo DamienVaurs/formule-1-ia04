@@ -3,7 +3,6 @@
 
 title Projet IA04 - Circuit de Formule 1
 
-
 class Circuit {
   - id: string
   - name: string
@@ -11,7 +10,7 @@ class Circuit {
   - MeteoDistribution : []int
   - NbLaps: int
 
-  + Circuit(name, country : string)
+  + Circuit(id, name, country : string, portions : []Portion, MeteoDistribution : []int, NbLaps: int)
   + GenerateMeteo(): Meteo
 }
 
@@ -23,29 +22,28 @@ enum Meteo{
 
 abstract class Portion{
   - id : string
-  - crashProbability : int
-  - tryOvertakeProbability: float64
+  - difficulty: int
+  - nextPortion: *Portion
 
-  + GetType(): PortionType
+  + Portion(id: string, difficulty: int, driversOnPortion: []*DriverInRace, isDRSZone: bool)
+  + AddDriverOn(driver : *DriverInRace)
+  + RemoveDriverOn(driver : *DriverInRace)
+  + SwapDrivers(driver1 : *DriverInRace, driver2 : *DriverInRace)
 }
 
 
 class Turn{
-
-  + Turn(id: string, crashProbability : int, tryOvertakeProbability: float64)
 }
 
 class Straight{
   - isDRSZone: bool
-
-  + Straight(id: string, crashProbability : int, tryOvertakeProbability: float64, isDRSZone: bool)
 }
 
 Circuit "1..n" --o "*" Championship : intègre >
 Circuit "1" *-- "1..n" Portion : contient >
 Portion  <|--  Turn
 Portion  <|--  Straight
-Portion "1" --o "*" Driver : est sur <
-
+Portion "1" -- "*" DriverInRace : est sur <
+Meteo "n" -- "*" Circuit : a une probabilité d'apparition sur >
 
 @enduml
