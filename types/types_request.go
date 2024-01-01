@@ -30,6 +30,29 @@ type SimulateChampionship struct {
 	LastChampionshipStatistics LastChampionshipStatistics `json:"lastChampionshipStatistics"`
 }
 
+type SimulateRace struct {
+	Championship           string                 `json:"championship"`
+	Race                   string                 `json:"race"`
+	ChampionshipStatistics ChampionshipStatistics `json:"championshipStatistics"`
+	RaceStatistics         RaceStatistics         `json:"raceStatistics"`
+}
+
+type ChampionshipStatistics struct {
+	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
+	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
+	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
+	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
+	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
+}
+
+type RaceStatistics struct {
+	DriversTotalPoints []*DriverTotalPoints `json:"driversTotalPoints"`
+	TeamsTotalPoints   []*TeamTotalPoints   `json:"teamsTotalPoints"`
+	// PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
+	// PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
+	// NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
+}
+
 type TotalStatistics struct {
 	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
 	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
@@ -84,4 +107,8 @@ func NewLastChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, team
 
 func NewSimulateChampionship(lastChampionship string, nbSim int, totalStatistics TotalStatistics, lastChampionshipStatistics LastChampionshipStatistics) *SimulateChampionship {
 	return &SimulateChampionship{LastChampionship: lastChampionship, TotalStatistics: totalStatistics, LastChampionshipStatistics: lastChampionshipStatistics, NbSimulations: nbSim}
+}
+
+func NewRaceStatistics(driversTotalPoints []*DriverTotalPoints) *RaceStatistics {
+	return &RaceStatistics{DriversTotalPoints: driversTotalPoints}
 }

@@ -3,6 +3,7 @@ package types
 import (
 	"log"
 	"math/rand"
+	"sort"
 	"sync"
 	"time"
 )
@@ -326,6 +327,21 @@ func (r *Race) CalcDriversPoints() map[string]int {
 
 	//Le dixième obtient 1 point
 	res[r.FinalResult[n-10].Id] = 1
+
+	return res
+}
+
+func (r *Race) CalcDriverRank() []*Driver {
+
+	res := make([]*Driver, 0)
+	for indT := range r.Teams {
+		for indD := range r.Teams[indT].Drivers {
+			res = append(res, &r.Teams[indT].Drivers[indD])
+		}
+	}
+	sort.Slice(res, func(i, j int) bool {
+		return res[i].ChampionshipPoints > res[j].ChampionshipPoints
+	})
 
 	return res
 }
