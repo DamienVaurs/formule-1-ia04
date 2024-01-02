@@ -35,6 +35,7 @@ type SimulateRace struct {
 	Race                   string                 `json:"race"`
 	ChampionshipStatistics ChampionshipStatistics `json:"championshipStatistics"`
 	RaceStatistics         RaceStatistics         `json:"raceStatistics"`
+	Highlights             []RaceHighlight        `json:"highlights"`
 }
 
 type ChampionshipStatistics struct {
@@ -66,6 +67,16 @@ type LastChampionshipStatistics struct {
 	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
 	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
 	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
+}
+
+// J'ai crée un nouveau type car JSON.Marshal aime pas le type DriverInRace et on n'en a pas besoin pour afficher les infos sur le front
+type RaceHighlight struct {
+	Description string        // Describe the highlight
+	Type        HighlightType // Type of highlight
+}
+
+func NewRaceHighlight(desc string, highlightType HighlightType) RaceHighlight {
+	return RaceHighlight{Description: desc, Type: highlightType}
 }
 
 type DriverTotalPoints struct {

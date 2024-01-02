@@ -26,6 +26,8 @@ const (
 
 func NewHighlight(drivers []*DriverInRace, highlightType HighlightType) (*Highlight, error) {
 
+	tyreTypes := [4]string{"WET", "SOFT", "MEDIUM", "HARD"}
+
 	d := make([]*DriverInRace, len(drivers))
 	copy(d, drivers)
 	var desc string
@@ -66,7 +68,7 @@ func NewHighlight(drivers []*DriverInRace, highlightType HighlightType) (*Highli
 		if len(drivers) != 1 {
 			return nil, fmt.Errorf("DRIVER_PITSTOP_CHANGETYRE highlight must include exactly 1 driver")
 		} else {
-			desc = fmt.Sprintf("PITSTOP: Le pilote %s est rentré au stand (changement pneu %d -> %d)", drivers[0].Driver.Lastname, drivers[0].PrevTyre, drivers[0].CurrentTyre)
+			desc = fmt.Sprintf("PITSTOP: Le pilote %s est rentré au stand (changement pneu %s vers %s)", drivers[0].Driver.Lastname, tyreTypes[drivers[0].PrevTyre], tyreTypes[drivers[0].CurrentTyre])
 		}
 	case CREVAISON:
 		if len(drivers) != 1 {

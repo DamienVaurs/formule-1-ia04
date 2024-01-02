@@ -16,14 +16,48 @@ var firstSimulation = true
 var raceStatistics *types.SimulateRace = &types.SimulateRace{}
 
 func (rsa *RestServer) resetRaceSimulation(w http.ResponseWriter, r *http.Request) {
-	firstSimulation = true
-	i = 0
-	raceStatistics = &types.SimulateRace{}
 
 	if r.Method != "GET" {
 		return
 	}
 	fmt.Println("GET /resetSimulateRace")
+
+	firstSimulation = true
+	i = 0
+	raceStatistics = &types.SimulateRace{}
+	raceStatistics = &types.SimulateRace{}
+	for _, team := range rsa.pointTabTeam {
+		for _, driver := range team.Drivers {
+			raceStatistics.RaceStatistics.DriversTotalPoints = append(raceStatistics.RaceStatistics.DriversTotalPoints, &types.DriverTotalPoints{Driver: driver.Lastname, TotalPoints: 0})
+			raceStatistics.ChampionshipStatistics.DriversTotalPoints = append(raceStatistics.ChampionshipStatistics.DriversTotalPoints, &types.DriverTotalPoints{Driver: driver.Lastname, TotalPoints: 0})
+		}
+		raceStatistics.RaceStatistics.TeamsTotalPoints = append(raceStatistics.ChampionshipStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
+		raceStatistics.ChampionshipStatistics.TeamsTotalPoints = append(raceStatistics.ChampionshipStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
+	}
+
+	raceStatistics.RaceStatistics.PersonalityAveragePoints = make([]*types.PersonalityAveragePoints, 0)
+	raceStatistics.ChampionshipStatistics.PersonalityAveragePoints = make([]*types.PersonalityAveragePoints, 0)
+	for indeTeam := range rsa.pointTabTeam {
+		for indDriv := range rsa.pointTabTeam[indeTeam].Drivers {
+			d := rsa.pointTabTeam[indeTeam].Drivers[indDriv].Id
+			var perso types.Personality
+			perso.TraitsValue = make(map[string]int)
+			perso.TraitsValue["Confidence"] = rsa.initPersonalities[d].TraitsValue["Confidence"]
+			perso.TraitsValue["Aggressivity"] = rsa.initPersonalities[d].TraitsValue["Aggressivity"]
+			perso.TraitsValue["Docility"] = rsa.initPersonalities[d].TraitsValue["Docility"]
+			perso.TraitsValue["Concentration"] = rsa.initPersonalities[d].TraitsValue["Concentration"]
+			raceStatistics.RaceStatistics.PersonalityAveragePoints = append(raceStatistics.RaceStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: perso.TraitsValue, AveragePoints: 0, NbDrivers: 0})
+			raceStatistics.ChampionshipStatistics.PersonalityAveragePoints = append(raceStatistics.ChampionshipStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: perso.TraitsValue, AveragePoints: 0, NbDrivers: 0})
+
+		}
+
+	}
+
+	serial, err := json.Marshal(raceStatistics) //statistics is defined in simulateChampionship.go
+	if err != nil {
+		panic("Error /reset : can't marshal statistics" + err.Error())
+	}
+	w.Write(serial)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -167,11 +201,18 @@ func (rsa *RestServer) startRaceSimulation(w http.ResponseWriter, r *http.Reques
 	raceStatistics.ChampionshipStatistics.TeamsTotalPoints = champTeamTotalPoints
 	raceStatistics.ChampionshipStatistics.PersonalityAverage = champPersonnalityAverage
 
+	for _, v := range new_Race.HighLigths {
+		highlight := types.NewRaceHighlight(v.Description, v.Type)
+		raceStatistics.Highlights = append(raceStatistics.Highlights, highlight)
+	}
+
+	// Incrémenter le compteur de course
 	i++
 
 	w.WriteHeader(http.StatusOK)
-	serial, _ := json.Marshal(raceStatistics)
+	serial, err := json.Marshal(raceStatistics)
+	if err != nil {
+		panic("Error /simulateRace : can't marshal statistics" + err.Error())
+	}
 	w.Write(serial)
 }
-
-// Split code into diff functions for readability
