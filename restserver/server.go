@@ -69,6 +69,7 @@ func (rsa *RestServer) Start() {
 
 	//Idem pour raceStatistics
 	raceStatistics = &types.SimulateRace{}
+	raceStatistics.IsLastRace = false
 	for _, team := range rsa.pointTabTeam {
 		for _, driver := range team.Drivers {
 			raceStatistics.RaceStatistics.DriversTotalPoints = append(raceStatistics.RaceStatistics.DriversTotalPoints, &types.DriverTotalPoints{Driver: driver.Lastname, TotalPoints: 0})

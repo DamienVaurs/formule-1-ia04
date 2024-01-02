@@ -36,6 +36,7 @@ type SimulateRace struct {
 	ChampionshipStatistics ChampionshipStatistics `json:"championshipStatistics"`
 	RaceStatistics         RaceStatistics         `json:"raceStatistics"`
 	Highlights             []RaceHighlight        `json:"highlights"`
+	IsLastRace             bool                   `json:"isLastRace"`
 }
 
 type ChampionshipStatistics struct {
