@@ -67,6 +67,35 @@ func (rsa *RestServer) Start() {
 
 	}
 
+	//Idem pour raceStatistics
+	raceStatistics = &types.SimulateRace{}
+	for _, team := range rsa.pointTabTeam {
+		for _, driver := range team.Drivers {
+			raceStatistics.RaceStatistics.DriversTotalPoints = append(raceStatistics.RaceStatistics.DriversTotalPoints, &types.DriverTotalPoints{Driver: driver.Lastname, TotalPoints: 0})
+			raceStatistics.ChampionshipStatistics.DriversTotalPoints = append(raceStatistics.ChampionshipStatistics.DriversTotalPoints, &types.DriverTotalPoints{Driver: driver.Lastname, TotalPoints: 0})
+		}
+		raceStatistics.RaceStatistics.TeamsTotalPoints = append(raceStatistics.ChampionshipStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
+		raceStatistics.ChampionshipStatistics.TeamsTotalPoints = append(raceStatistics.ChampionshipStatistics.TeamsTotalPoints, &types.TeamTotalPoints{Team: team.Name, TotalPoints: 0})
+	}
+
+	raceStatistics.RaceStatistics.PersonalityAveragePoints = make([]*types.PersonalityAveragePoints, 0)
+	raceStatistics.ChampionshipStatistics.PersonalityAveragePoints = make([]*types.PersonalityAveragePoints, 0)
+	for indeTeam := range rsa.pointTabTeam {
+		for indDriv := range rsa.pointTabTeam[indeTeam].Drivers {
+			d := rsa.pointTabTeam[indeTeam].Drivers[indDriv].Id
+			var perso types.Personality
+			perso.TraitsValue = make(map[string]int)
+			perso.TraitsValue["Confidence"] = rsa.initPersonalities[d].TraitsValue["Confidence"]
+			perso.TraitsValue["Aggressivity"] = rsa.initPersonalities[d].TraitsValue["Aggressivity"]
+			perso.TraitsValue["Docility"] = rsa.initPersonalities[d].TraitsValue["Docility"]
+			perso.TraitsValue["Concentration"] = rsa.initPersonalities[d].TraitsValue["Concentration"]
+			raceStatistics.RaceStatistics.PersonalityAveragePoints = append(raceStatistics.RaceStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: perso.TraitsValue, AveragePoints: 0, NbDrivers: 0})
+			raceStatistics.ChampionshipStatistics.PersonalityAveragePoints = append(raceStatistics.ChampionshipStatistics.PersonalityAveragePoints, &types.PersonalityAveragePoints{Personality: perso.TraitsValue, AveragePoints: 0, NbDrivers: 0})
+
+		}
+
+	}
+
 	// création du multiplexer
 	mux := http.NewServeMux()
 	mux.HandleFunc("/simulateRace", rsa.startRaceSimulation)
@@ -75,6 +104,7 @@ func (rsa *RestServer) Start() {
 	mux.HandleFunc("/simulate50Championships", rsa.start50Simulations)
 	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonalities)
 	mux.HandleFunc("/statisticsChampionship", rsa.statisticsChampionship)
+	mux.HandleFunc("/statisticsRace", rsa.statisticsRace)
 	mux.HandleFunc("/reset", rsa.reset)
 	corsHandler := corsMiddleware(mux)
 

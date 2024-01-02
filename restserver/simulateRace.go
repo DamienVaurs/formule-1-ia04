@@ -11,9 +11,9 @@ import (
 )
 
 var i = 0
-var raceStatistics *types.SimulateRace = &types.SimulateRace{}
 var championship *types.Championship
 var firstSimulation = true
+var raceStatistics *types.SimulateRace = &types.SimulateRace{}
 
 func (rsa *RestServer) resetRaceSimulation(w http.ResponseWriter, r *http.Request) {
 	firstSimulation = true

@@ -50,7 +50,7 @@ type RaceStatistics struct {
 	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
 	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
 	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
-	// NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
+	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
 }
 
 type TotalStatistics struct {
