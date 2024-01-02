@@ -15,16 +15,23 @@ var raceStatistics *types.SimulateRace = &types.SimulateRace{}
 var championship *types.Championship
 var firstSimulation = true
 
+func (rsa *RestServer) resetRaceSimulation(w http.ResponseWriter, r *http.Request) {
+	firstSimulation = true
+	i = 0
+	raceStatistics = &types.SimulateRace{}
+
+	if r.Method != "GET" {
+		return
+	}
+	fmt.Println("GET /resetSimulateRace")
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func (rsa *RestServer) startRaceSimulation(w http.ResponseWriter, r *http.Request) {
-	// var driverTotalPoints []*types.DriverTotalPoints
-	// var teamTotalPoints []*types.TeamTotalPoints
-	// var personalityAveragePoints []*types.PersonalityAveragePoints
-	// var personnalityAverage map[string]map[int]float64
-
-	// driversRankTab := make([]*types.DriverTotalPoints, 0)
-
 	if firstSimulation { //Initialise le championnat si premier lancement de la simulation course-par-course
 		championship = types.NewChampionship(nextChampionship, nextChampionship, rsa.pointTabCircuit, rsa.pointTabTeam)
+		firstSimulation = false
 	}
 
 	if r.Method != "GET" {
@@ -61,11 +68,78 @@ func (rsa *RestServer) startRaceSimulation(w http.ResponseWriter, r *http.Reques
 
 	// Points des pilotes pour la course
 	driversRankTab := make([]*types.DriverTotalPoints, 0)
+
+	// personality Average
+	personalityRankTab := make([]*types.PersonalityAveragePoints, 0)
+	personnalityAverage := make(map[string]map[int]float64)
+	nb := make(map[string]map[int]int)
+
 	for _, driver := range new_Race.FinalResult {
 		driverRank := types.NewDriverTotalPoints(driver.Lastname, pointsMap[driver.Id])
 		driversRankTab = append(driversRankTab, driverRank)
+
+		for personnality, level := range driver.Personality.TraitsValue {
+			if _, ok := personnalityAverage[personnality]; !ok {
+				personnalityAverage[personnality] = make(map[int]float64)
+				nb[personnality] = make(map[int]int)
+			}
+			personnalityAverage[personnality][level] += float64(pointsMap[driver.Id])
+			nb[personnality][level] += 1
+		}
+
+		var found bool
+		for indPers := range personalityRankTab {
+			if personalityRankTab[indPers].Personality["Aggressivity"] == driver.Personality.TraitsValue["Aggressivity"] &&
+				personalityRankTab[indPers].Personality["Concentration"] == driver.Personality.TraitsValue["Concentration"] &&
+				personalityRankTab[indPers].Personality["Confidence"] == driver.Personality.TraitsValue["Confidence"] &&
+				personalityRankTab[indPers].Personality["Docility"] == driver.Personality.TraitsValue["Docility"] {
+				personalityRankTab[indPers].AveragePoints += float64(pointsMap[driver.Id])
+				personalityRankTab[indPers].NbDrivers += 1
+				found = true
+				break
+			}
+		}
+		if !found {
+			var perso types.Personality
+			perso.TraitsValue = make(map[string]int)
+			perso.TraitsValue["Confidence"] = driver.Personality.TraitsValue["Confidence"]
+			perso.TraitsValue["Aggressivity"] = driver.Personality.TraitsValue["Aggressivity"]
+			perso.TraitsValue["Docility"] = driver.Personality.TraitsValue["Docility"]
+			perso.TraitsValue["Concentration"] = driver.Personality.TraitsValue["Concentration"]
+			//on ne peut pas passer le map directement en paramètre, il faut le copier
+			personalityRank := types.NewPersonalityAveragePoints(perso.TraitsValue, pointsMap[driver.Id], 1)
+			personalityRankTab = append(personalityRankTab, personalityRank)
+		}
+
 	}
+
+	//Calcule des moyennes
+	for indPers := range personalityRankTab {
+		if personalityRankTab[indPers].NbDrivers > 1 {
+			personalityRankTab[indPers].AveragePoints = personalityRankTab[indPers].AveragePoints / float64(personalityRankTab[indPers].NbDrivers)
+		}
+
+	}
+
+	for personnality := range personnalityAverage {
+		for i := 1; i < 6; i++ {
+			if _, ok := personnalityAverage[personnality][i]; !ok {
+				personnalityAverage[personnality][i] = 0
+				nb[personnality][i] = 1
+			}
+		}
+	}
+
+	//Calcule des moyennes de personnalités
+	for personnality, level := range personnalityAverage {
+		for level, points := range level {
+			personnalityAverage[personnality][level] = points / float64(nb[personnality][level])
+		}
+	}
+
 	raceStatistics.RaceStatistics.DriversTotalPoints = driversRankTab
+	raceStatistics.RaceStatistics.PersonalityAveragePoints = personalityRankTab
+	raceStatistics.RaceStatistics.PersonalityAverage = personnalityAverage
 
 	// Team points for current race
 	teamsRankTab := make([]*types.TeamTotalPoints, 0)
@@ -79,7 +153,25 @@ func (rsa *RestServer) startRaceSimulation(w http.ResponseWriter, r *http.Reques
 	}
 	raceStatistics.RaceStatistics.TeamsTotalPoints = teamsRankTab
 
+	// Championship stats
+	var champDriverTotalPoints []*types.DriverTotalPoints
+	var champTeamTotalPoints []*types.TeamTotalPoints
+	var champPersonalityAveragePoints []*types.PersonalityAveragePoints
+	var champPersonnalityAverage map[string]map[int]float64
+
+	champTeamTotalPoints = championship.DisplayTeamRank()
+	champDriverTotalPoints, champPersonalityAveragePoints, champPersonnalityAverage = championship.DisplayDriverRank()
+
+	raceStatistics.ChampionshipStatistics.DriversTotalPoints = champDriverTotalPoints
+	raceStatistics.ChampionshipStatistics.PersonalityAveragePoints = champPersonalityAveragePoints
+	raceStatistics.ChampionshipStatistics.TeamsTotalPoints = champTeamTotalPoints
+	raceStatistics.ChampionshipStatistics.PersonalityAverage = champPersonnalityAverage
+
+	i++
+
 	w.WriteHeader(http.StatusOK)
 	serial, _ := json.Marshal(raceStatistics)
 	w.Write(serial)
 }
+
+// Split code into diff functions for readability

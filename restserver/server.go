@@ -70,6 +70,7 @@ func (rsa *RestServer) Start() {
 	// création du multiplexer
 	mux := http.NewServeMux()
 	mux.HandleFunc("/simulateRace", rsa.startRaceSimulation)
+	mux.HandleFunc("/resetSimulateRace", rsa.resetRaceSimulation)
 	mux.HandleFunc("/simulateChampionship", rsa.startSimulation)
 	mux.HandleFunc("/simulate50Championships", rsa.start50Simulations)
 	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonalities)
