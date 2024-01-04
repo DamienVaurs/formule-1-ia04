@@ -20,8 +20,6 @@ const (
 	DRIVER_PITSTOP
 	DRIVER_PITSTOP_CHANGETYRE
 	CREVAISON
-	//DRIVER_PENALTY
-	//DRIVER_FASTEST_LAP
 )
 
 func NewHighlight(drivers []*DriverInRace, highlightType HighlightType) (*Highlight, error) {

@@ -55,14 +55,6 @@ func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.Tea
 					championship.Teams[indT].Drivers[indD].ChampionshipPoints += pointsMap[championship.Teams[indT].Drivers[indD].Id]
 				}
 			}
-			/*
-				for _, team := range championship.Teams {
-					log.Printf("%s : %d points\n", team.Name, team.CalcChampionshipPoints())
-					for _, driver := range team.Drivers {
-						log.Printf("	%s %s : %d points\n", driver.Firstname, driver.Lastname, driver.ChampionshipPoints)
-					}
-				}*/
-
 			//Etape 3 : on ajoute la course au championnat
 			//fmt.Println("Ajout de la course au championnat...")
 			championship.Races[i] = *new_Race
