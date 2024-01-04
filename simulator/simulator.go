@@ -56,14 +56,13 @@ func (s *Simulator) LaunchSimulation() ([]*types.DriverTotalPoints, []*types.Tea
 				}
 			}
 			//Etape 3 : on ajoute la course au championnat
-			//fmt.Println("Ajout de la course au championnat...")
 			championship.Races[i] = *new_Race
 		}
 		//On affiche le classement du championnat
 		log.Printf("\n\n===== Classements du championnat %s =====\n", championship.Name)
 		teamTotalPoints = championship.DisplayTeamRank()
 		driverTotalPoints, personalityAveragePoints, personnalityAverage = championship.DisplayDriverRank()
-		//championship.DisplayPersonalityRepartition()
+
 	}
 	return driverTotalPoints, teamTotalPoints, personalityAveragePoints, personnalityAverage
 }
