@@ -24,9 +24,8 @@ type DriverInRace struct {
 	Status        DriverStatus //Status du pilote
 	IsPitStop     bool         // PitStop --> true if the driver is in pitstop
 	TimeWoPitStop int          // Time without pitstop --> increments at each step
-	//Pour l'implémentation:
-	// - On a un channel pour recevoir et envoyer les actions & l'environnement
-	ChanEnv      chan Action
+	ChanEnv       chan Action  // channel pour recevoir et envoyer les actions & l'environnement
+
 	PitstopSteps int // Nombre de steps bloqué en pitstop
 
 	PrevTyre       Tyre
