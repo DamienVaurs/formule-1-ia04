@@ -77,7 +77,6 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 	//On simule tant que tous les pilotes n'ont pas fini la course
 	for nbFinish < nbDrivers {
-		//time.Sleep(5 * time.Second)
 		//Chaque pilote, dans un ordre aléatoire, réalise les tests sur la proba de dépasser etc...
 		drivers = ShuffleDrivers(drivers)
 
@@ -108,7 +107,6 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 			if drivers[i].Status == CRASHED || drivers[i].Status == ARRIVED {
 				continue
 			}
-			//time.Sleep(100 * time.Millisecond)
 			decision := decisionMap[drivers[i].Driver.Id]
 			switch decision {
 			case TRY_OVERTAKE:
@@ -226,9 +224,7 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 
 		//On fait avancer tout les pilotes n'ayant pas fini la course, n'étant pas crashés et n'étant pas en pitstop
 		newDriversOnPortion := make([][]*DriverInRace, len(r.Circuit.Portions)) //stocke les nouvelles positions des pilotes
-		//newDriversOnPortion[0] = make([]*DriverInRace, 0)
 		for i := range r.Circuit.Portions {
-			//newDriversOnPortion[(i+1)%len(r.Circuit.Portions)] = make([]*DriverInRace, 0) // crée la slice de la portion suivante nouvelle
 			for _, driver := range r.Circuit.Portions[i].DriversOn {
 				previousPortion := driver.Position
 				if driver.Status != CRASHED && driver.Status != ARRIVED && (driver.Status != PITSTOP && driver.Status != PITSTOP_CHANGETYRE) {
@@ -296,7 +292,6 @@ func (r *Race) SimulateRace() (map[string]int, error) {
 	for i := range r.FinalResult {
 		log.Printf("%d : %s %s\n", len(r.FinalResult)-i, r.FinalResult[i].Firstname, r.FinalResult[i].Lastname)
 	}
-	//time.Sleep(1 * time.Second)
 	//On retourne le classement et les points attribués
 	res := r.CalcDriversPoints()
 	return res, nil

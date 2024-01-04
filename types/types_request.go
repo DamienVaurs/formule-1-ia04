@@ -70,7 +70,6 @@ type LastChampionshipStatistics struct {
 	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
 }
 
-// J'ai crée un nouveau type car JSON.Marshal aime pas le type DriverInRace et on n'en a pas besoin pour afficher les infos sur le front
 type RaceHighlight struct {
 	Description string        // Describe the highlight
 	Type        HighlightType // Type of highlight
