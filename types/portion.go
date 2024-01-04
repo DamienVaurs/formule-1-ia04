@@ -46,7 +46,6 @@ func (p *Portion) AddDriverOn(driver *DriverInRace) {
 	p.DriversOn = append(p.DriversOn, driver)
 }
 
-// semble fonctionner
 func (p *Portion) RemoveDriverOn(driver *DriverInRace) {
 	for i, d := range p.DriversOn {
 		if d == driver {

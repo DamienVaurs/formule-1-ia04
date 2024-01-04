@@ -24,9 +24,8 @@ type DriverInRace struct {
 	Status        DriverStatus //Status du pilote
 	IsPitStop     bool         // PitStop --> true if the driver is in pitstop
 	TimeWoPitStop int          // Time without pitstop --> increments at each step
-	//Pour l'implémentation:
-	// - On a un channel pour recevoir et envoyer les actions & l'environnement
-	ChanEnv      chan Action
+	ChanEnv       chan Action  // channel pour recevoir et envoyer les actions & l'environnement
+
 	PitstopSteps int // Nombre de steps bloqué en pitstop
 
 	PrevTyre       Tyre
@@ -37,12 +36,6 @@ type DriverInRace struct {
 	CurrentRank    int //Classement actuel du pilote, à voir si on l'implémente
 	Speed          int //Vitesse du pilote
 }
-
-/* Pneus
-
-Est-ce que la priorité du nouveau type de pneu se base sur le classement actuel du pilote, ou simplement sur les types de pneus restants ?
-
-*/
 
 //Actions d'un pilote
 

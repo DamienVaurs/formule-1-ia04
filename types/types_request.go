@@ -30,6 +30,31 @@ type SimulateChampionship struct {
 	LastChampionshipStatistics LastChampionshipStatistics `json:"lastChampionshipStatistics"`
 }
 
+type SimulateRace struct {
+	Championship           string                 `json:"championship"`
+	Race                   string                 `json:"race"`
+	ChampionshipStatistics ChampionshipStatistics `json:"championshipStatistics"`
+	RaceStatistics         RaceStatistics         `json:"raceStatistics"`
+	Highlights             []RaceHighlight        `json:"highlights"`
+	IsLastRace             bool                   `json:"isLastRace"`
+}
+
+type ChampionshipStatistics struct {
+	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
+	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
+	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
+	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
+	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
+}
+
+type RaceStatistics struct {
+	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
+	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
+	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
+	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
+	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
+}
+
 type TotalStatistics struct {
 	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
 	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
@@ -43,6 +68,15 @@ type LastChampionshipStatistics struct {
 	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
 	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
 	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
+}
+
+type RaceHighlight struct {
+	Description string        // Describe the highlight
+	Type        HighlightType // Type of highlight
+}
+
+func NewRaceHighlight(desc string, highlightType HighlightType) RaceHighlight {
+	return RaceHighlight{Description: desc, Type: highlightType}
 }
 
 type DriverTotalPoints struct {
@@ -84,4 +118,12 @@ func NewLastChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, team
 
 func NewSimulateChampionship(lastChampionship string, nbSim int, totalStatistics TotalStatistics, lastChampionshipStatistics LastChampionshipStatistics) *SimulateChampionship {
 	return &SimulateChampionship{LastChampionship: lastChampionship, TotalStatistics: totalStatistics, LastChampionshipStatistics: lastChampionshipStatistics, NbSimulations: nbSim}
+}
+
+func NewRaceStatistics(driversTotalPoints []*DriverTotalPoints) *RaceStatistics {
+	return &RaceStatistics{DriversTotalPoints: driversTotalPoints}
+}
+
+func NewChampionshipStatistics(driversTotalPoints []*DriverTotalPoints, teamTotalPoints []*TeamTotalPoints, personalityTotalPoints []*PersonalityAveragePoints, personnalityAverage map[string]map[int]float64, nbCrashsPersonnality []*NbCrashsPersonnality) *LastChampionshipStatistics {
+	return &LastChampionshipStatistics{DriversTotalPoints: driversTotalPoints, TeamsTotalPoints: teamTotalPoints, PersonalityAveragePoints: personalityTotalPoints, PersonalityAverage: personnalityAverage, NbCrashsPersonnality: nbCrashsPersonnality}
 }
