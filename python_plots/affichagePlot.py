@@ -1,7 +1,21 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Données du champ PersonnalityAverage
+
+# Ce fichier sert à afficher les plots des points moyens en fonction du niveau de chaque trait de personnalité
+# Comment l'utiliser ?
+
+# 1. Lancer localhost:8080/simulate100Championships dans un navigateur
+    # Cela permet de simuler d'une traite 100 championnats avec des personnalités aléatoires 
+    # pour chacun des pilotes pour chaque championnat
+# 2. Lancer localhost:8080/statisticsChampionship dans un navigateur
+# 3. Localiser le champ "personnalityAverage" (ctrl+f et prendre le premier résultat, qui contient les données de tous les championnats)
+    # Attention, il ne faut pas prendre le champ "personalityAveragePoints" qui contient d'autres types de données
+# 4. Copier les données du champ "personnalityAverage" dans la variable personality_average_data ci-dessous (ligne 19)
+# 5. Copier le nombre de simulations dans la variable nbSimulations ci-dessous (ligne 20)
+    # Le nombre de simulations est indiqué dans les statistiques (champ "nbSimulations")
+
+# Données du champ personnalityAverage
 personality_average_data = ...
 nbSimulations = ...
 
