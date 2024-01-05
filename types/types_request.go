@@ -66,7 +66,7 @@ type LastChampionshipStatistics struct {
 	DriversTotalPoints       []*DriverTotalPoints        `json:"driversTotalPoints"`
 	TeamsTotalPoints         []*TeamTotalPoints          `json:"teamsTotalPoints"`
 	PersonalityAveragePoints []*PersonalityAveragePoints `json:"personalityAveragePoints"`
-	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"`
+	PersonalityAverage       map[string]map[int]float64  `json:"personalityAverage"` //pour réaliser les statistiques avec le script Python
 	NbCrashsPersonnality     []*NbCrashsPersonnality     `json:"nbCrashsPersonnality"`
 }
 
