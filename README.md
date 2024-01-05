@@ -21,6 +21,10 @@ Les deux parties du projet sont téléchargeables avec les commandes suivantes :
     git clone https://gitlab.utc.fr/ybrenala/formule-1-ia04-front
     git clone https://gitlab.utc.fr/vaursdam/formule-1-ia04 
 
+Pour le frontend, il se peut que des dépendances doivent être installées. Lors de nos essais, il s'est avéré que la commande suivante était l'unique à réaliser pour pouvoir lancer correctement le projet : 
+
+    npm i react-chartjs-2
+
 ### Lancement des programmes
 
 En ligne de commande, l'interface utilisateur se lance depuis le sous-repertoire *app-react* avec **npm**:
