@@ -14,6 +14,7 @@ import numpy as np
 # 4. Copier les données du champ "personnalityAverage" dans la variable personality_average_data ci-dessous (ligne 19)
 # 5. Copier le nombre de simulations dans la variable nbSimulations ci-dessous (ligne 20)
     # Le nombre de simulations est indiqué dans les statistiques (champ "nbSimulations")
+# 6. Lancer le script python (python3 affichagePlot.py)
 
 # Données du champ personnalityAverage
 personality_average_data = ...
