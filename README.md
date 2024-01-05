@@ -1,92 +1,82 @@
 # Formule 1 IA04
 
+IA04 - Groupe 1C
+Yannis Brena--Label, Adam Hafiz, Hugo Milair, Damien Vaurs
 
+Semestre A23, supervisé par S. Lagrue et H. Willot.
 
-## Getting started
+## Préambule
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Ce fichier s'inscrit dans le cadre du travail réalisé par le groupe 1C pour le projet de modélisation et de simulation d'un système multi-agent. Il décrit à la fois le backend (Go) et le frontend (React) que le lecteur pourra trouver dans les répertoires GitLab suivant :
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- frontend - https://gitlab.utc.fr/ybrenala/formule-1-ia04-front 
+- backend - https://gitlab.utc.fr/vaursdam/formule-1-ia04 
 
-## Add your files
+## Lancement du projet
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### Installation
 
-```
-cd existing_repo
-git remote add origin https://gitlab.utc.fr/vaursdam/formule-1-ia04.git
-git branch -M main
-git push -uf origin main
-```
+Les deux parties du projet sont téléchargeables avec les commandes suivantes :
 
-## Integrate with your tools
+    git clone https://gitlab.utc.fr/ybrenala/formule-1-ia04-front
+    git clone https://gitlab.utc.fr/vaursdam/formule-1-ia04 
 
-- [ ] [Set up project integrations](https://gitlab.utc.fr/vaursdam/formule-1-ia04/-/settings/integrations)
+### Lancement des programmes
 
-## Collaborate with your team
+En ligne de commande, l'interface utilisateur se lance depuis le sous-repertoire *app-react* avec **npm**:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+    npm run start
 
-## Test and Deploy
+Quant au projet Go, l'utilisateur peut soit lancer le programme avec :
 
-Use the built-in continuous integration in GitLab.
+    go run cmd/launch-simulation.go
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Ou en installant dans un premier temps le fichier exécutable :
 
-***
+    go install cmd/launch-simulation.go
 
-# Editing this README
+L'utilisateur pourra alors exécuter le fichier depuis son répertoire Go.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Remarques et conseils
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Pour le bon fonctionnement de l'interface utilisateur, il est impératif que le backend soit lancé. Aussi, l'utilisateur doit s'assurer que son **port 8080** soit libre pour que les requêtes du frontend atteignent bien le backend.
 
-## Name
-Choose a self-explaining name for your project.
+Aussi, lors de l'utilisation de l'interface utilisateur, il est possible que les graphes s'affichent mal dans l'onglet principal. On conseille à l'utilisateur de cliquer sur le bouton *Simuler un seul championnat*, aller sur un autre onglet, puis revenir sur l'onglet principal. Les graphes s'afficheront alors correctement lors de la simulation.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Enfin, le dossier **python_plots** contient le scripts Python permettant de tracer des graphes intéressants dans le cadre de la simulation mais que nous n'avons pas eu le temps d'inétgrer à l'interface utilisateur. L'utilisateur peut visualiser les dits graphes dans le même dossier. Des indications précises sur l'utilisation de ce script sont disponibles en tête du fichier Python.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Description du projet
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Objectif du projet
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Ce projet a pour but de répondre à la problématique **Quel est le meilleur profil d’un pilote pour obtenir le plus de points ?**. Y répondre permettrait notamment, dans la position d'une équipe, d'éclairer la stratégie de recrutement des pilotes à la lumière de leur personnalité.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Une personnalité est définie par 4 traits de caractère qui influencent le comportement du pilote en course. Ces traits sont les suivants :
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- **Aggressivité** : détermine la propension du pilote à tenter des dépassements
+- **Concentration** : détermine la capacité du pilote à se concentrer sur la course
+- **Confiance** : détermine le niveau de confiance en soi du pilote
+- **Docilité** : détermine la docilité du pilote face aux consignes de l'équipe
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Les deux premiers de ces traits, une fois fixés, ne varient pas au cours de la carrière du pilote. Les deux derniers, en revanche, peuvent évoluer en fonction des performances en courses des pilotes.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+L'objectif de la simulation est ainsi de **déceler quelle personnalité est la plus performante en course**. Pour cela, l'utilisateur peut, à travers l'interface, simuler des championnats ou des courses de Formule 1 et visualiser les résultats des pilotes, des équipes et des différents profils de personnalité. Il peut également modifier les personnalités des pilotes au cours de la simulation pour observer l'impact de ces changements sur les résultats du pilote.
+On lui conseille par ailleurs d'observer les pilotes surperformant dans les championnats (ex. le pilote Sargeant, bien que conduisant une mauvaise voiture et ayant un niveau intrinsèque faible, est régulièrement dans les meilleurs pilotes de nos simulations) et d'appliquer leurs personnalités à des pilotes mal classés. Le pilote aura tendance à gagner plus de points et l'utilisateur pourra observer l'impact de la personnalité sur les résultats.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Remarquons que la présentation du projet face aux professeurs ainsi que le graphe contenu dans **python_plots** ont mené à la conclusion que le pilote idéal est **peu agressif**, **peu concentré** et **peu docile**. Il est par ailleurs **très confiant**.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### Modélisation
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Ce projet prend en comptes plusieurs éléments des championnats de Formule 1. Les plus importants sont:
 
-## License
-For open source projects, say how it is licensed.
+- les **pilotes**, les agents de la simulation, qui sont caractérisés par leur personnalité, leur niveau et leur équipe. Les traits de personnalité initiaux de chaccun des 20 pilotes ont été estimés par un suiveur assidu de la Formule 1.
+- les **circuits** sur lesquels évoluent les pilotes. 12 circuits régulièrement impliqués dans les championnats ont été modélisés.
+- les **courses**, qui constituent le point d'intérêt des simulations.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Au sein des courses, certains éléments sont pris en compte :
+
+- la **météo**, dont la distribution varie en fonction de la situation géographique du circuit.
+- les **pneus**, qui s'ils ne sont pas remplacés risque de mener à une crevaison. L'état des pneus influe aussi sur la vitesse des pilotes
+- les **arrêts au stand** qui permettent de changer de pneus.
+
+D'autres éléments, notamment les qualifications et essais libres, pourraient être ajoutés. Aussi le modèle pourrait être amélioré pour correspondre au mieux à la réalité.
