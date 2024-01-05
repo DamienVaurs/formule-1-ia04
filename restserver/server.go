@@ -102,7 +102,7 @@ func (rsa *RestServer) Start() {
 	mux.HandleFunc("/simulateRace", rsa.startRaceSimulation)
 	mux.HandleFunc("/resetSimulateRace", rsa.resetRaceSimulation)
 	mux.HandleFunc("/simulateChampionship", rsa.startSimulation)
-	mux.HandleFunc("/simulate50Championships", rsa.start50Simulations)
+	mux.HandleFunc("/simulate100Championships", rsa.start100Simulations)
 	mux.HandleFunc("/personalities", rsa.getAndUpdatePersonalities)
 	mux.HandleFunc("/statisticsChampionship", rsa.statisticsChampionship)
 	mux.HandleFunc("/statisticsRace", rsa.statisticsRace)

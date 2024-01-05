@@ -43,6 +43,12 @@ func addNewStatistsicsToPrevious(lastStats types.LastChampionshipStatistics) {
 			statistics.TotalStatistics.TeamsTotalPoints[i].TotalPoints += mapScoreTeams[statistics.TotalStatistics.TeamsTotalPoints[i].Team]
 		}
 
+		for personality := range lastStats.PersonalityAverage {
+			for i := range statistics.TotalStatistics.PersonalityAverage[personality] {
+				statistics.TotalStatistics.PersonalityAverage[personality][i] += lastStats.PersonalityAverage[personality][i]
+			}
+		}
+
 		//Ajout des points des personnalités
 		for _, personality := range lastStats.PersonalityAveragePoints {
 			var found bool //set to true if personnality is found
@@ -123,8 +129,40 @@ func (rsa *RestServer) startSimulation(w http.ResponseWriter, r *http.Request) {
 	w.Write(serial)
 }
 
-func (rsa *RestServer) start50Simulations(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 50; i++ {
-		rsa.startSimulation(w, r)
+func (rsa *RestServer) startSimulationRandom(w http.ResponseWriter, r *http.Request) {
+
+	// vérification de la méthode de la requête
+	if r.Method != "GET" {
+		return
+	}
+	fmt.Println("GET /simulateChampionship")
+
+	championship := types.NewChampionshipRandom(nextChampionship, nextChampionship, rsa.pointTabCircuit, rsa.pointTabTeam)
+	ch, err := getNextChampionshipName(nextChampionship)
+	if err != nil {
+		panic("Error /simulateChampionship : can't create new Dates" + err.Error())
+	}
+	nextChampionship = ch
+
+	s := simulator.NewSimulator([]types.Championship{*championship})
+	nbSimulation += 1
+
+	// Lancement de la simulation
+	driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, personnalityAverage := s.LaunchSimulation()
+	lastChampionshipstatistics := types.NewLastChampionshipStatistics(driverLastChampPoints, teamLastChampPoints, personalityLastChampAveragePoints, personnalityAverage, nil)
+
+	//Ajoute les nouvelles statistics
+	addNewStatistsicsToPrevious(*lastChampionshipstatistics)
+	statistics.LastChampionship = championship.Name
+	statistics.NbSimulations = nbSimulation
+
+	w.WriteHeader(http.StatusOK)
+	serial, _ := json.Marshal(statistics)
+	w.Write(serial)
+}
+
+func (rsa *RestServer) start100Simulations(w http.ResponseWriter, r *http.Request) {
+	for i := 0; i < 100; i++ {
+		rsa.startSimulationRandom(w, r)
 	}
 }

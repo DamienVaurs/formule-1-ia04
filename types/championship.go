@@ -38,6 +38,32 @@ func NewChampionship(id string, name string, circuits []*Circuit, teams []*Team)
 	}
 }
 
+func NewChampionshipRandom(id string, name string, circuits []*Circuit, teams []*Team) *Championship {
+
+	c := make([]*Circuit, len(circuits))
+	copy(c, circuits)
+
+	t := make([]*Team, len(teams))
+	copy(t, teams)
+	for i := range t {
+		for j := range t[i].Drivers {
+			t[i].Drivers[j].ChampionshipPoints = 0
+			t[i].Drivers[j].Personality = *NewPersonalityRandom()
+		}
+
+	}
+
+	r := make([]Race, len(circuits))
+
+	return &Championship{
+		Id:       id,
+		Name:     name,
+		Circuits: c,
+		Races:    r,
+		Teams:    t,
+	}
+}
+
 //Remarque : on utilise des pointeurs quand l'objet ne gère pas le cycle de vie des instances
 
 func (c *Championship) CalcTeamRank() []*Team {
