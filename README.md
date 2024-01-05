@@ -19,11 +19,18 @@ Ce fichier s'inscrit dans le cadre du travail réalisé par le groupe 1C pour le
 Les deux parties du projet sont téléchargeables avec les commandes suivantes :
 
     git clone https://gitlab.utc.fr/ybrenala/formule-1-ia04-front
+    
     git clone https://gitlab.utc.fr/vaursdam/formule-1-ia04 
 
-Pour le frontend, il se peut que des dépendances doivent être installées. Lors de nos essais, il s'est avéré que la commande suivante était l'unique à réaliser pour pouvoir lancer correctement le projet : 
+
+**Après le clone**, pour le frontend, il se peut que des dépendances doivent être installées. Lors de nos essais, il s'est avéré que la commande suivante était l'unique à réaliser pour pouvoir lancer correctement le projet : 
 
     npm i react-chartjs-2
+
+**Si l'utilisateur ne clone pas le projet mais a obtenu le projet via le dépôt IA04**, il faut installer toutes les dépendances:
+
+- se placer dans app-react
+- réaliser la commande *npm install* pour installer les dépendances.
 
 ### Lancement des programmes
 
